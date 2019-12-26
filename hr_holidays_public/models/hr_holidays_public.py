@@ -18,7 +18,6 @@ class HrHolidaysPublic(models.Model):
     line_ids = fields.One2many("hr.holidays.public.line", "year_id", "Holiday Dates")
     country_id = fields.Many2one("res.country", "Country")
 
-    @api.multi
     @api.constrains("year", "country_id")
     def _check_year(self):
         for line in self:
@@ -40,7 +39,6 @@ class HrHolidaysPublic(models.Model):
             )
         return True
 
-    @api.multi
     @api.depends("year", "country_id")
     def _compute_display_name(self):
         for line in self:
@@ -49,7 +47,6 @@ class HrHolidaysPublic(models.Model):
             else:
                 line.display_name = line.year
 
-    @api.multi
     def name_get(self):
         result = []
         for rec in self:
@@ -123,7 +120,7 @@ class HrHolidaysPublicLine(models.Model):
     year_id = fields.Many2one(
         "hr.holidays.public", "Calendar Year", required=True, ondelete="cascade"
     )
-    variable_date = fields.Boolean("Date may change", oldname="variable", default=True)
+    variable_date = fields.Boolean("Date may change", default=True)
     state_ids = fields.Many2many(
         "res.country.state",
         "hr_holiday_public_state_rel",
@@ -132,7 +129,6 @@ class HrHolidaysPublicLine(models.Model):
         "Related States",
     )
 
-    @api.multi
     @api.constrains("date", "state_ids")
     def _check_date_state(self):
         for line in self:
