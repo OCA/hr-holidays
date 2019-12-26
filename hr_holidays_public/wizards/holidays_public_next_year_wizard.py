@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +27,6 @@ class HolidaysPublicNextYearWizard(models.TransientModel):
         "By default, the year following the template."
     )
 
-    @api.multi
     def create_public_holidays(self):
 
         self.ensure_one()
