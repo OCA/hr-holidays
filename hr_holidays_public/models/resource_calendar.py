@@ -7,7 +7,7 @@ from datetime import datetime, time
 from dateutil import rrule
 from pytz import timezone
 
-from odoo import api, models
+from odoo import models
 
 from odoo.addons.resource.models.resource import Intervals
 
@@ -52,7 +52,6 @@ class ResourceCalendar(models.Model):
                 )
         return Intervals(leaves)
 
-    @api.multi
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None):
         res = super()._leave_intervals(
             start_dt=start_dt, end_dt=end_dt, resource=resource, domain=domain
