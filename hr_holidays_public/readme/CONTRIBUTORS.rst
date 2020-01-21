@@ -16,3 +16,7 @@
 * `Camptocamp <https://www.camptocamp.com>`__:
 
   * Damien Crier <damien.crier@camptocamp.com>
+
+* `Druidoo <https://www.druidoo.io>`__:
+
+  * Iván Todorovich <ivan.todorovich@gmail.com>

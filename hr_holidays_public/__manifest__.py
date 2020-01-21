@@ -3,17 +3,19 @@
 
 {
     "name": "HR Holidays Public",
-    "version": "13.0.1.0.2",
+    "version": "13.0.2.0.0",
     "license": "AGPL-3",
     "category": "Human Resources",
     "author": "Michael Telahun Makonnen, "
     "Tecnativa, "
     "Fekete Mihai (Forest and Biomass Services Romania),"
+    "Druidoo,"
     "Odoo Community Association (OCA)",
     "summary": "Manage Public Holidays",
-    "website": "https://github.com/OCA/hr",
+    "website": "https://github.com/OCA/hr-holidays",
     "depends": ["hr_holidays"],
     "data": [
+        "data/data.xml",
         "security/ir.model.access.csv",
         "views/hr_holidays_public_view.xml",
         "views/hr_leave_type.xml",
