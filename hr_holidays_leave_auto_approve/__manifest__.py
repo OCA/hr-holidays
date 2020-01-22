@@ -2,18 +2,14 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Auto Approve Leaves',
-    'version': '13.0.1.0.0',
-    'license': 'AGPL-3',
-    'summary': 'Leave type for auto-validation of Leaves',
-    'author': 'Onestein, Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/hr-holidays',
-    'category': 'Human Resources',
-    'depends': [
-        'hr_holidays',
-    ],
-    'data': [
-        'views/hr_holidays_status.xml',
-    ],
-    'installable': True,
+    "name": "Auto Approve Leaves",
+    "version": "13.0.1.0.0",
+    "license": "AGPL-3",
+    "summary": "Leave type for auto-validation of Leaves",
+    "author": "Onestein, Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/hr-holidays",
+    "category": "Human Resources",
+    "depends": ["hr_holidays"],
+    "data": ["views/hr_holidays_status.xml"],
+    "installable": True,
 }
