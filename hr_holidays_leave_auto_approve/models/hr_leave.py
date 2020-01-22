@@ -12,13 +12,11 @@ class HrLeave(models.Model):
             return
         return super()._check_approval_update(state)
 
-    @api.multi
     def _should_auto_approve(self):
         self.ensure_one()
         policy = self.holiday_status_id.auto_approve_policy
         return (self.can_approve and policy == 'hr') or policy == 'all'
 
-    @api.multi
     def _apply_auto_approve_policy(self):
         self.filtered(
             lambda r: r._should_auto_approve()

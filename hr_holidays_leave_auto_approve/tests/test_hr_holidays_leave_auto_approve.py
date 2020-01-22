@@ -95,7 +95,7 @@ class TestHolidaysAutoValidate(TransactionCase):
         today = datetime.today()
 
         # Create leave requests for Leave Type1 and 2
-        leave1 = self.leave_request_model.sudo(self.test_user_id).create({
+        leave1 = self.leave_request_model.with_user(self.test_user_id).create({
             'name': 'Test Leave Request 1',
             'holiday_status_id': self.test_leave_type1_id.id,
             'date_from': today + timedelta(days=10),
@@ -104,7 +104,7 @@ class TestHolidaysAutoValidate(TransactionCase):
             'employee_id': self.test_employee_id.id,
         })
 
-        leave2 = self.leave_request_model.sudo(self.test_user_id).create({
+        leave2 = self.leave_request_model.with_user(self.test_user_id).create({
             'name': 'Test Leave Request 2',
             'holiday_status_id': self.test_leave_type2_id.id,
             'holiday_type': 'employee',
@@ -127,7 +127,7 @@ class TestHolidaysAutoValidate(TransactionCase):
         today = datetime.today()
         self.test_leave_type2_id.write({'auto_approve_policy': 'all'})
 
-        leave1 = self.leave_request_model.sudo(self.test_user_id).create({
+        leave1 = self.leave_request_model.with_user(self.test_user_id).create({
             'name': 'Test Leave Request 1',
             'holiday_status_id': self.test_leave_type1_id.id,
             'date_from': today + timedelta(days=10),
@@ -136,7 +136,7 @@ class TestHolidaysAutoValidate(TransactionCase):
             'employee_id': self.test_employee_id.id,
         })
 
-        leave2 = self.leave_request_model.sudo(self.test_user_id).create({
+        leave2 = self.leave_request_model.with_user(self.test_user_id).create({
             'name': 'Test Leave Request 2',
             'holiday_status_id': self.test_leave_type2_id.id,
             'holiday_type': 'employee',

@@ -3,11 +3,11 @@
 
 {
     'name': 'Auto Approve Leaves',
-    'version': '12.0.2.0.0',
+    'version': '13.0.1.0.0',
     'license': 'AGPL-3',
     'summary': 'Leave type for auto-validation of Leaves',
     'author': 'Onestein, Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/hr',
+    'website': 'https://github.com/OCA/hr-holidays',
     'category': 'Human Resources',
     'depends': [
         'hr_holidays',
