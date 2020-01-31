@@ -101,7 +101,7 @@ msgid "Date may change"
 msgstr "Datum kann sich ändern"
 
 #. module: hr_holidays_public
-#: code:addons/hr_holidays_public/models/hr_holidays_public.py:169
+#: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
 "Dates of holidays should be the same year as the calendar year they are "
@@ -167,23 +167,13 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: hr_holidays_public
-#: model:ir.model,name:hr_holidays_public.model_hr_leave
-msgid "Leave"
-msgstr "Urlaub"
-
-#. module: hr_holidays_public
-#: model:ir.model,name:hr_holidays_public.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Urlaubstyp"
-
-#. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public__display_name
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__name
 msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: hr_holidays_public
-#: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:40
+#: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
 "No Public Holidays found as template. Please create the first Public "
@@ -263,6 +253,16 @@ msgstr ""
 "verwendet werden.\""
 
 #. module: hr_holidays_public
+#: model:ir.model,name:hr_holidays_public.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_public
+#: model:ir.model,name:hr_holidays_public.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#. module: hr_holidays_public
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.holidays_public_next_year_wizard_view
 msgid ""
 "Use this wizard to create public holidays based on the\n"
@@ -300,7 +300,7 @@ msgstr ""
 "werden."
 
 #. module: hr_holidays_public
-#: code:addons/hr_holidays_public/models/hr_holidays_public.py:186
+#: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
 "You can't create duplicate public holiday per date %s and one of the country "
@@ -310,14 +310,14 @@ msgstr ""
 "Länder erstellen."
 
 #. module: hr_holidays_public
-#: code:addons/hr_holidays_public/models/hr_holidays_public.py:194
+#: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per date %s."
 msgstr ""
 "Sie können keinen öffentlichen Feiertag doppelt pro Datum %s erstellen."
 
 #. module: hr_holidays_public
-#: code:addons/hr_holidays_public/models/hr_holidays_public.py:47
+#: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per year and/or country"
 msgstr ""
@@ -325,7 +325,7 @@ msgstr ""
 "erstellen."
 
 #. module: hr_holidays_public
-#: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:76
+#: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
 "You cannot use as template the public holidays of a year that includes "
@@ -335,3 +335,9 @@ msgstr ""
 "Als Vorlage für die Erstellung von Feiertagen darf kein Schaltjahr (2016, "
 "2020, ...) verwendet werden. Es sollte die Vorlage eines anderes Jahres "
 "verwendet werden."
+
+#~ msgid "Leave"
+#~ msgstr "Urlaub"
+
+#~ msgid "Leave Type"
+#~ msgstr "Urlaubstyp"
