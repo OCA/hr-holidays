@@ -52,12 +52,12 @@ class ResourceCalendar(models.Model):
                 )
         return Intervals(leaves)
 
-    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         res = super()._leave_intervals(
-            start_dt=start_dt, end_dt=end_dt, resource=resource, domain=domain
+            start_dt=start_dt, end_dt=end_dt, resource=resource, domain=domain, tz=tz
         )
         if self.env.context.get("exclude_public_holidays"):
-            tz = timezone((resource or self).tz)
+            tz = tz if tz else timezone((resource or self).tz)
             public_holidays = self._public_holidays_leave_intervals(
                 start_dt, end_dt, self.env.context.get("employee_id", False), tz
             )
