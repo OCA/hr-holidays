@@ -128,7 +128,7 @@ Contributors
 
 * `Druidoo <https://www.druidoo.io>`__:
 
-  * Iván Todorovich <ivan.todorovich@druidoo.io>
+  * Iván Todorovich <ivan.todorovich@gmail.com>
 
 Maintainers
 ~~~~~~~~~~~

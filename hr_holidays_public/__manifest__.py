@@ -8,8 +8,8 @@
     "category": "Human Resources",
     "author": "Michael Telahun Makonnen, "
     "Tecnativa, "
-    "Fekete Mihai (Forest and Biomass Services Romania),"
-    "Druidoo,"
+    "Fekete Mihai (Forest and Biomass Services Romania), "
+    "Druidoo, "
     "Odoo Community Association (OCA)",
     "summary": "Manage Public Holidays",
     "website": "https://github.com/OCA/hr-holidays",

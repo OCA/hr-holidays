@@ -184,7 +184,6 @@ class HrHolidaysPublicLine(models.Model):
                 else self.name
             ),
             "description": ", ".join(self.state_ids.mapped("name")),
-            "categ_ids": [(6, 0, categ_id.ids if categ_id else [])],
             "start": self.date,
             "stop": self.date,
             "allday": True,
@@ -194,6 +193,8 @@ class HrHolidaysPublicLine(models.Model):
             "privacy": "confidential",
             "show_as": "busy",
         }
+        if categ_id:
+            meeting_values.update({"categ_ids": [(6, 0, categ_id.ids)]})
         return meeting_values
 
     @api.constrains("date", "name", "year_id", "state_ids")
