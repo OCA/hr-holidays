@@ -9,8 +9,10 @@ class HrLeaveType(models.Model):
 
     auto_approve_policy = fields.Selection(
         selection=[
-            ('no', 'No auto Validation'),
-            ('hr', 'Auto Validated by HR'),
-            ('all', 'Auto Validated by Everyone'),
-        ], default='no', required=True,
+            ("no", "No auto Validation"),
+            ("hr", "Auto Validated by HR"),
+            ("all", "Auto Validated by Everyone"),
+        ],
+        default="no",
+        required=True,
     )
