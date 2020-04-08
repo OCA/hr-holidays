@@ -11,11 +11,12 @@ _logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
-    if tools.column_exists(cr, 'hr_leave_type', 'auto_approve'):
-        _logger.debug("Set Auto Approve leave type to 'Auto Validated by HR' "
-                      "policy")
-        cr.execute("""
+    if tools.column_exists(cr, "hr_leave_type", "auto_approve"):
+        _logger.debug("Set Auto Approve leave type to 'Auto Validated by HR' " "policy")
+        cr.execute(
+            """
             UPDATE hr_leave_type
             SET auto_approve_policy = 'hr'
             WHERE auto_approve
-            """)
+            """
+        )
