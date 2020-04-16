@@ -14,7 +14,7 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
         self.date_start = datetime(2016, 12, 5, 8, 0, 0, 0)
         self.date_end = datetime(2016, 12, 5, 18, 0, 0, 0)
 
-        self.calendar = self.env["resource.calendar"].create({"name": "Calendar 1",})
+        self.calendar = self.env["resource.calendar"].create({"name": "Calendar 1"})
 
         for i in range(0, 7):
             self.env["resource.calendar.attendance"].create(
@@ -28,23 +28,23 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
             )
 
         self.employee_1 = self.env["hr.employee"].create(
-            {"name": "Employee 1", "resource_calendar_id": self.calendar.id,}
+            {"name": "Employee 1", "resource_calendar_id": self.calendar.id}
         )
         self.employee_2 = self.env["hr.employee"].create(
-            {"name": "Employee 2", "resource_calendar_id": self.calendar.id,}
+            {"name": "Employee 2", "resource_calendar_id": self.calendar.id}
         )
         self.employee_3 = self.env["hr.employee"].create(
-            {"name": "Employee 3", "resource_calendar_id": self.calendar.id,}
+            {"name": "Employee 3", "resource_calendar_id": self.calendar.id}
         )
         self.employee_4 = self.env["hr.employee"].create(
-            {"name": "Employee 4", "resource_calendar_id": self.calendar.id,}
+            {"name": "Employee 4", "resource_calendar_id": self.calendar.id}
         )
         self.employee_5 = self.env["hr.employee"].create(
-            {"name": "Failing Employee", "resource_calendar_id": self.calendar.id,}
+            {"name": "Failing Employee", "resource_calendar_id": self.calendar.id}
         )
 
         self.status_1 = self.env["hr.leave.type"].create(
-            {"name": "Repeating Status", "repeat": True, "validity_start": False,}
+            {"name": "Repeating Status", "repeat": True, "validity_start": False}
         )
 
         self.leave_1 = self.env["hr.leave"].create(
