@@ -19,7 +19,7 @@ class HrLeave(models.Model):
         ]
     )
     repeat_mode = fields.Selection(
-        [("times", "Number of Times"), ("date", "End Date"),], default="times"
+        [("times", "Number of Times"), ("date", "End Date")], default="times"
     )
     holiday_type_repeat = fields.Boolean(related="holiday_status_id.repeat")
     repeat_limit = fields.Integer(default=1, string="Repeat # times")
