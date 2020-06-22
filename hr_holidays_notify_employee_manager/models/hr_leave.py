@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class HRLeave(models.Model):
-    _inherit = 'hr.leave'
+    _inherit = "hr.leave"
 
     @api.multi
     def _get_approvers_to_notify(self):
@@ -34,5 +34,6 @@ class HRLeave(models.Model):
             if approver.user_id:
                 self._message_auto_subscribe_notify(
                     [approver.user_id.partner_id.id],
-                    template='mail.message_user_assigned')
+                    template="mail.message_user_assigned",
+                )
         return True

@@ -5,9 +5,10 @@ from odoo import fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = "res.company"
 
     leave_notify_manager = fields.Boolean(
         string="Leave Requests notified to employee's manager",
         help="When a leave request is created the employee's manager "
-             "will be added as follower and notified by email.")
+        "will be added as follower and notified by email.",
+    )
