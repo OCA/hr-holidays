@@ -7,7 +7,6 @@ from odoo import api, models
 class HRLeave(models.Model):
     _inherit = "hr.leave"
 
-    @api.multi
     def _get_approvers_to_notify(self):
         """Defines who to notify."""
         self.ensure_one()
@@ -22,7 +21,6 @@ class HRLeave(models.Model):
         res._notify_approvers()
         return res
 
-    @api.multi
     def _notify_approvers(self):
         """Input: res.user"""
         self.ensure_one()

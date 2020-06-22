@@ -36,7 +36,7 @@ class TestNotifyEmployeeManager(TransactionCase):
             }
         )
         self.holiday_type = self.type_model.create(
-            {"name": "Leave", "allocation_type": "fixed",}
+            {"name": "Leave", "allocation_type": "fixed"}
         )
         self.env["hr.leave.allocation"].create(
             {
