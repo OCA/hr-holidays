@@ -53,6 +53,8 @@ class ResourceCalendar(models.Model):
         return Intervals(leaves)
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
+        """DEPRECATED since odoo/odoo#51542, but left as is for retro-compatibility"""
+        # TODO: To be removed in v14 if not used in any place
         res = super()._leave_intervals(
             start_dt=start_dt, end_dt=end_dt, resource=resource, domain=domain, tz=tz
         )
@@ -62,4 +64,20 @@ class ResourceCalendar(models.Model):
                 start_dt, end_dt, self.env.context.get("employee_id", False), tz
             )
             res = res | public_holidays
+        return res
+
+    def _leave_intervals_batch(
+        self, start_dt, end_dt, resources=None, domain=None, tz=None
+    ):
+        """Inject public holidays in the leaves got for computations."""
+        res = super()._leave_intervals_batch(
+            start_dt=start_dt, end_dt=end_dt, resources=resources, domain=domain, tz=tz
+        )
+        if self.env.context.get("exclude_public_holidays"):
+            tz = tz if tz else timezone((resources[:1] or self).tz)
+            public_holidays = self._public_holidays_leave_intervals(
+                start_dt, end_dt, self.env.context.get("employee_id", False), tz
+            )
+            for key in res:
+                res[key] = res[key] | public_holidays
         return res
