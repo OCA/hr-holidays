@@ -15,13 +15,13 @@
         <field name="model">hr.leave</field>
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
         <field name="arch" type="xml">
-            <header position="after">
+            <sheet position="before">
                 <field name="restrict_dates" invisible="1" />
                 <div
-                    class="alert alert-warning"
+                    class="alert alert-warning text-center mb-3"
                     role="alert"
                     attrs="{'invisible': ['|', ('warning_validity', '=', False), ('restrict_dates', '=', True)]}"
-                    style="margin-bottom:0px;"
+                    style="padding-bottom:0.1rem;"
                 >
                     <p>
                         <i
@@ -33,7 +33,7 @@
                         <field name="warning_validity" />
                     </p>
                 </div>
-            </header>
+            </sheet>
         </field>
     </record>
 </odoo>

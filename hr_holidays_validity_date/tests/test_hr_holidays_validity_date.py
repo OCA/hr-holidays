@@ -17,7 +17,7 @@ class TestHrHolidaysValidityDate(common.TransactionCase):
         super(TestHrHolidaysValidityDate, self).setUp()
         self.holidays_obj = self.env["hr.leave"]
         self.type01 = self.env["hr.leave.type"].create(
-            {"name": "Status", "allocation_type": "no", "validity_start": False,}
+            {"name": "Leave Type", "allocation_type": "no", "validity_start": False}
         )
         self.employee01 = self.env["hr.employee"].create({"name": "Employee"})
 
@@ -70,4 +70,4 @@ class TestHrHolidaysValidityDate(common.TransactionCase):
             "number_of_days": 1,
         }
         holidays = self.holidays_obj.create(leave_vals)
-        self.assertIn("Warning", holidays.warning_validity)
+        self.assertTrue(holidays.warning_validity)
