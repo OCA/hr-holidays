@@ -7,14 +7,11 @@ from openupgradelib import openupgrade
 @openupgrade.migrate()
 def migrate(env, version):
     cr = env.cr
-    if openupgrade.column_exists(
-            cr,
-            'hr_leave_type',
-            'date_start'
-    ):
+    if openupgrade.column_exists(cr, "hr_leave_type", "date_start"):
         openupgrade.logged_query(
-            cr, """
+            cr,
+            """
             UPDATE hr_leave_type
             SET validity_start = date_start, validity_stop = date_end;
-            """
+            """,
         )
