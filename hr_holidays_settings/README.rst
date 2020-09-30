@@ -23,7 +23,7 @@ HR Holidays Settings
     :target: https://runbot.odoo-community.org/runbot/290/13.0
     :alt: Try me on Runbot
 
-|badge1| |badge2| |badge3| |badge4| |badge5| 
+|badge1| |badge2| |badge3| |badge4| |badge5|
 
 This module adds a Settings form in the menu of Leaves (HR Holidays module).
 This settings are empty by default but enable other modules to be able to extend it.
@@ -56,12 +56,12 @@ Credits
 Authors
 ~~~~~~~
 
-* Eficent
+* ForgeFlow
 
 Contributors
 ~~~~~~~~~~~~
 
-* Miquel Raïch <miquel.raich@eficent.com>
+* Miquel Raïch <miquel.raich@forgeflow.com>
 * Andrea Stirpe <a.stirpe@onestein.nl>
 * Dennis Sluijk <d.sluijk@onestein.nl>
 * Anand Kansagra <kansagraanand@hotmail.com>
