@@ -35,16 +35,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays_validity_date
-#: model:ir.model,name:hr_holidays_validity_date.model_hr_leave
-msgid "Leave"
-msgstr "Dopust"
-
-#. module: hr_holidays_validity_date
-#: model:ir.model,name:hr_holidays_validity_date.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Tip dopusta"
-
-#. module: hr_holidays_validity_date
 #: model:ir.model.fields,field_description:hr_holidays_validity_date.field_hr_leave_type__restrict_dates
 msgid "Restrict"
 msgstr ""
@@ -55,12 +45,22 @@ msgid "Restrict dates"
 msgstr ""
 
 #. module: hr_holidays_validity_date
+#: model:ir.model,name:hr_holidays_validity_date.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_validity_date
+#: model:ir.model,name:hr_holidays_validity_date.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#. module: hr_holidays_validity_date
 #: model:ir.model.fields,field_description:hr_holidays_validity_date.field_hr_leave__warning_validity
 msgid "Warning Validity"
 msgstr ""
 
-#. module: hr_holidays_validity_date
-#: code:addons/hr_holidays_validity_date/models/hr_leave.py:43
-#, python-format
-msgid "Warning: You can take %s only between %s and %s"
-msgstr ""
+#~ msgid "Leave"
+#~ msgstr "Dopust"
+
+#~ msgid "Leave Type"
+#~ msgstr "Tip dopusta"
