@@ -108,9 +108,9 @@ Contributors
 
   * Pedro M. Baeza
 
-* `Brainbean Apps <https://brainbeanapps.com>`__:
+* `CorporateHub <https://corporatehub.eu/>`__
 
-  * Alexey Pelykh <alexey.pelykh@brainbeanapps.com>
+  * Alexey Pelykh <alexey.pelykh@corphub.eu>
 
 * `Camptocamp <https://www.camptocamp.com>`__:
 
