@@ -164,6 +164,11 @@ msgid "Last Updated on"
 msgstr "Última actualización en"
 
 #. module: hr_holidays_public
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__meeting_id
+msgid "Meeting"
+msgstr ""
+
+#. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public__display_name
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__name
 msgid "Name"
