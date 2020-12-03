@@ -187,9 +187,9 @@ class HrHolidaysPublicLine(models.Model):
             "start": self.date,
             "stop": self.date,
             "allday": True,
-            "partner_ids": False,
+            # "partner_ids": False,
             "user_id": SUPERUSER_ID,
-            "state": "open",
+            # "state": "open",
             "privacy": "confidential",
             "show_as": "busy",
         }
