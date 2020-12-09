@@ -40,17 +40,14 @@ class HrHolidaysPublic(models.Model):
         return True
 
     @api.depends("year", "country_id")
-    def _compute_display_name(self):
+    def name_get(self):
+        result = []
         for line in self:
             if line.country_id:
                 line.display_name = "{} ({})".format(line.year, line.country_id.name)
             else:
                 line.display_name = line.year
-
-    def name_get(self):
-        result = []
-        for rec in self:
-            result.append((rec.id, rec.display_name))
+            result.append((line.id, line.display_name))
         return result
 
     @api.model
@@ -187,9 +184,9 @@ class HrHolidaysPublicLine(models.Model):
             "start": self.date,
             "stop": self.date,
             "allday": True,
-            "partner_ids": False,
+            # "partner_ids": False,
             "user_id": SUPERUSER_ID,
-            "state": "open",
+            # "state": "open",
             "privacy": "confidential",
             "show_as": "busy",
         }
