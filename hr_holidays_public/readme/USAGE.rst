@@ -5,7 +5,7 @@ For adding public holidays:
 
 For using public holidays on leaves:
 
-#. Go to *Leaves > Dashboard*.
+#. Go to *Time Off > Dashboard*.
 #. Select dragging on the calendar the days you want to be on leave, or go
    to the form view for selecting start and end dates.
 #. Select the proper "Leave Type" that has "Exclude Public Holidays" checked.

@@ -9,7 +9,7 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='visibility']" position="after">
+            <xpath expr="//group[@name='allocation_validation']" position="after">
                 <group name="public_holidays" string="Public Holidays">
                     <field name="exclude_public_holidays" />
                 </group>
