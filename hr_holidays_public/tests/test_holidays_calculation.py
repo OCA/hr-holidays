@@ -1,6 +1,7 @@
 # Copyright 2015 iDT LABS (http://www.@idtlabs.sl)
 # Copyright 2017-2018 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Brainbean Apps
+# Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo.tests import common
@@ -125,7 +126,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_1.id,
             }
         )
-        leave_request._onchange_leave_dates()
+        leave_request._compute_number_of_days()
         self.assertEqual(leave_request.number_of_days, 4)
 
     def _test_number_days_excluding_employee_2(self):
@@ -137,7 +138,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
-        leave_request._onchange_leave_dates()
+        leave_request._compute_number_of_days()
         self.assertEqual(leave_request.number_of_days, 2)
 
     def test_number_days_not_excluding(self):
@@ -149,7 +150,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_1.id,
             }
         )
-        leave_request._onchange_leave_dates()
+        leave_request._compute_number_of_days()
         self.assertEqual(leave_request.number_of_days, 5)
 
     def test_number_days_across_year(self):
@@ -161,7 +162,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_1.id,
             }
         )
-        leave_request._onchange_leave_dates()
+        leave_request._compute_number_of_days()
         self.assertEqual(leave_request.number_of_days, 7)
 
     def test_number_days_across_year_2(self):
@@ -173,5 +174,5 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
-        leave_request._onchange_leave_dates()
+        leave_request._compute_number_of_days()
         self.assertEqual(leave_request.number_of_days, 5)
