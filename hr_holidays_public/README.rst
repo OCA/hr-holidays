@@ -114,6 +114,7 @@ Contributors
 * Salton Massally (iDT Labs) <smassally@idtlabs.sl>
 * Ivan Yelizariev <yelizariev@it-projects.info>
 * Bassirou Ndaw <b.ndaw@ergobit.org>
+* Dhara Solanki <dhara.solanki@initos.com>
 * `Tecnativa <https://www.tecnativa.com>`__:
 
   * Pedro M. Baeza

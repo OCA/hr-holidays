@@ -1,4 +1,5 @@
 # Copyright 2015 2011,2013 Michael Telahun Makonnen <mmakonnen@gmail.com>
+# Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
@@ -10,7 +11,7 @@
     "Tecnativa, "
     "Fekete Mihai (Forest and Biomass Services Romania), "
     "Druidoo, "
-    "Odoo Community Association (OCA)",
+    "Odoo Community Association (OCA),",
     "summary": "Manage Public Holidays",
     "website": "https://github.com/OCA/hr-holidays",
     "depends": ["hr_holidays"],
