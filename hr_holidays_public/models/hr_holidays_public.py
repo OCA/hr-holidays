@@ -1,4 +1,5 @@
 # Copyright 2015 2011,2013 Michael Telahun Makonnen <mmakonnen@gmail.com>
+# Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from datetime import date
@@ -187,9 +188,7 @@ class HrHolidaysPublicLine(models.Model):
             "start": self.date,
             "stop": self.date,
             "allday": True,
-            "partner_ids": False,
             "user_id": SUPERUSER_ID,
-            "state": "open",
             "privacy": "confidential",
             "show_as": "busy",
         }
