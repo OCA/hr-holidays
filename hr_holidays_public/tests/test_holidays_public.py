@@ -1,5 +1,6 @@
 # Copyright 2015 Salton Massally <smassally@idtlabs.sl>
 # Copyright 2018 Brainbean Apps (https://brainbeanapps.com)
+# Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from datetime import date

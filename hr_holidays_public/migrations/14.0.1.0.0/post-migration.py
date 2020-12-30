@@ -1,4 +1,5 @@
 # Copyright 2019 Druidoo - Iván Todorovich <ivan.todorovich@druidoo.io>
+# Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import logging
