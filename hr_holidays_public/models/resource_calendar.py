@@ -42,12 +42,20 @@ class ResourceCalendar(models.Model):
             lines = HrHolidaysPublic.get_holidays_list(
                 day.year, employee_id=employee_id
             )
+            # In some cases, an error appears about mixing 2 models
+            # (hr.holidays.public.line + resource.calendar.leaves)
+            # in _leave_intervals or _leave_intervals_batch functions
+            # It only happen when both holidays and leaves exist.
+            # The solution is to pass an empty leave in the tuple instead
+            # of the public holiday line record, as this element has no
+            # further use except the union operation.
+            resource_leave_model = self.env["resource.calendar.leaves"]
             for line in lines:
                 leaves.append(
                     (
                         datetime.combine(line.date, time.min).replace(tzinfo=tz),
                         datetime.combine(line.date, time.max).replace(tzinfo=tz),
-                        line,
+                        resource_leave_model,
                     )
                 )
         return Intervals(leaves)
