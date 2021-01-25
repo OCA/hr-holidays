@@ -38,7 +38,7 @@ the leave type configuration.
 Configuration
 =============
 
-Go to *Leaves -> Configuration* and open a Leave Type
+Go to *Time Off -> Configuration -> Time Off Types* and open a Leave Type
 
 * Check "Exclude Public Holidays" to exclude public holidays.
 
@@ -47,12 +47,12 @@ Usage
 
 For adding public holidays:
 
-#. Go to the menu *Leaves > Public Holidays > Public Holidays*.
+#. Go to the menu *Time Off -> Public Holidays -> Public Holidays*.
 #. Create your public holidays.
 
 For using public holidays on leaves:
 
-#. Go to *Leaves > Dashboard*.
+#. Go to *Time Off > Dashboard*.
 #. Select dragging on the calendar the days you want to be on leave, or go
    to the form view for selecting start and end dates.
 #. Select the proper "Leave Type" that has "Exclude Public Holidays" checked.
