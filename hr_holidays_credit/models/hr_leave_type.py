@@ -1,7 +1,7 @@
 # Copyright (C) 2018 Brainbean Apps (https://brainbeanapps.com)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.tools.float_utils import float_round
 
 
@@ -31,12 +31,9 @@ class HrLeaveType(models.Model):
     creditable_department_ids = fields.Many2many(
         string="Creditable Departments",
         comodel_name="hr.department",
-        help=(
-            "If set, limits credit allowance to employees of specified" " departments"
-        ),
+        help=("If set, limits credit allowance to employees of specified departments"),
     )
 
-    @api.multi
     def name_get(self):
         context_employee_id = self._context.get("employee_id")
 
