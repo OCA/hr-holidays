@@ -2,6 +2,7 @@
 # Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import datetime
 from datetime import date
 
 from odoo import SUPERUSER_ID, _, api, fields, models
@@ -56,15 +57,23 @@ class HrHolidaysPublic(models.Model):
 
     @api.model
     @api.returns("hr.holidays.public.line")
-    def get_holidays_list(self, year, employee_id=None):
+    def get_holidays_list(
+        self, year=None, start_dt=None, end_dt=None, employee_id=None
+    ):
         """
         Returns recordset of hr.holidays.public.line
         for the specified year and employee
-        :param year: year as string
+        :param year: year as string (optional if start_dt and end_dt defined)
+        :param start_dt: start_dt as date
+        :param end_dt: end_dt as date
         :param employee_id: ID of the employee
         :return: recordset of hr.holidays.public.line
         """
-        holidays_filter = [("year", "=", year)]
+        if not start_dt and not end_dt:
+            start_dt = datetime.date(year, 1, 1)
+            end_dt = datetime.date(year, 12, 31)
+        years = list(range(start_dt.year, end_dt.year + 1))
+        holidays_filter = [("year", "in", years)]
         employee = False
         if employee_id:
             employee = self.env["hr.employee"].browse(employee_id)
@@ -89,6 +98,8 @@ class HrHolidaysPublic(models.Model):
             ]
         else:
             states_filter.append(("state_ids", "=", False))
+        states_filter.append(("date", ">=", start_dt))
+        states_filter.append(("date", "<=", end_dt))
         hhplo = self.env["hr.holidays.public.line"]
         holidays_lines = hhplo.search(states_filter)
         return holidays_lines
@@ -102,7 +113,7 @@ class HrHolidaysPublic(models.Model):
         :return: bool
         """
         holidays_lines = self.get_holidays_list(
-            selected_date.year, employee_id=employee_id
+            year=selected_date.year, employee_id=employee_id
         )
         if holidays_lines:
             hol_date = holidays_lines.filtered(lambda r: r.date == selected_date)
