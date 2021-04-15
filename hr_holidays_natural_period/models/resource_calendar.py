@@ -1,4 +1,4 @@
-# Copyright 2020 Tecnativa - Víctor Martínez
+# Copyright 2020-2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from datetime import datetime, time
@@ -20,11 +20,10 @@ class ResourceCalendar(models.Model):
                 return True
         return False
 
-    def _natural_period_intervals_batch(
-        self, start_dt, end_dt, intervals, resources, tz
-    ):
+    def _natural_period_intervals_batch(self, start_dt, end_dt, intervals, resources):
         for resource in resources:
             interval_resource = intervals[resource.id]
+            tz = timezone(resource.tz)
             attendances = []
             if len(interval_resource._items) > 0:
                 attendances = interval_resource._items
@@ -48,8 +47,7 @@ class ResourceCalendar(models.Model):
             start_dt=start_dt, end_dt=end_dt, resources=resources, domain=domain, tz=tz
         )
         if self.env.context.get("natural_period"):
-            tz = tz if tz else timezone((resources[:1] or self).tz)
             return self._natural_period_intervals_batch(
-                start_dt, end_dt, res, resources, tz
+                start_dt, end_dt, res, resources
             )
         return res
