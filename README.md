@@ -19,7 +19,7 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[hr_holidays_public](hr_holidays_public/) | 14.0.1.0.0 | Manage Public Holidays
+[hr_holidays_public](hr_holidays_public/) | 14.0.1.0.1 | Manage Public Holidays
 
 [//]: # (end addons)
 
