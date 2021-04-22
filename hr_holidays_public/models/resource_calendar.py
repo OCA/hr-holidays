@@ -39,7 +39,7 @@ class ResourceCalendar(models.Model):
         res = super()._attendance_intervals_batch(
             start_dt=start_dt, end_dt=end_dt, resources=resources, domain=domain, tz=tz
         )
-        if self.env.context.get("exclude_public_holidays"):
+        if self.env.context.get("exclude_public_holidays") and resources:
             return self._attendance_intervals_batch_exclude_public_holidays(
                 start_dt, end_dt, res, resources, tz
             )
