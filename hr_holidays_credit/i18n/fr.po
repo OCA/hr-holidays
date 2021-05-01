@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hr_holidays_credit
+# 	* hr_holidays_credit
 #
 msgid ""
 msgstr ""
@@ -17,25 +17,25 @@ msgstr ""
 "X-Generator: Weblate 3.6.1\n"
 
 #. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:70
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%(name)s (%(extra)s)"
 msgstr "%(name)s (%(extra)s)"
 
 #. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:54
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%g available"
 msgstr "%g disponible"
 
 #. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:52
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%g available + credit"
 msgstr "%g disponible + credit"
 
 #. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:62
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%g used in credit"
 msgstr "%g utilisé en crédit"
@@ -62,7 +62,9 @@ msgstr "Employé(e)s admissibles"
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__allow_credit
-msgid "If set to true, employees would be able to make requests for this leave type even if allocated amount is insufficient."
+msgid ""
+"If set to true, employees would be able to make requests for this leave type "
+"even if allocated amount is insufficient."
 msgstr ""
 "Si la valeur est « true », les employés pourront demander ce type de congé "
 "même si le montant alloué est insuffisant."
@@ -76,7 +78,9 @@ msgstr ""
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_employee_category_ids
-msgid "If set, limits credit allowance to employees with at least one of specified tags"
+msgid ""
+"If set, limits credit allowance to employees with at least one of specified "
+"tags"
 msgstr ""
 "Si défini, limite l’allocation de crédit aux employés ayant au moins une des "
 "étiquettes spécifiées"
@@ -88,10 +92,16 @@ msgstr "Si défini, limite l'allocation de crédit à certains employés"
 
 #. module: hr_holidays_credit
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave
-msgid "Leave"
-msgstr "Congé"
+msgid "Time Off"
+msgstr ""
 
 #. module: hr_holidays_credit
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Type de congé"
+msgid "Time Off Type"
+msgstr ""
+
+#~ msgid "Leave"
+#~ msgstr "Congé"
+
+#~ msgid "Leave Type"
+#~ msgstr "Type de congé"
