@@ -21,7 +21,7 @@ class ResourceCalendar(models.Model):
         return False
 
     def _natural_period_intervals_batch(self, start_dt, end_dt, intervals, resources):
-        for resource in resources:
+        for resource in resources or []:
             interval_resource = intervals[resource.id]
             tz = timezone(resource.tz)
             attendances = []
