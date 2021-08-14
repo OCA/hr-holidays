@@ -17,9 +17,9 @@ TODO: add repo description.
 
 Available addons
 ----------------
-addon | version | summary
---- | --- | ---
-[hr_holidays_public](hr_holidays_public/) | 14.0.1.0.2 | Manage Public Holidays
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[hr_holidays_public](hr_holidays_public/) | 14.0.1.0.2 |  | Manage Public Holidays
 
 [//]: # (end addons)
 
