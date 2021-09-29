@@ -195,20 +195,50 @@ class TestHolidaysPublic(TransactionCase):
         hline.unlink()
         self.assertFalse(meeting_id.exists())
 
-    def test_get_unusual_days_return_public_holidays(self):
+    def assertPublicHolidayIsUnusualDay(self, expected, country_id=None):
         self.assertFalse(
             self.env["hr.leave"]
             .with_user(self.env.ref("base.user_demo").id)
-            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"]
+            .get_unusual_days("2019-07-01", date_to="2019-07-31")
+            .get("2019-07-30", False)
         )
-        holiday = self.holiday_model.create(
-            {"year": 2019, "country_id": self.env.ref("base.us").id}
-        )
+        holiday = self.holiday_model.create({"year": 2019, "country_id": country_id})
         self.holiday_model_line.create(
             {"name": "holiday x", "date": "2019-07-30", "year_id": holiday.id}
         )
-        self.assertTrue(
+        self.assertEqual(
             self.env["hr.leave"]
             .with_user(self.env.ref("base.user_demo").id)
-            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"]
+            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
+            expected,
         )
+
+    def test_get_unusual_days_return_public_holidays_same_country(self):
+        self.assertPublicHolidayIsUnusualDay(
+            True,
+            country_id=self.env.ref(
+                "base.user_demo"
+            ).employee_id.address_id.country_id.id,
+        )
+
+    def test_get_unusual_days_return_general_public_holidays(self):
+        self.assertPublicHolidayIsUnusualDay(True, country_id=False)
+
+    def test_get_unusual_days_not_return_public_holidays_different_country(self):
+        self.env.ref("base.user_demo").employee_id.address_id.country_id = self.env.ref(
+            "base.fr"
+        )
+        self.assertPublicHolidayIsUnusualDay(False, self.env.ref("base.us").id)
+
+    def test_get_unusual_days_return_public_holidays_fallback_to_company_country(self):
+        self.env.ref("base.user_demo").employee_id.address_id.country_id = False
+        self.assertPublicHolidayIsUnusualDay(
+            True, country_id=self.env.company.country_id.id
+        )
+
+    def test_get_unusual_days_not_return_public_holidays_fallback_to_company_country(
+        self,
+    ):
+        self.env.ref("base.user_demo").employee_id.address_id.country_id = False
+        self.env.company.country_id = self.env.ref("base.fr")
+        self.assertPublicHolidayIsUnusualDay(False, self.env.ref("base.us").id)
