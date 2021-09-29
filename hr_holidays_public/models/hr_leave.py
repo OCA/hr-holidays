@@ -31,6 +31,17 @@ class HrLeave(models.Model):
                     date_to,
                 )
             )
+        country_id = self.env.user.employee_id.address_id.country_id.id
+        if not country_id:
+            country_id = self.env.company.country_id.id or False
+        if country_id:
+            domain.extend(
+                [
+                    "|",
+                    ("year_id.country_id", "=", False),
+                    ("year_id.country_id", "=", country_id),
+                ]
+            )
         public_holidays = self.env["hr.holidays.public.line"].search(domain)
         for public_holiday in public_holidays:
             res[fields.Date.to_string(public_holiday.date)] = True
