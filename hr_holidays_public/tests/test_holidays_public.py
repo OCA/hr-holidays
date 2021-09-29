@@ -194,3 +194,21 @@ class TestHolidaysPublic(TransactionCase):
         self.assertTrue(meeting_id)
         hline.unlink()
         self.assertFalse(meeting_id.exists())
+
+    def test_get_unusual_days_return_public_holidays(self):
+        self.assertFalse(
+            self.env["hr.leave"]
+            .with_user(self.env.ref("base.user_demo").id)
+            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"]
+        )
+        holiday = self.holiday_model.create(
+            {"year": 2019, "country_id": self.env.ref("base.us").id}
+        )
+        self.holiday_model_line.create(
+            {"name": "holiday x", "date": "2019-07-30", "year_id": holiday.id}
+        )
+        self.assertTrue(
+            self.env["hr.leave"]
+            .with_user(self.env.ref("base.user_demo").id)
+            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"]
+        )
