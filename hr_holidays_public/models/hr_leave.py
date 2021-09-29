@@ -2,7 +2,7 @@
 # Copyright 2018 Brainbean Apps
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import models
+from odoo import api, fields, models
 
 
 class HrLeave(models.Model):
@@ -18,3 +18,20 @@ class HrLeave(models.Model):
         return super(HrLeave, instance)._get_number_of_days(
             date_from, date_to, employee_id
         )
+
+    @api.model
+    def get_unusual_days(self, date_from, date_to=None):
+        res = super().get_unusual_days(date_from, date_to=date_to)
+        domain = [("date", ">=", date_from)]
+        if date_to:
+            domain.append(
+                (
+                    "date",
+                    "<",
+                    date_to,
+                )
+            )
+        public_holidays = self.env["hr.holidays.public.line"].search(domain)
+        for public_holiday in public_holidays:
+            res[fields.Date.to_string(public_holiday.date)] = True
+        return res
