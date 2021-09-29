@@ -15,3 +15,7 @@ For using public holidays on leaves:
    selected employee, including global, country and state holidays.
 #. If no employee is yet selected, only global holidays will be taken into
    account.
+
+In calendar views in HR holiday app public will be display
+(likes other unusual days) according the current user employee country. If not set
+the there is a fallback to the current company country to filter public holidays.
