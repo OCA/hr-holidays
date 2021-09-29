@@ -195,7 +195,9 @@ class TestHolidaysPublic(TransactionCase):
         hline.unlink()
         self.assertFalse(meeting_id.exists())
 
-    def assertPublicHolidayIsUnusualDay(self, expected, country_id=None):
+    def assertPublicHolidayIsUnusualDay(
+        self, expected, country_id=None, state_ids=False
+    ):
         self.assertFalse(
             self.env["hr.leave"]
             .with_user(self.env.ref("base.user_demo").id)
@@ -204,7 +206,12 @@ class TestHolidaysPublic(TransactionCase):
         )
         holiday = self.holiday_model.create({"year": 2019, "country_id": country_id})
         self.holiday_model_line.create(
-            {"name": "holiday x", "date": "2019-07-30", "year_id": holiday.id}
+            {
+                "name": "holiday x",
+                "date": "2019-07-30",
+                "year_id": holiday.id,
+                "state_ids": state_ids,
+            }
         )
         self.assertEqual(
             self.env["hr.leave"]
@@ -228,7 +235,9 @@ class TestHolidaysPublic(TransactionCase):
         self.env.ref("base.user_demo").employee_id.address_id.country_id = self.env.ref(
             "base.fr"
         )
-        self.assertPublicHolidayIsUnusualDay(False, self.env.ref("base.us").id)
+        self.assertPublicHolidayIsUnusualDay(
+            False, country_id=self.env.ref("base.us").id
+        )
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_country(self):
         self.env.ref("base.user_demo").employee_id.address_id.country_id = False
@@ -241,4 +250,51 @@ class TestHolidaysPublic(TransactionCase):
     ):
         self.env.ref("base.user_demo").employee_id.address_id.country_id = False
         self.env.company.country_id = self.env.ref("base.fr")
-        self.assertPublicHolidayIsUnusualDay(False, self.env.ref("base.us").id)
+        self.assertPublicHolidayIsUnusualDay(
+            False, country_id=self.env.ref("base.us").id
+        )
+
+    def test_get_unusual_days_return_public_holidays_same_state(self):
+        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
+        demo_user_empl_addr.country_id = self.env.ref("base.us")
+        demo_user_empl_addr.state_id = self.env.ref("base.state_us_4")
+        self.assertPublicHolidayIsUnusualDay(
+            True,
+            country_id=self.env.ref(
+                "base.user_demo"
+            ).employee_id.address_id.country_id.id,
+            state_ids=[(6, 0, [demo_user_empl_addr.state_id.id])],
+        )
+
+    def test_get_unusual_days_not_return_public_holidays_different_state(self):
+        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
+        demo_user_empl_addr.country_id = self.env.ref("base.us")
+        demo_user_empl_addr.state_id = self.env.ref("base.state_us_4")
+        self.assertPublicHolidayIsUnusualDay(
+            False,
+            country_id=self.env.ref("base.us").id,
+            state_ids=[(6, 0, [self.env.ref("base.state_us_35").id])],
+        )
+
+    def test_get_unusual_days_return_public_holidays_fallback_to_company_state(self):
+        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
+        demo_user_empl_addr.country_id = self.env.ref("base.us")
+        demo_user_empl_addr.state_id = self.env.ref("base.state_us_35")
+        self.assertPublicHolidayIsUnusualDay(
+            True,
+            country_id=demo_user_empl_addr.country_id.id,
+            state_ids=[(6, 0, [self.env.company.state_id.id])],
+        )
+
+    def test_get_unusual_days_not_return_public_holidays_fallback_to_company_state(
+        self,
+    ):
+        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
+        demo_user_empl_addr.country_id = self.env.ref("base.us")
+        demo_user_empl_addr.state_id = False
+        self.env.company.state_id = self.env.ref("base.state_us_4")
+        self.assertPublicHolidayIsUnusualDay(
+            False,
+            country_id=demo_user_empl_addr.country_id.id,
+            state_ids=[(6, 0, [self.env.ref("base.state_us_3").id])],
+        )
