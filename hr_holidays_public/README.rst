@@ -25,10 +25,12 @@ HR Holidays Public
 
 |badge1| |badge2| |badge3| |badge4| |badge5| 
 
-This module is a technical module to handle public holidays.
+This module handles public holidays.
 
 The calculation of each leave can exclude rest public holiday, depending on
 the leave type configuration.
+
+In HR holiday app, public holiday will be displayed as unusual days (grey like weekends).
 
 **Table of contents**
 
@@ -62,6 +64,10 @@ For using public holidays on leaves:
    selected employee, including global, country and state holidays.
 #. If no employee is yet selected, only global holidays will be taken into
    account.
+
+In calendar views in HR holiday app public will be display
+(likes other unusual days) according the current user employee country/state. If not set
+the there is a fallback to the current company country/state to filter public holidays.
 
 Known issues / Roadmap
 ======================

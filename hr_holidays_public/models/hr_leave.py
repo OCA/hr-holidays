@@ -44,7 +44,7 @@ class HrLeave(models.Model):
             )
         state_id = self.env.user.employee_id.address_id.state_id.id
         if not state_id:
-            country_id = self.env.company.state_id.id or False
+            state_id = self.env.company.state_id.id or False
         if state_id:
             domain.extend(
                 [
