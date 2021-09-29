@@ -221,6 +221,8 @@ class TestHolidaysPublic(TransactionCase):
         )
 
     def test_get_unusual_days_return_public_holidays_same_country(self):
+        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
+        self.env.company.state_id = False
         self.assertPublicHolidayIsUnusualDay(
             True,
             country_id=self.env.ref(
@@ -229,9 +231,13 @@ class TestHolidaysPublic(TransactionCase):
         )
 
     def test_get_unusual_days_return_general_public_holidays(self):
+        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
+        self.env.company.state_id = False
         self.assertPublicHolidayIsUnusualDay(True, country_id=False)
 
     def test_get_unusual_days_not_return_public_holidays_different_country(self):
+        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
+        self.env.company.state_id = False
         self.env.ref("base.user_demo").employee_id.address_id.country_id = self.env.ref(
             "base.fr"
         )
@@ -240,6 +246,8 @@ class TestHolidaysPublic(TransactionCase):
         )
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_country(self):
+        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
+        self.env.company.state_id = False
         self.env.ref("base.user_demo").employee_id.address_id.country_id = False
         self.assertPublicHolidayIsUnusualDay(
             True, country_id=self.env.company.country_id.id
@@ -248,6 +256,8 @@ class TestHolidaysPublic(TransactionCase):
     def test_get_unusual_days_not_return_public_holidays_fallback_to_company_country(
         self,
     ):
+        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
+        self.env.company.state_id = False
         self.env.ref("base.user_demo").employee_id.address_id.country_id = False
         self.env.company.country_id = self.env.ref("base.fr")
         self.assertPublicHolidayIsUnusualDay(
@@ -277,12 +287,10 @@ class TestHolidaysPublic(TransactionCase):
         )
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_state(self):
-        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
-        demo_user_empl_addr.country_id = self.env.ref("base.us")
-        demo_user_empl_addr.state_id = self.env.ref("base.state_us_35")
+        self.env.ref("base.user_demo").employee_id = False
         self.assertPublicHolidayIsUnusualDay(
             True,
-            country_id=demo_user_empl_addr.country_id.id,
+            country_id=self.env.company.country_id.id,
             state_ids=[(6, 0, [self.env.company.state_id.id])],
         )
 
