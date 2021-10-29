@@ -40,4 +40,4 @@ class HolidaysRequest(models.Model):
     def _check_leave_type_validity(self):
         if not self.env.context.get("compute_warning_range", False):
             self = self.filtered("restrict_dates")
-        super(HolidaysRequest, self)._check_leave_type_validity()
+        return super(HolidaysRequest, self)._check_leave_type_validity()
