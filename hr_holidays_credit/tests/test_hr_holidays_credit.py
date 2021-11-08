@@ -132,7 +132,9 @@ class TestHrHolidaysCredit(common.TransactionCase):
             }
         )
 
-        name = leave_type.with_context(employee_id=employee.id,).name_get()[0][1]
+        name = leave_type.with_context(employee_id=employee.id,).name_get()[
+            0
+        ][1]
         self.assertTrue("available" in name)
         self.assertTrue("credit" not in name)
 
@@ -142,7 +144,9 @@ class TestHrHolidaysCredit(common.TransactionCase):
             {"name": "Leave Type #6", "allocation_type": "fixed", "allow_credit": True}
         )
 
-        name = leave_type.with_context(employee_id=employee.id,).name_get()[0][1]
+        name = leave_type.with_context(employee_id=employee.id,).name_get()[
+            0
+        ][1]
         self.assertTrue("available + credit" in name)
 
     def test_7(self):
@@ -159,5 +163,7 @@ class TestHrHolidaysCredit(common.TransactionCase):
             }
         )
 
-        name = leave_type.with_context(employee_id=employee.id,).name_get()[0][1]
+        name = leave_type.with_context(employee_id=employee.id,).name_get()[
+            0
+        ][1]
         self.assertTrue("used in credit" in name)
