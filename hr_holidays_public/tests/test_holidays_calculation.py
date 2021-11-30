@@ -176,3 +176,18 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
         )
         leave_request._compute_number_of_days()
         self.assertEqual(leave_request.number_of_days, 5)
+
+    def test_number_of_hours_excluding_employee_2(self):
+        self.holiday_type.request_unit = "hour"
+        leave_request = self.HrLeave.new(
+            {
+                "date_from": "1946-12-23 00:00:00",  # Monday
+                "date_to": "1946-12-29 23:59:59",  # Sunday
+                "holiday_status_id": self.holiday_type.id,
+                "employee_id": self.employee_2.id,
+            }
+        )
+        leave_request.action_validate()
+
+        self.assertEqual(leave_request.number_of_days, 2)
+        self.assertEqual(leave_request.number_of_hours_display, 16)
