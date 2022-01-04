@@ -38,10 +38,10 @@ class TestHolidaysPublic(TransactionCase):
             {"name": "holiday 6", "date": "1994-11-14", "year_id": holiday3.id}
         )
 
-        holiday1 = self.holiday_model.create({"year": 1995})
+        self.holiday1 = self.holiday_model.create({"year": 1995})
         for dt in ["1995-10-14", "1995-12-31", "1995-01-01"]:
             self.holiday_model_line.create(
-                {"name": "holiday x", "date": dt, "year_id": holiday1.id}
+                {"name": "holiday x", "date": dt, "year_id": self.holiday1.id}
             )
 
         self.employee = self.employee_model.create(
@@ -140,8 +140,16 @@ class TestHolidaysPublic(TransactionCase):
         self.assertEqual(len(lines), 3)
 
     def test_create_next_year_public_holidays(self):
+        old_meeting = self.holiday1.line_ids[0].meeting_id
         self.wizard_next_year.new().create_public_holidays()
+        # Ensure that the previous meeting date is preserved
+        self.assertEqual(old_meeting.start.year, 1995)
         lines = self.holiday_model.get_holidays_list(1996)
+        # The meeting is not the same for the new entries
+        self.assertFalse(any(x.meeting_id == old_meeting for x in lines))
+        # There's a meeting for the new entries
+        self.assertTrue(lines[0].meeting_id)
+        self.assertEqual(lines[0].meeting_id.start.year, 1996)
         res = lines.filtered(lambda r: r.date == date(1996, 10, 14))
         self.assertEqual(len(res), 1)
         self.assertEqual(len(lines), 3)

@@ -4,7 +4,7 @@
 
 {
     "name": "HR Holidays Public",
-    "version": "14.0.2.0.2",
+    "version": "14.0.2.0.3",
     "license": "AGPL-3",
     "category": "Human Resources",
     "author": "Michael Telahun Makonnen, "
