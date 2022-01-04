@@ -140,7 +140,7 @@ class HrHolidaysPublicLine(models.Model):
         "state_id",
         "Related States",
     )
-    meeting_id = fields.Many2one("calendar.event", string="Meeting")
+    meeting_id = fields.Many2one("calendar.event", string="Meeting", copy=False)
 
     @api.constrains("date", "state_ids")
     def _check_date_state(self):
