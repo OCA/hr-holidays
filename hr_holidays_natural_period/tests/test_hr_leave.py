@@ -1,7 +1,7 @@
 # Copyright 2020 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.tests import common
+from odoo.tests import Form, common
 
 
 class TestHrLeave(common.SavepointCase):
@@ -17,6 +17,18 @@ class TestHrLeave(common.SavepointCase):
             }
         )
         calendar = cls.env.ref("resource.resource_calendar_std")
+        calendar = calendar.copy({"name": "Test calendar"})
+        calendar.switch_calendar_type()
+        calendar.attendance_ids.filtered(
+            lambda x: x.week_type == "0"
+            and not x.display_type
+            and x.day_period == "afternoon"
+        ).unlink()
+        calendar.attendance_ids.filtered(
+            lambda x: x.week_type == "1"
+            and not x.display_type
+            and x.day_period == "morning"
+        ).unlink()
         partner = cls.env["res.partner"].create(
             {
                 "name": "Test employee",
@@ -33,25 +45,19 @@ class TestHrLeave(common.SavepointCase):
         )
 
     def test_hr_leave_natural_day(self):
-        leave_request = self.HrLeave.new(
-            {
-                "date_from": "2021-01-02 00:00:00",
-                "date_to": "2021-01-04 23:59:59",
-                "holiday_status_id": self.leave_type.id,
-                "employee_id": self.employee.id,
-            }
+        leave_form = Form(
+            self.HrLeave.with_context(default_employee_id=self.employee.id,)
         )
-        leave_request._onchange_leave_dates()
-        self.assertEquals(leave_request.number_of_days, 3.0)
+        leave_form.holiday_status_id = self.leave_type
+        leave_form.request_date_from = "2021-01-02"
+        leave_form.request_date_to = "2021-01-05"
+        self.assertEquals(leave_form.number_of_days, 4.0)
 
     def test_hr_leave_day(self):
-        leave_request = self.HrLeave.new(
-            {
-                "date_from": "2021-01-02 00:00:00",  # Saturday
-                "date_to": "2021-01-05 00:00:00",  # Monday
-                "holiday_status_id": self.env.ref("hr_holidays.holiday_status_cl").id,
-                "employee_id": self.employee.id,
-            }
+        leave_form = Form(
+            self.HrLeave.with_context(default_employee_id=self.employee.id,)
         )
-        leave_request._onchange_leave_dates()
-        self.assertEquals(leave_request.number_of_days, 1)
+        leave_form.holiday_status_id = self.env.ref("hr_holidays.holiday_status_cl")
+        leave_form.request_date_from = "2021-01-02"  # Saturday
+        leave_form.request_date_to = "2021-01-04"  # Monday
+        self.assertEquals(leave_form.number_of_days, 1)
