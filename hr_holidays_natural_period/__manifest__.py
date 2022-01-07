@@ -6,7 +6,7 @@
     "summary": "Apply natural days in holidays",
     "version": "13.0.1.0.2",
     "category": "Human Resources",
-    "website": "https://github.com/OCA/hr-holidays/",
+    "website": "https://github.com/OCA/hr-holidays",
     "author": "Tecnativa, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "installable": True,
