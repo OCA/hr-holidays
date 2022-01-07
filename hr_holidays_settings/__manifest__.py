@@ -5,7 +5,7 @@
     "summary": "Enables Settings Form for HR Holidays.",
     "version": "13.0.1.0.0",
     "category": "Human Resources",
-    "website": "https://github.com/OCA/hr",
+    "website": "https://github.com/OCA/hr-holidays",
     "author": "ForgeFlow, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "depends": ["hr_holidays"],
