@@ -16,7 +16,7 @@ class ResourceCalendar(models.Model):
 
     def _exist_interval_in_date(self, intervals, date):
         for interval in intervals:
-            if interval[0].date == date:
+            if interval[0].date() == date:
                 return True
         return False
 
