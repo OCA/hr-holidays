@@ -4,13 +4,10 @@
 # Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo.tests import common
+from odoo.tests.common import TransactionCase
 
 
-class TestHolidaysComputeDaysBase(common.SavepointCase):
-    at_install = False
-    post_install = True
-
+class TestHolidaysComputeDaysBase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHolidaysComputeDaysBase, cls).setUpClass()
