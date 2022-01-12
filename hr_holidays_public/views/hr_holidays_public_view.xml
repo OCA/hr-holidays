@@ -4,7 +4,7 @@
         <field name="name">hr.holidays.public.tree</field>
         <field name="model">hr.holidays.public</field>
         <field name="arch" type="xml">
-            <tree string="Public Holidays">
+            <tree>
                 <field name="display_name" />
                 <field name="country_id" />
             </tree>
@@ -26,7 +26,7 @@
                 </group>
                 <group string="Public Holidays" name="group_detail">
                     <field name="line_ids" nolabel="1">
-                        <tree string="Public Holidays" editable="top">
+                        <tree editable="top">
                             <field
                                 name="date"
                                 attrs="{'readonly':[['variable_date', '=', False]]}"
