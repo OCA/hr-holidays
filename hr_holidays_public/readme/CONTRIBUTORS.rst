@@ -21,3 +21,7 @@
 * `Druidoo <https://www.druidoo.io>`__:
 
   * Iván Todorovich <ivan.todorovich@gmail.com>
+
+* `Pesol <https://www.pesol.es>`__:
+
+  * Pedro Evaristo Gonzalez Sanchez <pedro.gonzalez@pesol.es>

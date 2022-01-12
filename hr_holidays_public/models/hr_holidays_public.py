@@ -127,8 +127,8 @@ class HrHolidaysPublicLine(models.Model):
     _description = "Public Holidays Lines"
     _order = "date, name desc"
 
-    name = fields.Char("Name", required=True)
-    date = fields.Date("Date", required=True)
+    name = fields.Char(required=True)
+    date = fields.Date(required=True)
     year_id = fields.Many2one(
         "hr.holidays.public", "Calendar Year", required=True, ondelete="cascade"
     )
