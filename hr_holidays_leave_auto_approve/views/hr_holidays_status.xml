@@ -4,7 +4,7 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='validation']">
+            <xpath expr="//group[@name='validity']">
                 <field name="auto_approve_policy" />
             </xpath>
         </field>
