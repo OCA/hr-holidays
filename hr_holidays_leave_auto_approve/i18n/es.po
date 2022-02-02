@@ -23,21 +23,21 @@ msgstr ""
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave_type__auto_approve_policy
 msgid "Auto Approve Policy"
-msgstr ""
+msgstr "Política automática de aprobación"
 
 #. module: hr_holidays_leave_auto_approve
 #: selection:hr.leave.type,auto_approve_policy:0
 #, fuzzy
 #| msgid "Auto Validate"
 msgid "Auto Validated by Everyone"
-msgstr "Aprobación automática"
+msgstr "Auto validado por todos"
 
 #. module: hr_holidays_leave_auto_approve
 #: selection:hr.leave.type,auto_approve_policy:0
 #, fuzzy
 #| msgid "Auto Validate"
 msgid "Auto Validated by HR"
-msgstr "Aprobación automática"
+msgstr "Auto validado por Recursos Humanos"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave
@@ -54,7 +54,7 @@ msgstr "Tipo de ausencia"
 #, fuzzy
 #| msgid "Auto Validate"
 msgid "No auto Validation"
-msgstr "Aprobación automática"
+msgstr "Sin validación automática"
 
 #~ msgid ""
 #~ "If True, leaves belonging to this leave type will be automatically "
