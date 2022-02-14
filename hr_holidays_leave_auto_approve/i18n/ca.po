@@ -6,40 +6,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2022-02-14 11:16+0000\n"
+"Last-Translator: Noel estudillo <noelestudilloviera@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3.2\n"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave_type__auto_approve_policy
 msgid "Auto Approve Policy"
-msgstr ""
+msgstr "Política d'auto aprovació"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__all
 msgid "Auto Validated by Everyone"
-msgstr ""
+msgstr "Validat automàticament per tothom"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__hr
 msgid "Auto Validated by HR"
-msgstr ""
+msgstr "Validat automàticament per RRHH"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__no
 msgid "No auto Validation"
-msgstr ""
+msgstr "Sense validació automàtica"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave
 msgid "Time Off"
-msgstr ""
+msgstr "Temps de descans"
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Tipus de temps de descans"
