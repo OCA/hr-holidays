@@ -11,9 +11,8 @@
         "hr_holidays",
         "hr_timesheet_overview",
     ],
-    "website": "http://www.camptocamp.com",
+    "website": "https://github.com/OCA/hr-holidays",
     "data": [
-        "security/ir.model.access.csv",
         "views/hr_employee_leave_report_views.xml",
     ],
     "installable": True,

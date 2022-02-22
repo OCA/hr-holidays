@@ -1,6 +1,7 @@
 # Copyright 2022 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from datetime import datetime
 
 from freezegun import freeze_time
 
@@ -21,23 +22,37 @@ class TestHours(SavepointCase):
                 "wage": 100,
             }
         )
-
-    @freeze_time("2022-02-10")
-    def test_contract_dates(self):
-        self.assertEqual(
-            self.test_employee.last_hours_report_date.strftime("%Y-%m-%d"), "2022-02-01"
-        )
-        self.hour_obj.action_generate_data(employee_ids=self.test_employee.ids)
-        self.assertEqual(
-            self.test_employee.last_hours_report_date.strftime("%Y-%m-%d"), "2022-02-10"
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Legal Leaves",
+                "time_type": "leave",
+                "allocation_type": "no",
+                "validity_start": False,
+            }
         )
 
     @freeze_time("2022-02-10")
-    def test_create_hours_missing(self):
-        self.hour_obj.action_generate_data(employee_ids=self.test_employee.ids)
-        hours_missing = self.hour_obj.search(
-            [("employee_id", "=", self.test_employee.id)]
+    def test_create_leave(self):
+        start = datetime(2022, 2, 3, 8, 0, 0)
+        end = datetime(2022, 2, 3, 19, 0, 0)
+        self.env["hr.leave"].create(
+            {
+                "name": "1leave",
+                "employee_id": self.test_employee.id,
+                "holiday_status_id": self.leave_type.id,
+                "date_from": start,
+                "date_to": end,
+                "number_of_days": 1,
+            }
         )
-        # missing attendance from 01.02.2022 to 10.02.2022 created
-        self.assertEqual(len(hours_missing), 7)
-        self.assertEqual(sum(hours_missing.mapped("hours_qty")), -56)
+        self.hour_obj.action_generate_data(employee_ids=self.test_employee.ids)
+        leave_request_hours = self.hour_obj.search(
+            [
+                ("employee_id", "=", self.test_employee.id),
+                ("type", "=", "leave_request"),
+            ]
+        )
+        self.assertEqual(len(leave_request_hours), 1)
+        self.assertEqual(leave_request_hours.days_qty, 1)
+
+        # TODO test leave on weekend?

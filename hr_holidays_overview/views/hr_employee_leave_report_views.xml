@@ -1,34 +1,89 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
+    <record id="hr_employee_hour_tree_view" model="ir.ui.view">
+        <field name="name">hr.employee.hour.tree</field>
+        <field name="model">hr.employee.hour</field>
+        <field
+            name="inherit_id"
+            ref="hr_timesheet_overview.hr_employee_hour_tree_view"
+        />
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="leave_state" optional="show" />
+            </field>
+        </field>
+    </record>
+
 
     <record id="hr_employee_leave_report_search_view" model="ir.ui.view">
         <field name="name">hr.employee.leave.report.search</field>
         <field name="model">hr.employee.hour</field>
         <field name="arch" type="xml">
             <search string="Leaves Report">
-                <field name="employee_id"/>
-                <field name="user_id"/>
-                <field name="date"/>
-                <field name="type"/>
-                <field name="manager_id"/>
+                <field name="employee_id" />
+                <field name="user_id" />
+                <field name="date" />
+                <field name="type" />
+                <field name="manager_id" />
                 <group expand="1" string="Group By">
-                    <filter name="filter_my_report" domain="[('user_id', '=', uid)]"
-                            string="My report"/>
-                    <filter name="filter_my_team" domain="[('manager_id', '=', uid)]"
-                            string="My team"/>
-                    <separator/>
-                    <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
-                    <filter string="Planned" name="filter_planned" domain="[('unplanned', '=', False)]"/>
-                    <filter string="Unplanned" name="filter_unplanned" domain="[('unplanned', '=', True)]"/>
-                    <separator/>
-                    <filter name="filter_today" string="Until today"
-                            domain="[('date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter name="filter_this_year" string="This Year"
-                            domain="[('date', '&gt;=', context_today().strftime('%Y-01-01')),('date', '&lt;=', context_today().strftime('%Y-12-30'))]"/>
-                    <filter name="filter_employee" string="Employee"
-                            context="{'group_by':'employee_id'}"/>
-                    <filter name="filter_user" string="User"
-                            context="{'group_by':'user_id'}"/>
+                    <filter
+                        string="Leave"
+                        name="filter_type_leave"
+                        domain="[('type', 'in', ('leave_request', 'leave_allocation'))]"
+                    />
+                    <filter
+                        name="filter_my_report"
+                        domain="[('user_id', '=', uid)]"
+                        string="My report"
+                    />
+                    <filter
+                        name="filter_my_team"
+                        domain="[('manager_id', '=', uid)]"
+                        string="My team"
+                    />
+                    <separator />
+                    <filter
+                        name="filter_worked"
+                        domain="[('sum_type', '=', 'add')]"
+                        string="Worked"
+                    />
+                    <filter
+                        name="filter_scheduled"
+                        domain="[('sum_type', '=', 'remove')]"
+                        string="Scheduled"
+                    />
+                    <filter
+                        string="Planned"
+                        name="filter_planned"
+                        domain="[('unplanned', '=', False)]"
+                    />
+                    <filter
+                        string="Unplanned"
+                        name="filter_unplanned"
+                        domain="[('unplanned', '=', True)]"
+                    />
+                    <separator />
+                    <filter
+                        name="filter_today"
+                        string="Until today"
+                        domain="[('date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"
+                    />
+                    <filter
+                        name="filter_this_year"
+                        string="This Year"
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-01-01')),('date', '&lt;=', context_today().strftime('%Y-12-30'))]"
+                    />
+                    <filter
+                        name="filter_employee"
+                        string="Employee"
+                        context="{'group_by':'employee_id'}"
+                    />
+                    <filter
+                        name="filter_user"
+                        string="User"
+                        context="{'group_by':'user_id'}"
+                    />
                 </group>
             </search>
         </field>
@@ -38,12 +93,10 @@
         <field name="name">Leaves Report</field>
         <field name="res_model">hr.employee.hour</field>
         <field name="view_mode">graph,pivot,tree</field>
-        <field name="search_view_id"
-               ref="hr_employee_leave_report_search_view"/>
+        <field name="search_view_id" ref="hr_employee_leave_report_search_view" />
         <field name="context">{
             'group_by': [],
-            'search_default_filter_my_report': 1,
-            'search_default_filter_planned': 1,
+            'search_default_filter_type_leave': 1,
             }
         </field>
         <field name="help" type="html">
@@ -53,8 +106,12 @@
         </field>
     </record>
 
-    <menuitem id="menu_hr_employee_leave_report" name="Leaves Report"
-              parent="hr_timesheet_overview.menu_hr_report_dashboard" sequence="10"
-              action="action_hr_employee_leave_report"/>
+    <menuitem
+        id="menu_hr_employee_leave_report"
+        name="Leaves Report"
+        parent="hr_timesheet_overview.menu_hr_report_dashboard"
+        sequence="10"
+        action="action_hr_employee_leave_report"
+    />
 
 </odoo>
