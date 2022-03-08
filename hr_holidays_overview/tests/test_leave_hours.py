@@ -18,8 +18,9 @@ class TestHours(SavepointCase):
             {
                 "name": "Test contract",
                 "employee_id": cls.test_employee.id,
-                "last_hours_report_date": "2022-02-01",
+                "hours_report_last_update": "2022-02-01",
                 "wage": 100,
+                "state": "open",
             }
         )
         cls.leave_type = cls.env["hr.leave.type"].create(

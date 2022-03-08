@@ -37,7 +37,7 @@ class HrEmployeeHour(models.Model):
         return [
             ("employee_id", "=", employee.id),
             ("state", "not in", ("draft", "cancel", "refuse")),
-            ("date_from", ">=", employee.last_hours_report_date),
+            ("date_from", ">=", employee.hours_report_last_update),
         ]
 
     @api.model
@@ -46,11 +46,11 @@ class HrEmployeeHour(models.Model):
         return [
             ("employee_id", "=", employee.id),
             ("state", "not in", ("draft", "cancel", "refuse")),
-            ("date_from", ">=", employee.last_hours_report_date),
+            ("date_from", ">=", employee.hours_report_last_update),
         ]
 
     @api.model
-    def _prepare_leave_allocation_values(self, employee, date_from=None, date_to=None):
+    def _prepare_leave_allocation_values(self, employee, date_from=None):
         """Retrieve leave allocations values
 
         :param employee: an employee record
@@ -111,10 +111,24 @@ class HrEmployeeHour(models.Model):
             )
         return values_list
 
-    def _create_values_per_employee(self, employee, date):
-        super()._create_values_per_employee(employee, date)
+    def create_employee_values(self, employee):
+        super().create_employee_values(employee)
         # For leaves and holidays, we need to have a whole year view
+        self._create_leave_allocation_records(
+            employee, employee.hours_report_last_update
+        )
+        self._create_leave_request_records(employee, employee.hours_report_last_update)
+
+    def _create_leave_allocation_records(self, employee, date):
+        hr_obj = self.env["hr.leave.allocation"]
+        self._clean_records(employee, employee.hours_report_last_update, hr_obj)
+        _logger.info(f"Generating timesheet hours for '{employee.name}' from {date}")
         leave_alloc_values = self._prepare_leave_allocation_values(employee)
+        self.create(leave_alloc_values)
+
+    def _create_leave_request_records(self, employee, date):
+        hr_obj = self.env["hr.leave"]
+        self._clean_records(employee, employee.hours_report_last_update, hr_obj)
+        _logger.info(f"Generating timesheet hours for '{employee.name}' from {date}")
         leave_request_values = self._prepare_leave_request_values(employee)
-        self.create(leave_request_values + leave_alloc_values)
-        return
+        self.create(leave_request_values)
