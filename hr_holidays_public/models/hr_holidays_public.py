@@ -73,36 +73,30 @@ class HrHolidaysPublic(models.Model):
             start_dt = datetime.date(year, 1, 1)
             end_dt = datetime.date(year, 12, 31)
         years = list(range(start_dt.year, end_dt.year + 1))
-        holidays_filter = [("year", "in", years)]
-        employee = False
-        if employee_id:
-            employee = self.env["hr.employee"].browse(employee_id)
-            if employee.address_id and employee.address_id.country_id:
-                holidays_filter.append("|")
-                holidays_filter.append(("country_id", "=", False))
-                holidays_filter.append(
-                    ("country_id", "=", employee.address_id.country_id.id)
-                )
+        domain = [
+            ("year_id.year", "in", years),
+            ("date", ">=", start_dt),
+            ("date", "<=", end_dt),
+        ]
+        employee = employee_id and self.env["hr.employee"].browse(employee_id)
+        if employee:
+            if employee.address_id.country_id:
+                domain += [
+                    "|",
+                    ("year_id.country_id", "=", False),
+                    ("year_id.country_id", "=", employee.address_id.country_id.id),
+                ]
             else:
-                holidays_filter.append(("country_id", "=", False))
-        pholidays = self.search(holidays_filter)
-        if not pholidays:
-            return self.env["hr.holidays.public.line"]
-
-        states_filter = [("year_id", "in", pholidays.ids)]
-        if employee and employee.address_id and employee.address_id.state_id:
-            states_filter += [
-                "|",
-                ("state_ids", "=", False),
-                ("state_ids", "=", employee.address_id.state_id.id),
-            ]
-        else:
-            states_filter.append(("state_ids", "=", False))
-        states_filter.append(("date", ">=", start_dt))
-        states_filter.append(("date", "<=", end_dt))
-        hhplo = self.env["hr.holidays.public.line"]
-        holidays_lines = hhplo.search(states_filter)
-        return holidays_lines
+                domain += [("year_id.country_id", "=", False)]
+            if employee.address_id.state_id:
+                domain += [
+                    "|",
+                    ("state_ids", "=", False),
+                    ("state_ids", "=", employee.address_id.state_id.id),
+                ]
+            else:
+                domain += [("state_ids", "=", False)]
+        return self.env["hr.holidays.public.line"].search(domain)
 
     @api.model
     def is_public_holiday(self, selected_date, employee_id=None):
