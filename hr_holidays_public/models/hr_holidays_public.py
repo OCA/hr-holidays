@@ -213,12 +213,13 @@ class HrHolidaysPublicLine(models.Model):
             if rec.meeting_id:
                 rec.meeting_id.write(rec._prepare_holidays_meeting_values())
 
-    @api.model
-    def create(self, values):
-        res = super().create(values)
-        res.meeting_id = self.env["calendar.event"].create(
-            res._prepare_holidays_meeting_values()
-        )
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for record in res:
+            record.meeting_id = self.env["calendar.event"].create(
+                record._prepare_holidays_meeting_values()
+            )
         return res
 
     def unlink(self):
