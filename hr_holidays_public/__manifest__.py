@@ -14,7 +14,7 @@
     "Odoo Community Association (OCA),",
     "summary": "Manage Public Holidays",
     "website": "https://github.com/OCA/hr-holidays",
-    "depends": ["hr_holidays"],
+    "depends": ["hr_holidays", "hr_attendance"],
     "data": [
         "data/data.xml",
         "security/ir.model.access.csv",
