@@ -46,7 +46,9 @@ class TestHrLeave(common.SavepointCase):
 
     def test_hr_leave_natural_day(self):
         leave_form = Form(
-            self.HrLeave.with_context(default_employee_id=self.employee.id,)
+            self.HrLeave.with_context(
+                default_employee_id=self.employee.id,
+            )
         )
         leave_form.holiday_status_id = self.leave_type
         leave_form.request_date_from = "2021-01-02"
@@ -55,7 +57,9 @@ class TestHrLeave(common.SavepointCase):
 
     def test_hr_leave_day(self):
         leave_form = Form(
-            self.HrLeave.with_context(default_employee_id=self.employee.id,)
+            self.HrLeave.with_context(
+                default_employee_id=self.employee.id,
+            )
         )
         leave_form.holiday_status_id = self.env.ref("hr_holidays.holiday_status_cl")
         leave_form.request_date_from = "2021-01-02"  # Saturday
