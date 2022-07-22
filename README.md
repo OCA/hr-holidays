@@ -22,6 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [hr_holidays_credit](hr_holidays_credit/) | 14.0.1.0.0 |  | Enable negative leave balance for employees
+[hr_holidays_natural_period](hr_holidays_natural_period/) | 14.0.1.0.0 | [![victoralmau](https://github.com/victoralmau.png?size=30px)](https://github.com/victoralmau) | Apply natural days in holidays
 [hr_holidays_public](hr_holidays_public/) | 14.0.2.0.5 |  | Manage Public Holidays
 
 [//]: # (end addons)
