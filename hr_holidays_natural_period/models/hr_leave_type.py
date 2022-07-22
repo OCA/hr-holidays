@@ -7,4 +7,7 @@ from odoo import fields, models
 class HrLeaveType(models.Model):
     _inherit = "hr.leave.type"
 
-    request_unit = fields.Selection(selection_add=[("natural_day", "Natural day")])
+    request_unit = fields.Selection(
+        selection_add=[("natural_day", "Natural day")],
+        ondelete={"natural_day": "set default"},
+    )
