@@ -21,7 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[hr_holidays_public](hr_holidays_public/) | 15.0.1.0.1 |  | Manage Public Holidays
+[hr_holidays_public](hr_holidays_public/) | 15.0.1.1.0 |  | Manage Public Holidays
 
 [//]: # (end addons)
 
