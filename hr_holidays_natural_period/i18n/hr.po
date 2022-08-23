@@ -6,7 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2022-08-23 12:07+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: none\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -14,49 +15,50 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.3.2\n"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_resource_calendar__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazani naziv"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave__id
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type__id
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_resource_calendar__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave____last_update
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type____last_update
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_resource_calendar____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnje modificirano"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_type__request_unit__natural_day
 msgid "Natural day"
-msgstr ""
+msgstr "Cijeli dan"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Radno vrijeme resursa"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type__request_unit
 msgid "Take Time Off in"
-msgstr ""
+msgstr "Uzmi slobodno kao"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave
 msgid "Time Off"
-msgstr ""
+msgstr "Slobodno vrijeme"
 
 #. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Tip slobodnog vremena"
