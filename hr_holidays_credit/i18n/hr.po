@@ -6,7 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2022-08-23 12:07+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: none\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -14,40 +15,41 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.3.2\n"
 
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%(name)s (%(extra)s)"
-msgstr ""
+msgstr "%(name)s (%(extra)s)"
 
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%g available"
-msgstr ""
+msgstr "%g raspoloživo"
 
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%g available + credit"
-msgstr ""
+msgstr "%g raspoloživo + unaprijed"
 
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%g used in credit"
-msgstr ""
+msgstr "%g korišteno unaprijed"
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__allow_credit
 msgid "Allow Credit"
-msgstr ""
+msgstr "Odobri korištenje unaprijed"
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__creditable_department_ids
 msgid "Creditable Departments"
-msgstr ""
+msgstr "Odjeli koji mogu koristiti unaprijed"
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__creditable_employee_category_ids
