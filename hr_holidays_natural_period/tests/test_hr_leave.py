@@ -4,17 +4,13 @@
 from odoo.tests import Form, common
 
 
-class TestHrLeave(common.SavepointCase):
+class TestHrLeave(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.HrLeave = cls.env["hr.leave"]
-        cls.leave_type = cls.env["hr.leave.type"].create(
-            {
-                "name": "Test partner",
-                "request_unit": "natural_day",
-                "responsible_id": cls.env.ref("base.user_admin").id,
-            }
+        cls.leave_type = cls.env.ref(
+            "hr_holidays_natural_period.hr_leave_type_natural_day_test"
         )
         calendar = cls.env.ref("resource.resource_calendar_std")
         calendar = calendar.copy({"name": "Test calendar"})
