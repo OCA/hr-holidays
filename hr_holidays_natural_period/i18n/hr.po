@@ -18,27 +18,6 @@ msgstr ""
 "X-Generator: Weblate 4.3.2\n"
 
 #. module: hr_holidays_natural_period
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave__display_name
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type__display_name
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_resource_calendar__display_name
-msgid "Display Name"
-msgstr "Prikazani naziv"
-
-#. module: hr_holidays_natural_period
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave__id
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type__id
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_resource_calendar__id
-msgid "ID"
-msgstr "ID"
-
-#. module: hr_holidays_natural_period
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave____last_update
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_type____last_update
-#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_resource_calendar____last_update
-msgid "Last Modified on"
-msgstr "Zadnje modificirano"
-
-#. module: hr_holidays_natural_period
 #: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_type__request_unit__natural_day
 msgid "Natural day"
 msgstr "Cijeli dan"
@@ -54,6 +33,11 @@ msgid "Take Time Off in"
 msgstr "Uzmi slobodno kao"
 
 #. module: hr_holidays_natural_period
+#: model:hr.leave.type,name:hr_holidays_natural_period.hr_leave_type_natural_day_test
+msgid "Test Time Off (natural day)"
+msgstr ""
+
+#. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave
 msgid "Time Off"
 msgstr "Slobodno vrijeme"
@@ -62,3 +46,12 @@ msgstr "Slobodno vrijeme"
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Tip slobodnog vremena"
+
+#~ msgid "Display Name"
+#~ msgstr "Prikazani naziv"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Zadnje modificirano"
