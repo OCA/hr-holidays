@@ -32,6 +32,11 @@ msgid "Take Time Off in"
 msgstr "Preneu-vos un temps lliure"
 
 #. module: hr_holidays_natural_period
+#: model:hr.leave.type,name:hr_holidays_natural_period.hr_leave_type_natural_day_test
+msgid "Test Time Off (natural day)"
+msgstr ""
+
+#. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave
 msgid "Time Off"
 msgstr "Temps lliure"
