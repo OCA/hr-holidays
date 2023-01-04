@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo14-addon-hr_holidays_credit',
         'odoo14-addon-hr_holidays_leave_auto_approve',
+        'odoo14-addon-hr_holidays_leave_repeated',
         'odoo14-addon-hr_holidays_natural_period',
         'odoo14-addon-hr_holidays_public',
     ],
