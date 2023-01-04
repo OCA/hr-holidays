@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_leave_repeated_view_form" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']/.." position="after">
+                <field name="holiday_type_repeat" invisible="1" />
+                <div
+                    class="row"
+                    name="repeat_mode"
+                    attrs="{'invisible':[('holiday_type_repeat','!=',True)]}"
+                >
+                    <label class="col-2 mr-0" for="repeat_every" />
+                    <field name="repeat_every" class="col-2 pl-0" nolabel="1" />
+                    <label class="col-2 mr-0" for="repeat_mode" />
+                    <field name="repeat_mode" class="col-2 pl-0" nolabel="1" />
+                </div>
+                <div
+                    class="row"
+                    attrs="{'invisible':['|',('repeat_mode','=','times'),('holiday_type_repeat','!=',True)]}"
+                    name="repeat_date"
+                >
+                    <label class="col-2 mr-0" for="repeat_end_date" />
+                    <field name="repeat_end_date" class="col-2 pl-0" nolabel="1" />
+                </div>
+                <div
+                    class="row"
+                    attrs="{'invisible':['|',('repeat_mode','=','date'),('holiday_type_repeat','!=',True)]}"
+                    name="repeat_limit"
+                >
+                    <label class="col-2 mr-0" for="repeat_limit" />
+                    <field name="repeat_limit" class="col-2 pl-0" nolabel="1" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
