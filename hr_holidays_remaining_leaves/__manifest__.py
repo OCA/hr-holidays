@@ -9,7 +9,7 @@
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "depends": ["hr_holidays"],
-    "data": ["views/hr_leave_allocation_views.xml"],
+    "data": ["views/hr_leave_allocation.xml"],
     "installable": True,
     "application": False,
     "auto_install": False,
