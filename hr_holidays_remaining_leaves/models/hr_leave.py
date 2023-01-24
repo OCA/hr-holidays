@@ -22,6 +22,7 @@ class HolidaysAllocation(models.Model):
             allocation.remaining_leaves_days = allocation.number_of_days - sum(leaves.mapped('number_of_days'))
             allocation.remaining_leaves_hours = allocation.number_of_hours_display - sum(leaves.mapped('number_of_hours_display'))
     
+    # @api.depends('remaining_leaves_hours', 'remaining_leaves_days')
     def _compute_remaining_leaves_display(self):
         for allocation in self:
             allocation.remaining_leaves_display = '%g %s' % (
