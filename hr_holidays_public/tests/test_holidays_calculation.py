@@ -14,8 +14,6 @@ class TestHolidaysComputeDaysBase(TransactionCase):
         cls.HrLeave = cls.env["hr.leave"]
         cls.HrLeaveType = cls.env["hr.leave.type"]
         cls.HrHolidaysPublic = cls.env["hr.holidays.public"]
-        # Remove timezone for controlling data better
-        cls.env.user.tz = False
         cls.calendar = cls.env["resource.calendar"].create(
             {"name": "Calendar", "attendance_ids": []}
         )
