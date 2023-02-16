@@ -15,11 +15,16 @@ class HrLeave(models.Model):
         holiday. Unfortunately, no regression test can be added, being in a separate
         module.
         """
-        if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
-            self = self.with_context(
-                employee_id=self.employee_id.id, exclude_public_holidays=True
-            )
-        return super().action_validate()
+        for leave in self:
+            if (
+                leave.holiday_status_id.exclude_public_holidays
+                or not leave.holiday_status_id
+            ):
+                leave = leave.with_context(
+                    employee_id=leave.employee_id.id, exclude_public_holidays=True
+                )
+            super(HrLeave, leave).action_validate()
+        return True
 
     def _get_duration(self, check_leave_type=True, resource_calendar=None):
         if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
