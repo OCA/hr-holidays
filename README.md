@@ -25,7 +25,7 @@ addon | version | maintainers | summary
 [hr_holidays_leave_auto_approve](hr_holidays_leave_auto_approve/) | 14.0.1.0.0 |  | Leave type for auto-validation of Leaves
 [hr_holidays_leave_repeated](hr_holidays_leave_repeated/) | 14.0.1.0.0 |  | Define periodical leaves
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 14.0.1.0.0 | [![victoralmau](https://github.com/victoralmau.png?size=30px)](https://github.com/victoralmau) | Apply natural days in holidays
-[hr_holidays_public](hr_holidays_public/) | 14.0.2.1.0 |  | Manage Public Holidays
+[hr_holidays_public](hr_holidays_public/) | 14.0.2.1.1 |  | Manage Public Holidays
 
 [//]: # (end addons)
 
