@@ -9,48 +9,44 @@ from odoo.tests.common import TransactionCase
 
 
 class TestHolidaysPublic(TransactionCase):
-    at_install = False
-    post_install = True
-
-    def setUp(self):
-        super(TestHolidaysPublic, self).setUp()
-        self.holiday_model = self.env["hr.holidays.public"]
-        self.holiday_model_line = self.env["hr.holidays.public.line"]
-        self.employee_model = self.env["hr.employee"]
-        self.wizard_next_year = self.env["public.holidays.next.year.wizard"]
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.holiday_model = cls.env["hr.holidays.public"]
+        cls.holiday_model_line = cls.env["hr.holidays.public.line"]
+        cls.employee_model = cls.env["hr.employee"]
+        cls.wizard_next_year = cls.env["public.holidays.next.year.wizard"]
 
         # Remove possibly existing public holidays that would interfer.
-        self.holiday_model_line.search([]).unlink()
-        self.holiday_model.search([]).unlink()
+        cls.holiday_model_line.search([]).unlink()
+        cls.holiday_model.search([]).unlink()
 
         # Create holidays
-        holiday2 = self.holiday_model.create(
-            {"year": 1994, "country_id": self.env.ref("base.sl").id}
+        holiday2 = cls.holiday_model.create(
+            {"year": 1994, "country_id": cls.env.ref("base.sl").id}
         )
-        self.holiday_model_line.create(
+        cls.holiday_model_line.create(
             {"name": "holiday 5", "date": "1994-10-14", "year_id": holiday2.id}
         )
 
-        holiday3 = self.holiday_model.create(
-            {"year": 1994, "country_id": self.env.ref("base.sk").id}
+        holiday3 = cls.holiday_model.create(
+            {"year": 1994, "country_id": cls.env.ref("base.sk").id}
         )
-        self.holiday_model_line.create(
+        cls.holiday_model_line.create(
             {"name": "holiday 6", "date": "1994-11-14", "year_id": holiday3.id}
         )
 
-        self.holiday1 = self.holiday_model.create({"year": 1995})
+        cls.holiday1 = cls.holiday_model.create({"year": 1995})
         for dt in ["1995-10-14", "1995-12-31", "1995-01-01"]:
-            self.holiday_model_line.create(
-                {"name": "holiday x", "date": dt, "year_id": self.holiday1.id}
+            cls.holiday_model_line.create(
+                {"name": "holiday x", "date": dt, "year_id": cls.holiday1.id}
             )
 
-        self.employee = self.employee_model.create(
+        cls.employee = cls.employee_model.create(
             {
                 "name": "Employee 1",
-                "address_id": self.env["res.partner"]
-                .create(
-                    {"name": "Employee 1", "country_id": self.env.ref("base.sl").id}
-                )
+                "address_id": cls.env["res.partner"]
+                .create({"name": "Employee 1", "country_id": cls.env.ref("base.sl").id})
                 .id,
             }
         )
