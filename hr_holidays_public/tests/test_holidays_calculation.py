@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 class TestHolidaysComputeDaysBase(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestHolidaysComputeDaysBase, cls).setUpClass()
+        super().setUpClass()
         cls.HrLeave = cls.env["hr.leave"]
         cls.HrLeaveType = cls.env["hr.leave.type"]
         cls.HrHolidaysPublic = cls.env["hr.holidays.public"]
