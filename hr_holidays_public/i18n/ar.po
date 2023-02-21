@@ -93,6 +93,7 @@ msgid "Date may change"
 msgstr ""
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
@@ -166,6 +167,7 @@ msgid "Name"
 msgstr ""
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
@@ -185,7 +187,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays_public.menu_hr_public_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_tree
 msgid "Public Holidays"
 msgstr ""
 
@@ -266,6 +267,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
@@ -274,18 +276,21 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per date %s."
 msgstr ""
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per year and/or country"
 msgstr ""
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
