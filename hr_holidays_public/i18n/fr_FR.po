@@ -21,10 +21,13 @@ msgstr ""
 msgid ""
 "By default, the most recent public holidays\n"
 "                            for each country are used as template to create\n"
-"                            public holidays for the year following the templates.\n"
+"                            public holidays for the year following the "
+"templates.\n"
 "                            <br/><br/>\n"
-"                            Normally, you should not need to input anything in\n"
-"                            optional fields and only need to click on the button\n"
+"                            Normally, you should not need to input anything "
+"in\n"
+"                            optional fields and only need to click on the "
+"button\n"
 "                            \"Create\"."
 msgstr ""
 "Par défaut, les derniers jours fériés\n"
@@ -96,6 +99,7 @@ msgid "Date may change"
 msgstr "La date peut changer"
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
@@ -112,10 +116,7 @@ msgstr "Défauts"
 
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__display_name
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave__display_name
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard__display_name
-#: model:ir.model.fields,field_description:hr_holidays_public.field_resource_calendar__display_name
 msgid "Display Name"
 msgstr "Nom affiché"
 
@@ -132,10 +133,7 @@ msgstr "Date des vacances"
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public__id
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__id
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave__id
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type__id
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard__id
-#: model:ir.model.fields,field_description:hr_holidays_public.field_resource_calendar__id
 msgid "ID"
 msgstr "ID"
 
@@ -148,10 +146,7 @@ msgstr ""
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public____last_update
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line____last_update
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave____last_update
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type____last_update
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard____last_update
-#: model:ir.model.fields,field_description:hr_holidays_public.field_resource_calendar____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
 
@@ -181,6 +176,7 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
@@ -202,7 +198,6 @@ msgstr "Optionnel"
 #: model:ir.ui.menu,name:hr_holidays_public.menu_hr_public_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_tree
 msgid "Public Holidays"
 msgstr "Jours fériés"
 
@@ -244,9 +239,11 @@ msgstr "Modèles"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.holidays_public_next_year_wizard_view
 msgid ""
 "The below optional fields are here only to handle\n"
-"                            special situations like \"2011 was a special year with\n"
+"                            special situations like \"2011 was a special "
+"year with\n"
 "                            an additional public holiday for the 150th\n"
-"                            anniversary of the Italian unification, so you want to\n"
+"                            anniversary of the Italian unification, so you "
+"want to\n"
 "                            replicate the 2010 Italian holidays to 2012.\""
 msgstr ""
 "Les champs facultatifs ci-dessous sont uniquement destinés à\n"
@@ -274,7 +271,8 @@ msgid ""
 "Use this wizard to create public holidays based on the\n"
 "                            existing ones.<br/>\n"
 "                            Only the last templates of each country\n"
-"                            will be taken into account (If you select templates\n"
+"                            will be taken into account (If you select "
+"templates\n"
 "                            from 2012 and 2015 of the same country; '\n"
 "                            only the templates from 2015 will be taken into\n"
 "                            account)."
@@ -303,28 +301,32 @@ msgstr ""
 "suivant le modèle."
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
-"You can't create duplicate public holiday per date %s and one of the country"
-" states."
+"You can't create duplicate public holiday per date %s and one of the country "
+"states."
 msgstr ""
 "Vous ne pouvez pas créer un double jour férié par date %s et dans l’un des "
 "états du pays."
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per date %s."
 msgstr "Vous ne pouvez dupliquer ce jour férié par date %s."
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per year and/or country"
 msgstr "Vous ne pouvez pas créer de double jour férié par an et/ou par pays"
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""

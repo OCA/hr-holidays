@@ -102,6 +102,7 @@ msgid "Date may change"
 msgstr "Data variabile"
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
@@ -179,6 +180,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
@@ -200,7 +202,6 @@ msgstr "Opzionale"
 #: model:ir.ui.menu,name:hr_holidays_public.menu_hr_public_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_tree
 msgid "Public Holidays"
 msgstr "Giorni festivi"
 
@@ -304,6 +305,7 @@ msgstr ""
 "predefinita, l'anno successivo al template."
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid ""
@@ -314,18 +316,21 @@ msgstr ""
 "province della nazione."
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per date %s."
 msgstr "Non puoi creare un giorno festivo duplicato per la data %s."
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/models/hr_holidays_public.py:0
 #, python-format
 msgid "You can't create duplicate public holiday per year and/or country"
 msgstr "Non è possibile creare giorni festivi duplicati per anno e/o nazione"
 
 #. module: hr_holidays_public
+#. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid ""
