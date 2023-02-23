@@ -2,10 +2,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Hr Leave Hour",
+    "name": "Custom Hour Interval for Holidays",
     "summary": """
-        Custom hours with float fields""",
-    "version": "13.0.1.0.0",
+        Edit start and end of leaves using time intervals""",
+    "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "author": "Creu Blanca,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/hr-holidays",
