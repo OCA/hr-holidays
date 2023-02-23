@@ -17,8 +17,8 @@ msgstr ""
 
 #. module: hr_holidays_remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays_remaining_leaves.field_hr_leave_allocation__remaining_leaves_display
-msgid "Remaining (Days/Hours)"
-msgstr "Verbleibend (Tage / Stunden)"
+msgid "Remaining"
+msgstr "Verbleibend"
 
 #. module: hr_holidays_remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays_remaining_leaves.field_hr_leave_allocation__remaining_leaves
