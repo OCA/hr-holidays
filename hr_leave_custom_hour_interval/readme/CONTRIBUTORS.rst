@@ -1,2 +1,3 @@
 * Creu Blanca
-    * Olga Marco <olga.marco@creublanca.es>
+    * Olga Marco
+    * Enric Tobella
