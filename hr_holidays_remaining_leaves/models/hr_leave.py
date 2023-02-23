@@ -8,7 +8,7 @@ class HolidaysAllocation(models.Model):
 
     remaining_leaves_hours = fields.Float(compute='_compute_remaining_leaves')
     remaining_leaves_days = fields.Float(compute='_compute_remaining_leaves')
-    remaining_leaves_display = fields.Char('Remaining (Days/Hours)', compute='_compute_remaining_leaves_display')
+    remaining_leaves_display = fields.Char('Remaining', compute='_compute_remaining_leaves_display')
 
     def _compute_remaining_leaves(self):
         for allocation in self:
