@@ -26,13 +26,6 @@ class HrLeave(models.Model):
         for leave in self:
             leave.request_hour_to = "%.2f" % self.request_time_hour_to
 
-    @api.onchange(
-        "request_date_from_period",
-        "request_time_hour_from",
-        "request_time_hour_to",
-        "request_date_from",
-        "request_date_to",
-        "employee_id",
-    )
-    def _onchange_request_parameters(self):
-        return super(HrLeave, self)._onchange_request_parameters()
+    @api.depends("request_time_hour_from", "request_time_hour_to")
+    def _compute_date_from_to(self):
+        return super(HrLeave, self)._compute_date_from_to()
