@@ -6,8 +6,8 @@ from odoo.tools import float_utils
 # only be used when the one from the calendar
 # is not available.
 HOURS_PER_DAY = 8
-# This will generate 16th of days
-ROUNDING_FACTOR = 16
+# This will generate 64th of days
+ROUNDING_FACTOR = 64
 
 
 class ResourceCalendar(models.Model):
