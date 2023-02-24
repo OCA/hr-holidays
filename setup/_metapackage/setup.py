@@ -13,6 +13,7 @@ setuptools.setup(
         'odoo14-addon-hr_holidays_leave_repeated',
         'odoo14-addon-hr_holidays_natural_period',
         'odoo14-addon-hr_holidays_public',
+        'odoo14-addon-hr_leave_custom_hour_interval',
     ],
     classifiers=[
         'Programming Language :: Python',
