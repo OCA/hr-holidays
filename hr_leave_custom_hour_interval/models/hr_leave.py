@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class HrLeave(models.Model):
-
     _inherit = "hr.leave"
 
     request_time_hour_from = fields.Float("Float hour from")
@@ -28,4 +27,4 @@ class HrLeave(models.Model):
 
     @api.depends("request_time_hour_from", "request_time_hour_to")
     def _compute_date_from_to(self):
-        return super(HrLeave, self)._compute_date_from_to()
+        return super()._compute_date_from_to()
