@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 CreuBlanca
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="hr_leave_type_form_view">
+        <field name="name">hr.leave.type.form (in hr_holidays_auto_extend)</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
+        <field name="arch" type="xml">
+            <field name="request_unit" position="after">
+                <field name="auto_extend" widget="boolean_toggle" />
+                <field
+                    name="auto_extend_period"
+                    attrs="{'invisible':[('auto_extend', '=', False)]}"
+                />
+            </field>
+        </field>
+    </record>
+
+
+
+</odoo>
