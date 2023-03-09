@@ -31,7 +31,10 @@ class HolidaysAllocation(models.Model):
             leaves = self.env['hr.leave'].search([
                 ('employee_id', '=', allocation.employee_id.id),
                 ('state', '=', 'validate'),
-                ('holiday_status_id', '=',  allocation.holiday_status_id.id)
+                ('holiday_status_id', '=',  allocation.holiday_status_id.id),
+                '|',
+                ('holiday_allocation_id', '=', allocation.id),
+                ('holiday_allocation_id', '=', False)
             ])
 
             # Set the remaining leaves
