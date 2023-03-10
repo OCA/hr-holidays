@@ -2,7 +2,9 @@
 # Copyright 2018 Brainbean Apps (https://brainbeanapps.com)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from datetime import date
+from datetime import date, datetime
+
+import pytz
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
@@ -313,4 +315,41 @@ class TestHolidaysPublic(TransactionCase):
             False,
             country_id=demo_user_empl_addr.country_id.id,
             state_ids=[(6, 0, [self.env.ref("base.state_us_3").id])],
+        )
+
+    def test_calendar_attendance_interval_exclude_public_holidays(self):
+        # SK employee has holiday 3, so off on 1994-11-14
+        employee_sk = self.employee_model.create(
+            {
+                "name": "Employee Sk",
+                "address_id": self.env["res.partner"]
+                .create(
+                    {"name": "Employee Sk", "country_id": self.env.ref("base.sk").id}
+                )
+                .id,
+            }
+        )
+        resource_sk = employee_sk.resource_id
+        # SL employee has holiday2 so off on 1994-10-14
+        employee_sl = self.employee
+        resource_sl = employee_sl.resource_id
+        calendar = employee_sl.resource_id.calendar_id.with_context(
+            exclude_public_holidays=True
+        )
+        start_dt = datetime(1994, 10, 1, tzinfo=pytz.utc)
+        end_dt = datetime(1994, 11, 30, tzinfo=pytz.utc)
+        intervals_sk_sl = calendar._attendance_intervals_batch(
+            start_dt=start_dt, end_dt=end_dt, resources=resource_sk + resource_sl
+        )
+        intervals_sk = calendar._attendance_intervals_batch(
+            start_dt=start_dt, end_dt=end_dt, resources=resource_sk
+        )
+        intervals_sl = calendar._attendance_intervals_batch(
+            start_dt=start_dt, end_dt=end_dt, resources=resource_sl
+        )
+        self.assertEqual(
+            intervals_sk[resource_sk.id]._items, intervals_sk_sl[resource_sk.id]._items
+        )
+        self.assertEqual(
+            intervals_sl[resource_sl.id]._items, intervals_sk_sl[resource_sl.id]._items
         )

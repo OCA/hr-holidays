@@ -23,6 +23,7 @@ class ResourceCalendar(models.Model):
                     end_dt=end_dt.date(),
                     employee_id=self.env.context.get("employee_id", False),
                 )
+                .filtered(lambda rec: not rec.year_id.country_id)
                 .mapped("date")
             )
         }
@@ -47,9 +48,7 @@ class ResourceCalendar(models.Model):
         # even if employees and resource_country are empty
         # we still process holidays, so provide defaults
         for resource in resources:
-            interval_resource = intervals.get(
-                resource.id, Intervals(self.env["hr.attendance"])
-            )
+            interval_resource = intervals.get(resource.id, Intervals())
             attendances = []
             country = resource_country.get(resource.id, self.env["res.country"])
             holidays = holidays_by_country.get(country, set())
