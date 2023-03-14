@@ -8,6 +8,7 @@
     "category": "Human Resources",
     "version": "14.0.1.0.1",
     "license": "AGPL-3",
+    "demo":  ["demo/resource_data.xml"],
     "depends": ["resource"],
     "installable": True,
     "application": False,

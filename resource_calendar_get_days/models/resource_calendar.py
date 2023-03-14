@@ -2,12 +2,8 @@ from odoo import models
 from collections import defaultdict
 from odoo.tools import float_utils
 
-# Default hour per day value. The one should
-# only be used when the one from the calendar
-# is not available.
 HOURS_PER_DAY = 8
-# This will generate 64th of days
-ROUNDING_FACTOR = 64
+ROUNDING_FACTOR = 9600
 
 
 class ResourceCalendar(models.Model):
