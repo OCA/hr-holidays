@@ -172,6 +172,13 @@ msgstr "Nom"
 #. odoo-python
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
+msgid "New public holidays"
+msgstr ""
+
+#. module: hr_holidays_public
+#. odoo-python
+#: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
+#, python-format
 msgid ""
 "No Public Holidays found as template. Please create the first Public "
 "Holidays manually."
