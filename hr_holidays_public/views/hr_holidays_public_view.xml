@@ -24,24 +24,23 @@
                         <!-- Left empty for extensions -->
                     </group>
                 </group>
-                <group string="Public Holidays" name="group_detail">
-                    <field name="line_ids" nolabel="1">
-                        <tree editable="top">
-                            <field
-                                name="date"
-                                attrs="{'readonly':[['variable_date', '=', False]]}"
-                                force_save="1"
-                            />
-                            <field name="name" />
-                            <field
-                                name="state_ids"
-                                widget="many2many_tags"
-                                domain="[('country_id','=',parent.country_id)]"
-                            />
-                            <field name="variable_date" />
-                        </tree>
-                    </field>
-                </group>
+                <separator string="Public Holidays" name="group_detail" />
+                <field name="line_ids" nolabel="1">
+                    <tree editable="top">
+                        <field
+                            name="date"
+                            attrs="{'readonly':[['variable_date', '=', False]]}"
+                            force_save="1"
+                        />
+                        <field name="name" />
+                        <field
+                            name="state_ids"
+                            widget="many2many_tags"
+                            domain="[('country_id','=',parent.country_id)]"
+                        />
+                        <field name="variable_date" />
+                    </tree>
+                </field>
             </form>
         </field>
     </record>
