@@ -1,7 +1,9 @@
-# Copyright 2020-2022 Tecnativa - Víctor Martínez
+# Copyright 2020-2023 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.tests import Form, common
+from odoo import fields
+from odoo.tests import Form, common, new_test_user
+from odoo.tests.common import users
 
 
 class TestHrLeave(common.TransactionCase):
@@ -12,6 +14,8 @@ class TestHrLeave(common.TransactionCase):
         cls.leave_type = cls.env.ref(
             "hr_holidays_natural_period.hr_leave_type_natural_day_test"
         )
+        cls.leave_type_day = cls.env.ref("hr_holidays.holiday_status_cl")
+        cls.leave_type_day.employee_requests = "yes"
         calendar = cls.env.ref("resource.resource_calendar_std")
         calendar = calendar.copy({"name": "Test calendar"})
         calendar.switch_calendar_type()
@@ -32,32 +36,73 @@ class TestHrLeave(common.TransactionCase):
                 "country_id": cls.env.ref("base.es").id,
             }
         )
+        ctx = {
+            "mail_create_nolog": True,
+            "mail_create_nosubscribe": True,
+            "mail_notrack": True,
+            "no_reset_password": True,
+        }
+        cls.user = new_test_user(
+            cls.env,
+            login="test-user",
+            context=ctx,
+        )
         cls.employee = cls.env["hr.employee"].create(
             {
                 "name": "Test employee",
                 "address_home_id": partner.id,
                 "resource_calendar_id": calendar.id,
+                "user_id": cls.user.id,
             }
         )
 
-    def test_hr_leave_natural_day(self):
-        leave_form = Form(
-            self.HrLeave.with_context(
-                default_employee_id=self.employee.id,
+    def _create_leave_allocation(self, leave_type, days):
+        leave_allocation_form = Form(
+            self.env["hr.leave.allocation"].with_context(
+                default_date_from="2021-01-01",
+                default_date_to="%s-12-31" % (fields.Date.today().year),
             )
         )
-        leave_form.holiday_status_id = self.leave_type
-        leave_form.request_date_from = "2021-01-02"
-        leave_form.request_date_to = "2021-01-05"
-        self.assertEqual(leave_form.number_of_days, 4.0)
+        leave_allocation_form.name = "TEST"
+        leave_allocation_form.holiday_status_id = leave_type
+        leave_allocation_form.number_of_days_display = days
+        return leave_allocation_form.save()
 
+    def _create_hr_leave(self, leave_type, date_from, date_to):
+        leave_form = Form(self.env["hr.leave"])
+        leave_form.holiday_status_id = leave_type
+        leave_form.request_date_from = date_from
+        leave_form.request_date_to = date_to
+        return leave_form.save()
+
+    @users("test-user")
+    def test_hr_leave_natural_day(self):
+        leave_allocation = self._create_leave_allocation(self.leave_type, 5)
+        leave_allocation.action_confirm()
+        leave_allocation.sudo().action_validate()
+        res_leave_type = self.env["hr.leave.type"].get_days_all_request()[0][1]
+        self.assertEqual(res_leave_type["remaining_leaves"], "5")
+        self.assertEqual(res_leave_type["virtual_remaining_leaves"], "5")
+        self.assertEqual(res_leave_type["max_leaves"], "5")
+        self.assertEqual(res_leave_type["leaves_taken"], "0")
+        self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
+        self.assertEqual(res_leave_type["request_unit"], "natural_day")
+        leave = self._create_hr_leave(self.leave_type, "2021-01-02", "2021-01-05")
+        self.assertEqual(leave.number_of_days, 4.0)
+        self.assertEqual(leave.number_of_days_display, 4.0)
+
+    @users("test-user")
     def test_hr_leave_day(self):
-        leave_form = Form(
-            self.HrLeave.with_context(
-                default_employee_id=self.employee.id,
-            )
-        )
-        leave_form.holiday_status_id = self.env.ref("hr_holidays.holiday_status_cl")
-        leave_form.request_date_from = "2021-01-02"  # Saturday
-        leave_form.request_date_to = "2021-01-04"  # Monday
-        self.assertEqual(leave_form.number_of_days, 1)
+        leave_allocation = self._create_leave_allocation(self.leave_type_day, 5)
+        leave_allocation.action_confirm()
+        leave_allocation.sudo().action_validate()
+        res_leave_type = self.env["hr.leave.type"].get_days_all_request()[0][1]
+        self.assertEqual(res_leave_type["remaining_leaves"], "5")
+        self.assertEqual(res_leave_type["virtual_remaining_leaves"], "5")
+        self.assertEqual(res_leave_type["max_leaves"], "5")
+        self.assertEqual(res_leave_type["leaves_taken"], "0")
+        self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
+        self.assertEqual(res_leave_type["request_unit"], "day")
+        leave = self._create_hr_leave(self.leave_type_day, "2021-01-02", "2021-01-04")
+        self.assertEqual(leave.number_of_days, 1)
+        self.assertEqual(leave.number_of_days_display, 1)
