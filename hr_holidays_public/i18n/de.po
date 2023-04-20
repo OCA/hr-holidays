@@ -117,7 +117,10 @@ msgstr "Standards"
 
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__display_name
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard__display_name
+#: model:ir.model.fields,field_description:hr_holidays_public.field_resource_calendar__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -134,7 +137,10 @@ msgstr "Urlaubsdaten"
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public__id
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__id
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type__id
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard__id
+#: model:ir.model.fields,field_description:hr_holidays_public.field_resource_calendar__id
 msgid "ID"
 msgstr "ID"
 
@@ -148,7 +154,10 @@ msgstr ""
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public____last_update
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line____last_update
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type____last_update
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard____last_update
+#: model:ir.model.fields,field_description:hr_holidays_public.field_resource_calendar____last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
@@ -176,6 +185,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__name
 msgid "Name"
 msgstr "Bezeichnung"
+
+#. module: hr_holidays_public
+#: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
+#, python-format
+msgid "New public holidays"
+msgstr ""
 
 #. module: hr_holidays_public
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
