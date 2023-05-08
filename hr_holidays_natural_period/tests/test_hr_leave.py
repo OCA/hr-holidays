@@ -1,15 +1,26 @@
 # Copyright 2020-2023 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests import Form, common, new_test_user
 from odoo.tests.common import users
 
 
+@freeze_time("2021-01-01", tick=True)
 class TestHrLeave(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(
+            context=dict(
+                cls.env.context,
+                mail_create_nolog=True,
+                mail_create_nosubscribe=True,
+                mail_notrack=True,
+                no_reset_password=True,
+            )
+        )
         cls.HrLeave = cls.env["hr.leave"]
         cls.leave_type = cls.env.ref(
             "hr_holidays_natural_period.hr_leave_type_natural_day_test"
@@ -36,17 +47,7 @@ class TestHrLeave(common.TransactionCase):
                 "country_id": cls.env.ref("base.es").id,
             }
         )
-        ctx = {
-            "mail_create_nolog": True,
-            "mail_create_nosubscribe": True,
-            "mail_notrack": True,
-            "no_reset_password": True,
-        }
-        cls.user = new_test_user(
-            cls.env,
-            login="test-user",
-            context=ctx,
-        )
+        cls.user = new_test_user(cls.env, login="test-user")
         cls.employee = cls.env["hr.employee"].create(
             {
                 "name": "Test employee",
