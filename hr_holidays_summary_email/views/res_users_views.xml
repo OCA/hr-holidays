@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <record id="res_users_view_form_profile" model="ir.ui.view">
+        <field
+            name="name"
+        >res.users.preferences.form.inherit - hr_holidays_summary_email</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile" />
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field
+                    name="hr_leave_summary_type"
+                    attrs="{'readonly': [('can_edit', '=', False)]}"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

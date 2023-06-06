@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_holidays_summary_mail_template_daily" model="mail.template">
+            <field name="name">Leaves Summary: Daily</field>
+            <field name="model_id" ref="hr.model_hr_employee" />
+            <field name="subject">Daily Leaves Summary</field>
+            <field name="email_to">${object.work_email | safe}</field>
+            <field
+                name="email_from"
+            >${object.company_id.partner_id.email_formatted | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear ${object.name},</p>
+                    <br />
+                    <p>This is today's leave summary:</p>
+                    <br />
+                    <table
+                        style="border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;"
+                    >
+                        <tr>
+                            <th
+                                style="padding: 5px; border: 1px solid black;"
+                            >Employee</th>
+                            <th
+                                style="padding: 5px; border: 1px solid black;"
+                            >Time Off</th>
+                            <th style="padding: 5px; border: 1px solid black;">From</th>
+                            <th style="padding: 5px; border: 1px solid black;">To</th>
+                        </tr>
+                    % set timeoffs = ctx.get('time_offs', False)
+                    % for data in timeoffs
+                        % set d_from = data.format_hr_leave_summary_date()
+                        % set d_to = data.format_hr_leave_summary_date(False)
+                        <tr>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${data.employee_id.name}</td>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${data.name or ''}</td>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${d_from}</td>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${d_to}</td>
+                        </tr>
+                    % endfor
+                    </table>
+                </div>
+            </field>
+            <field name="lang">${object.lang}</field>
+            <field name="auto_delete" eval="True" />
+        </record>
+        <record id="hr_holidays_summary_mail_template_weekly" model="mail.template">
+            <field name="name">Leaves Summary: Weekly</field>
+            <field name="model_id" ref="hr.model_hr_employee" />
+            <field name="subject">Weekly Leaves Summary</field>
+            <field name="email_to">${object.work_email | safe}</field>
+            <field
+                name="email_from"
+            >${object.company_id.partner_id.email_formatted | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear ${object.name},</p>
+                    <br />
+                    <p>This is the leaves summary for this week:</p>
+                    <br />
+                    <table
+                        style="border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;"
+                    >
+                        <tr>
+                            <th
+                                style="padding: 5px; border: 1px solid black;"
+                            >Employee</th>
+                            <th
+                                style="padding: 5px; border: 1px solid black;"
+                            >Time Off</th>
+                            <th style="padding: 5px; border: 1px solid black;">From</th>
+                            <th style="padding: 5px; border: 1px solid black;">To</th>
+                        </tr>
+                    % set timeoffs = ctx.get('time_offs', False)
+                    % for data in timeoffs
+                        % set d_from = data.format_hr_leave_summary_date()
+                        % set d_to = data.format_hr_leave_summary_date(False)
+                        <tr>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${data.employee_id.name}</td>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${data.name or ''}</td>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${d_from}</td>
+                            <td
+                                style="padding: 5px; border: 1px solid black;"
+                            >${d_to}</td>
+                        </tr>
+                    % endfor
+                    </table>
+                </div>
+            </field>
+            <field name="lang">${object.lang}</field>
+            <field name="auto_delete" eval="True" />
+        </record>
+    </data>
+</odoo>
