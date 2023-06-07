@@ -7,7 +7,7 @@ from odoo.tests import Form, common, new_test_user
 from odoo.tests.common import users
 
 
-@freeze_time("2021-01-01", tick=True)
+@freeze_time("2023-01-01", tick=True)
 class TestHrLeave(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -60,7 +60,7 @@ class TestHrLeave(common.TransactionCase):
     def _create_leave_allocation(self, leave_type, days):
         leave_allocation_form = Form(
             self.env["hr.leave.allocation"].with_context(
-                default_date_from="2021-01-01",
+                default_date_from="2023-01-01",
                 default_date_to="%s-12-31" % (fields.Date.today().year),
             )
         )
@@ -88,7 +88,7 @@ class TestHrLeave(common.TransactionCase):
         self.assertEqual(res_leave_type["leaves_taken"], "0")
         self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
         self.assertEqual(res_leave_type["request_unit"], "natural_day")
-        leave = self._create_hr_leave(self.leave_type, "2021-01-02", "2021-01-05")
+        leave = self._create_hr_leave(self.leave_type, "2023-01-02", "2023-01-05")
         self.assertEqual(leave.number_of_days, 4.0)
         self.assertEqual(leave.number_of_days_display, 4.0)
 
@@ -104,6 +104,6 @@ class TestHrLeave(common.TransactionCase):
         self.assertEqual(res_leave_type["leaves_taken"], "0")
         self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
         self.assertEqual(res_leave_type["request_unit"], "day")
-        leave = self._create_hr_leave(self.leave_type_day, "2021-01-02", "2021-01-04")
-        self.assertEqual(leave.number_of_days, 1)
-        self.assertEqual(leave.number_of_days_display, 1)
+        leave = self._create_hr_leave(self.leave_type_day, "2023-01-08", "2023-01-15")
+        self.assertEqual(leave.number_of_days, 5)
+        self.assertEqual(leave.number_of_days_display, 5)
