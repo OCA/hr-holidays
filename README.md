@@ -26,6 +26,7 @@ addon | version | maintainers | summary
 [hr_holidays_leave_repeated](hr_holidays_leave_repeated/) | 14.0.1.0.0 |  | Define periodical leaves
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 14.0.1.0.0 | [![victoralmau](https://github.com/victoralmau.png?size=30px)](https://github.com/victoralmau) | Apply natural days in holidays
 [hr_holidays_public](hr_holidays_public/) | 14.0.2.1.2 |  | Manage Public Holidays
+[hr_holidays_settings](hr_holidays_settings/) | 14.0.1.0.0 |  | Enables Settings Form for HR Holidays.
 [hr_leave_custom_hour_interval](hr_leave_custom_hour_interval/) | 14.0.1.0.0 |  | Edit start and end of leaves using time intervals
 
 [//]: # (end addons)
