@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-hr-holidays Odoo addons",
     version=version,
     install_requires=[
+        'odoo-addon-hr_holidays_natural_period>=16.0dev,<16.1dev',
         'odoo-addon-hr_holidays_public>=16.0dev,<16.1dev',
     ],
     classifiers=[
