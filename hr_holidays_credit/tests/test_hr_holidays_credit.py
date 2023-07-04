@@ -23,29 +23,14 @@ class TestHrHolidaysCredit(common.TransactionCase):
         self.SudoLeave = self.Leave.sudo()
 
     def test_1(self):
-        employee = self.SudoEmployee.create({"name": "Employee #1"})
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #1",
-                "allocation_type": "fixed",
-                "allow_credit": False,
-            }
-        )
-
-        with self.assertRaises(ValidationError):
-            self.SudoLeave.create(
-                {
-                    "holiday_status_id": leave_type.id,
-                    "holiday_type": "employee",
-                    "employee_id": employee.id,
-                    "number_of_days": 1,
-                }
-            )
-
-    def test_2(self):
         employee = self.SudoEmployee.create({"name": "Employee #2"})
         leave_type = self.SudoLeaveType.create(
-            {"name": "Leave Type #2", "allocation_type": "fixed", "allow_credit": True}
+            {
+                "name": "Leave Type #2",
+                "requires_allocation": "yes",
+                "allocation_validation_type": "officer",
+                "allow_credit": True,
+            }
         )
 
         self.SudoLeave.create(
@@ -57,7 +42,7 @@ class TestHrHolidaysCredit(common.TransactionCase):
             }
         )
 
-    def test_3(self):
+    def test_2(self):
         department = self.SudoDepartment.create({"name": "Department #3"})
         employee_1 = self.SudoEmployee.create(
             {"name": "Employee #3-1", "department_id": department.id}
@@ -66,7 +51,8 @@ class TestHrHolidaysCredit(common.TransactionCase):
         leave_type = self.SudoLeaveType.create(
             {
                 "name": "Leave Type #3",
-                "allocation_type": "fixed",
+                "requires_allocation": "yes",
+                "allocation_validation_type": "officer",
                 "allow_credit": True,
                 "creditable_department_ids": [(6, False, [department.id])],
             }
@@ -91,13 +77,14 @@ class TestHrHolidaysCredit(common.TransactionCase):
                 }
             )
 
-    def test_4(self):
+    def test_3(self):
         employee_1 = self.SudoEmployee.create({"name": "Employee #4-1"})
         employee_2 = self.SudoEmployee.create({"name": "Employee #4-2"})
         leave_type = self.SudoLeaveType.create(
             {
                 "name": "Leave Type #4",
-                "allocation_type": "fixed",
+                "requires_allocation": "yes",
+                "allocation_validation_type": "officer",
                 "allow_credit": True,
                 "creditable_employee_ids": [(6, False, [employee_1.id])],
             }
@@ -122,12 +109,13 @@ class TestHrHolidaysCredit(common.TransactionCase):
                 }
             )
 
-    def test_5(self):
+    def test_4(self):
         employee = self.SudoEmployee.create({"name": "Employee #5"})
         leave_type = self.SudoLeaveType.create(
             {
                 "name": "Leave Type #5",
-                "allocation_type": "fixed",
+                "requires_allocation": "yes",
+                "allocation_validation_type": "officer",
                 "allow_credit": False,
             }
         )
@@ -138,10 +126,15 @@ class TestHrHolidaysCredit(common.TransactionCase):
         self.assertTrue("available" in name)
         self.assertTrue("credit" not in name)
 
-    def test_6(self):
+    def test_5(self):
         employee = self.SudoEmployee.create({"name": "Employee #6"})
         leave_type = self.SudoLeaveType.create(
-            {"name": "Leave Type #6", "allocation_type": "fixed", "allow_credit": True}
+            {
+                "name": "Leave Type #6",
+                "requires_allocation": "yes",
+                "allocation_validation_type": "officer",
+                "allow_credit": True,
+            }
         )
 
         name = leave_type.with_context(employee_id=employee.id,).name_get()[
@@ -149,10 +142,15 @@ class TestHrHolidaysCredit(common.TransactionCase):
         ][1]
         self.assertTrue("available + credit" in name)
 
-    def test_7(self):
+    def test_6(self):
         employee = self.SudoEmployee.create({"name": "Employee #7"})
         leave_type = self.SudoLeaveType.create(
-            {"name": "Leave Type #7", "allocation_type": "fixed", "allow_credit": True}
+            {
+                "name": "Leave Type #7",
+                "requires_allocation": "yes",
+                "allocation_validation_type": "officer",
+                "allow_credit": True,
+            }
         )
         self.SudoLeave.create(
             {

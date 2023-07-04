@@ -63,6 +63,8 @@ Contributors
   * Watcharaporn Charamrum <watcharapornc@ecosoft.co.th>
   * Tharathip Chaweewongphan <tharathipc@ecosoft.co.th>
 
+* Dhara Solanki <dhara.solanki@initos.com>
+
 Maintainers
 ~~~~~~~~~~~
 
