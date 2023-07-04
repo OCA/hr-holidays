@@ -85,7 +85,7 @@ class HrHolidaysPublic(models.Model):
                 )
             else:
                 holidays_filter.append(("country_id", "=", False))
-        pholidays = self.search(holidays_filter)
+        pholidays = self.sudo().search(holidays_filter)
         if not pholidays:
             return self.env["hr.holidays.public.line"]
 
@@ -101,7 +101,7 @@ class HrHolidaysPublic(models.Model):
         states_filter.append(("date", ">=", start_dt))
         states_filter.append(("date", "<=", end_dt))
         hhplo = self.env["hr.holidays.public.line"]
-        holidays_lines = hhplo.search(states_filter)
+        holidays_lines = hhplo.sudo().search(states_filter)
         return holidays_lines
 
     @api.model
