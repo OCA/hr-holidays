@@ -8,12 +8,12 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestHolidaysPublic(TransactionCase):
+class TestHolidaysPublicBase(TransactionCase):
     at_install = False
     post_install = True
 
     def setUp(self):
-        super(TestHolidaysPublic, self).setUp()
+        super().setUp()
         self.holiday_model = self.env["hr.holidays.public"]
         self.holiday_model_line = self.env["hr.holidays.public.line"]
         self.employee_model = self.env["hr.employee"]
@@ -55,6 +55,8 @@ class TestHolidaysPublic(TransactionCase):
             }
         )
 
+
+class TestHolidaysPublic(TestHolidaysPublicBase):
     def test_name_get(self):
         hol = self.holiday_model.create({"year": 1999})
         hol_name = hol.name_get()[0]
