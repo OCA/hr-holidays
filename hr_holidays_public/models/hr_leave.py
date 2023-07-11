@@ -48,9 +48,7 @@ class HrLeave(models.Model):
             super(HrLeave, leave)._compute_number_of_hours_display()
         return super(HrLeave, self - to_serialize)._compute_number_of_hours_display()
 
-    @api.model
-    def get_unusual_days(self, date_from, date_to=None):
-        res = super().get_unusual_days(date_from, date_to=date_to)
+    def _get_domain_from_get_unusual_days(self, date_from, date_to=None):
         domain = [("date", ">=", date_from)]
         if date_to:
             domain.append(
@@ -82,7 +80,14 @@ class HrLeave(models.Model):
                     ("state_ids", "=", False),
                 ]
             )
+        return domain
 
+    @api.model
+    def get_unusual_days(self, date_from, date_to=None):
+        res = super().get_unusual_days(date_from, date_to=date_to)
+        domain = self._get_domain_from_get_unusual_days(
+            date_from=date_from, date_to=date_to
+        )
         public_holidays = self.env["hr.holidays.public.line"].search(domain)
         for public_holiday in public_holidays:
             res[fields.Date.to_string(public_holiday.date)] = True
