@@ -55,6 +55,23 @@ class HrHolidaysPublic(models.Model):
             result.append((rec.id, rec.display_name))
         return result
 
+    def _get_domain_states_filter(self, pholidays, start_dt, end_dt, employee_id=None):
+        employee = False
+        if employee_id:
+            employee = self.env["hr.employee"].browse(employee_id)
+        states_filter = [("year_id", "in", pholidays.ids)]
+        if employee and employee.address_id and employee.address_id.state_id:
+            states_filter += [
+                "|",
+                ("state_ids", "=", False),
+                ("state_ids", "=", employee.address_id.state_id.id),
+            ]
+        else:
+            states_filter.append(("state_ids", "=", False))
+        states_filter.append(("date", ">=", start_dt))
+        states_filter.append(("date", "<=", end_dt))
+        return states_filter
+
     @api.model
     @api.returns("hr.holidays.public.line")
     def get_holidays_list(
@@ -89,17 +106,9 @@ class HrHolidaysPublic(models.Model):
         if not pholidays:
             return self.env["hr.holidays.public.line"]
 
-        states_filter = [("year_id", "in", pholidays.ids)]
-        if employee and employee.address_id and employee.address_id.state_id:
-            states_filter += [
-                "|",
-                ("state_ids", "=", False),
-                ("state_ids", "=", employee.address_id.state_id.id),
-            ]
-        else:
-            states_filter.append(("state_ids", "=", False))
-        states_filter.append(("date", ">=", start_dt))
-        states_filter.append(("date", "<=", end_dt))
+        states_filter = self._get_domain_states_filter(
+            pholidays, start_dt, end_dt, employee_id
+        )
         hhplo = self.env["hr.holidays.public.line"]
         holidays_lines = hhplo.search(states_filter)
         return holidays_lines
@@ -147,6 +156,21 @@ class HrHolidaysPublicLine(models.Model):
         for line in self:
             line._check_date_state_one()
 
+    def _get_domain_check_date_state_one_state_ids(self):
+        return [
+            ("date", "=", self.date),
+            ("year_id", "=", self.year_id.id),
+            ("state_ids", "!=", False),
+            ("id", "!=", self.id),
+        ]
+
+    def _get_domain_check_date_state_one(self):
+        return [
+            ("date", "=", self.date),
+            ("year_id", "=", self.year_id.id),
+            ("state_ids", "=", False),
+        ]
+
     def _check_date_state_one(self):
         if self.date.year != self.year_id.year:
             raise ValidationError(
@@ -157,12 +181,7 @@ class HrHolidaysPublicLine(models.Model):
             )
 
         if self.state_ids:
-            domain = [
-                ("date", "=", self.date),
-                ("year_id", "=", self.year_id.id),
-                ("state_ids", "!=", False),
-                ("id", "!=", self.id),
-            ]
+            domain = self._get_domain_check_date_state_one_state_ids()
             holidays = self.search(domain)
 
             for holiday in holidays:
@@ -175,11 +194,7 @@ class HrHolidaysPublicLine(models.Model):
                         )
                         % self.date
                     )
-        domain = [
-            ("date", "=", self.date),
-            ("year_id", "=", self.year_id.id),
-            ("state_ids", "=", False),
-        ]
+        domain = self._get_domain_check_date_state_one()
         if self.search_count(domain) > 1:
             raise ValidationError(
                 _("You can't create duplicate public holiday per date %s.") % self.date
