@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo-addon-hr_holidays_natural_period>=15.0dev,<15.1dev',
         'odoo-addon-hr_holidays_public>=15.0dev,<15.1dev',
+        'odoo-addon-hr_holidays_public_city>=15.0dev,<15.1dev',
         'odoo-addon-hr_leave_custom_hour_interval>=15.0dev,<15.1dev',
     ],
     classifiers=[
