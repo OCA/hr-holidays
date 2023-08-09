@@ -25,6 +25,12 @@ class HrLeave(models.Model):
 
         return super(HrLeave, uncreditable_requests)._check_holidays()
 
+    def _check_overtime_deductible(self, leaves):
+        uncreditable_leaves = leaves.filtered(
+            lambda holiday: not holiday._is_holiday_credit_allowed()
+        )
+        return super()._check_overtime_deductible(uncreditable_leaves)
+
     def _is_holiday_credit_allowed(self):
         self.ensure_one()
 

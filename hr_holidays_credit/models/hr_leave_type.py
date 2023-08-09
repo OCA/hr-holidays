@@ -68,38 +68,3 @@ class HrLeaveType(models.Model):
             res.append((record.id, record_name))
 
         return res
-
-    def get_employees_days(self, employee_ids, date=None):
-        """Use this method to compute the virtual remaining leaves
-        when the allow credit is enabled. In Odoo standard v15, it will
-        calculate only when the allocation is set."""
-        res = super().get_employees_days(employee_ids=employee_ids)
-        for record in self:
-            hr_leave = self.env["hr.leave"].search(
-                [
-                    ("employee_id", "in", employee_ids),
-                    ("state", "in", ["confirm", "validate1", "validate"]),
-                    ("holiday_status_id.id", "=", record.id),
-                ]
-            )
-            allocations = (
-                self.env["hr.leave.allocation"]
-                .with_context(active_test=False)
-                .search(
-                    [
-                        ("employee_id", "in", employee_ids),
-                        ("state", "in", ["validate"]),
-                        ("holiday_status_id", "in", record.ids),
-                    ]
-                )
-            )
-
-            for hr_leave_record in hr_leave:
-                if record.allow_credit and not allocations:
-                    virtual_remaining_leaves = res[hr_leave_record.employee_id.id][
-                        record.id
-                    ]["virtual_remaining_leaves"]
-                    res[hr_leave_record.employee_id.id][record.id][
-                        "virtual_remaining_leaves"
-                    ] = (virtual_remaining_leaves - hr_leave_record.number_of_days)
-        return res
