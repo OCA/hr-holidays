@@ -11,7 +11,7 @@ class HrLeave(models.Model):
         domain=[
             "|",
             ("has_valid_allocation", "=", True),
-            "|",
+            "&",
             ("requires_allocation", "=", "no"),
             ("allow_credit", "=", True),
         ]

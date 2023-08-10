@@ -1,7 +1,7 @@
 # Copyright (C) 2018 Brainbean Apps (https://brainbeanapps.com)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_round
 
 
@@ -32,6 +32,11 @@ class HrLeaveType(models.Model):
         comodel_name="hr.department",
         help=("If set, limits credit allowance to employees of specified departments"),
     )
+
+    @api.onchange("requires_allocation", "allocation_validation_type")
+    def _onchange_allow_credit(self):
+        if self.requires_allocation == "no" or self.allocation_validation_type == "no":
+            self.allow_credit = False
 
     def name_get(self):
         context_employee_id = self._context.get("employee_id")
