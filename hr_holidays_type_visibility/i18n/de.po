@@ -1,0 +1,54 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * hr_holidays_type_visibility
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-03 13:39+0000\n"
+"PO-Revision-Date: 2023-08-03 13:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays_type_visibility
+#: model:ir.model.fields,help:hr_holidays_type_visibility.field_hr_leave_type__visible_calendar
+msgid ""
+"Configure the visibility in the calendar dashboard header depending on "
+"the remaining leaves\n"
+"  * Positive: Show only if positive. This is the Odoo default\n"
+"  * Never: Never show the total\n"
+"  * Always: Always show the total"
+msgstr ""
+"Konfiguriere die Sichtbarkeit im Kopf des Dashboardkalenders basierend auf den "
+"übrigen Abwesenheiten\n"
+"  * Positiv: Zeige nur, wenn positiv. Dies ist der Odoo Standard\n"
+"  * Niemals: Zeige es niemals an\n"
+"  * Immer: Zeige es immer an"
+
+#. module: hr_holidays_type_visibility
+#: code:addons/hr_holidays_type_visibility/models/hr_leave_type.py:0
+#, python-format
+msgid "Always"
+msgstr "Immer"
+
+#. module: hr_holidays_type_visibility
+#: code:addons/hr_holidays_type_visibility/models/hr_leave_type.py:0
+#, python-format
+msgid "Never"
+msgstr "Niemals"
+
+#. module: hr_holidays_type_visibility
+#: code:addons/hr_holidays_type_visibility/models/hr_leave_type.py:0
+#, python-format
+msgid "Positive"
+msgstr "Positiv"
+
+#. module: hr_holidays_type_visibility
+#: model:ir.model.fields,field_description:hr_holidays_type_visibility.field_hr_leave_type__visible_calendar
+msgid "Visiblility Calendar"
+msgstr "Sichtbarkeit Kalender"
