@@ -1,0 +1,237 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_summary_email
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays_summary_email
+#: model:mail.template,body_html:hr_holidays_summary_email.hr_holidays_summary_mail_template_weekly
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p>Dear ${object.name},</p>\n"
+"                    <br/>\n"
+"                    <p>This is the leaves summary for this week:</p>\n"
+"                    <br/>\n"
+"                    <table style=\"border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Employee</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Time Off</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">From</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">To</th>\n"
+"                        </tr>\n"
+"                    % set timeoffs = ctx.get('time_offs', False)\n"
+"                    % for data in timeoffs\n"
+"                        % set d_from = data.format_hr_leave_summary_date()\n"
+"                        % set d_to = data.format_hr_leave_summary_date(False)\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${data.employee_id.name}</td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${data.name or ''}</td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${d_from}</td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${d_to}</td>\n"
+"                        </tr>\n"
+"                    % endfor\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:mail.template,body_html:hr_holidays_summary_email.hr_holidays_summary_mail_template_daily
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p>Dear ${object.name},</p>\n"
+"                    <br/>\n"
+"                    <p>This is today's leave summary:</p>\n"
+"                    <br/>\n"
+"                    <table style=\"border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Employee</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">Time Off</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">From</th>\n"
+"                            <th style=\"padding: 5px; border: 1px solid black;\">To</th>\n"
+"                        </tr>\n"
+"                    % set timeoffs = ctx.get('time_offs', False)\n"
+"                    % for data in timeoffs\n"
+"                        % set d_from = data.format_hr_leave_summary_date()\n"
+"                        % set d_to = data.format_hr_leave_summary_date(False)\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${data.employee_id.name}</td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${data.name or ''}</td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${d_from}</td>\n"
+"                            <td style=\"padding: 5px; border: 1px solid black;\">${d_to}</td>\n"
+"                        </tr>\n"
+"                    % endfor\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model_terms:ir.ui.view,arch_db:hr_holidays_summary_email.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Weekly Leaves Summary</span>"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model,name:hr_holidays_summary_email.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model,name:hr_holidays_summary_email.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model,name:hr_holidays_summary_email.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee__hr_leave_summary_type__daily
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee_base__hr_leave_summary_type__daily
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee_public__hr_leave_summary_type__daily
+msgid "Daily"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:mail.template,subject:hr_holidays_summary_email.hr_holidays_summary_mail_template_daily
+msgid "Daily Leaves Summary"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model_terms:ir.ui.view,arch_db:hr_holidays_summary_email.res_config_settings_view_form
+msgid "Day of week when the weekly leaves summary is sent."
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__4
+msgid "Friday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_company__id
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_users__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee__last_hr_leave_summary_sent
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_base__last_hr_leave_summary_sent
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_public__last_hr_leave_summary_sent
+msgid "Last Leave Summary Email Sent"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_base____last_update
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_company____last_update
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_users____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee__hr_leave_summary_type
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_base__hr_leave_summary_type
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_hr_employee_public__hr_leave_summary_type
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_users__hr_leave_summary_type
+msgid "Leave Summary Email"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_company__hr_holidays_summary_weekly_dow
+#: model:ir.model.fields,field_description:hr_holidays_summary_email.field_res_config_settings__hr_holidays_summary_weekly_dow
+msgid "Leave Weekly Summary Day of Week"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.actions.server,name:hr_holidays_summary_email.ir_cron_hr_holidays_summary_email_ir_actions_server
+#: model:ir.cron,cron_name:hr_holidays_summary_email.ir_cron_hr_holidays_summary_email
+#: model:ir.cron,name:hr_holidays_summary_email.ir_cron_hr_holidays_summary_email
+msgid "Leaves Summary Email"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__0
+msgid "Monday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee__hr_leave_summary_type__no
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee_base__hr_leave_summary_type__no
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee_public__hr_leave_summary_type__no
+msgid "No"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__5
+msgid "Saturday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model_terms:ir.ui.view,arch_db:hr_holidays_summary_email.res_config_settings_view_form
+msgid "Sending Day Of Week"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__6
+msgid "Sunday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__3
+msgid "Thursday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model,name:hr_holidays_summary_email.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__1
+msgid "Tuesday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model,name:hr_holidays_summary_email.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__res_company__hr_holidays_summary_weekly_dow__2
+msgid "Wednesday"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee__hr_leave_summary_type__weekly
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee_base__hr_leave_summary_type__weekly
+#: model:ir.model.fields.selection,name:hr_holidays_summary_email.selection__hr_employee_public__hr_leave_summary_type__weekly
+msgid "Weekly"
+msgstr ""
+
+#. module: hr_holidays_summary_email
+#: model:mail.template,subject:hr_holidays_summary_email.hr_holidays_summary_mail_template_weekly
+msgid "Weekly Leaves Summary"
+msgstr ""
