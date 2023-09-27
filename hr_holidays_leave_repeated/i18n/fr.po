@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hr_holidays_leave_repeated
+# 	* hr_holidays_leave_repeated
 #
 msgid ""
 msgstr ""
@@ -17,47 +17,55 @@ msgstr ""
 "X-Generator: Weblate 3.6.1\n"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_mode:0
+#: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_holidays_leave_repeated
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_mode__date
 msgid "End Date"
 msgstr "Date de fin"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__month
 msgid "Every four weeks"
 msgstr "Toutes les quatre semaines"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__biweek
 msgid "Every two weeks"
 msgstr "Toutes les deux semaines"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__week
 msgid "Every week"
 msgstr "Toutes les semaines"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__workday
 msgid "Every workday"
 msgstr "Chaque jour travaillé"
 
 #. module: hr_holidays_leave_repeated
-#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave
-msgid "Leave"
-msgstr "Congé"
+#: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave_type__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_holidays_leave_repeated
-#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Type de congé"
+#: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave_type____last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_mode:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_mode__times
 msgid "Number of Times"
 msgstr "Nombre de fois"
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:135
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, fuzzy, python-format
 msgid "Please set a positive amount of repetitions."
 msgstr "Veuillez définir un nombre de répétitions positif."
@@ -89,39 +97,63 @@ msgid "Repeat Mode"
 msgstr "Mode de répétition"
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:139
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid "The Repeat End Date cannot be in the past"
 msgstr "La date de fin de répétition ne peut pas être dans le passé"
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:58
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
-msgid "The repetition is based on workdays: the duration of the leave request must not exceed 1 day."
+msgid ""
+"The repetition is based on workdays: the duration of the leave request must "
+"not exceed 1 day."
 msgstr ""
 "La répétition est basée sur les jours ouvrables : la durée de la demande de "
 "congé ne doit pas dépasser 1 jour."
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:76
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
-msgid "The repetition is every four weeks: the duration of the leave request must not exceed 28 days."
+msgid ""
+"The repetition is every four weeks: the duration of the leave request must "
+"not exceed 28 days."
 msgstr ""
 "La répétition a lieu toutes les quatre semaines : la durée de la demande de "
 "congé ne doit pas dépasser 28 jours."
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:70
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
-msgid "The repetition is every two weeks: the duration of the leave request must not exceed 2 weeks."
+msgid ""
+"The repetition is every two weeks: the duration of the leave request must "
+"not exceed 2 weeks."
 msgstr ""
 "La répétition a lieu toutes les deux semaines : la durée de la demande de "
 "congé ne doit pas dépasser 2 semaines."
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:64
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
-msgid "The repetition is every week: the duration of the leave request must not exceed 1 week."
+msgid ""
+"The repetition is every week: the duration of the leave request must not "
+"exceed 1 week."
 msgstr ""
 "La répétition est hebdomadaire : la durée de la demande de congé ne doit pas "
 "dépasser 1 semaine."
+
+#. module: hr_holidays_leave_repeated
+#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_leave_repeated
+#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#~ msgid "Leave"
+#~ msgstr "Congé"
+
+#~ msgid "Leave Type"
+#~ msgstr "Type de congé"
