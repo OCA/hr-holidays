@@ -63,8 +63,8 @@ msgstr "Empleats acreditats"
 #. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__allow_credit
 msgid ""
-"If set to true, employees would be able to make requests for this leave type"
-" even if allocated amount is insufficient."
+"If set to true, employees would be able to make requests for this leave type "
+"even if allocated amount is insufficient."
 msgstr ""
 "Si s'estableix en cert, els empleats podrien fer sol·licituds per a aquest "
 "tipus de permís encara que l'import assignat sigui insuficient."
@@ -88,7 +88,8 @@ msgstr ""
 #. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_employee_ids
 msgid "If set, limits credit allowance to specified employees"
-msgstr "Si s'estableix, limita la prestació de crèdit als empleats especificats"
+msgstr ""
+"Si s'estableix, limita la prestació de crèdit als empleats especificats"
 
 #. module: hr_holidays_credit
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave
