@@ -18,47 +18,37 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_mode:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_mode__date
 msgid "End Date"
 msgstr "Einddatum"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__month
 msgid "Every four weeks"
 msgstr "Elke vier weken"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__biweek
 msgid "Every two weeks"
 msgstr "Elke twee weken"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__week
 msgid "Every week"
 msgstr "Elke week"
 
 #. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_every:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_every__workday
 msgid "Every workday"
 msgstr "Elke werkdag"
 
 #. module: hr_holidays_leave_repeated
-#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave
-msgid "Leave"
-msgstr "Verlof"
-
-#. module: hr_holidays_leave_repeated
-#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Verlofsoort"
-
-#. module: hr_holidays_leave_repeated
-#: selection:hr.leave,repeat_mode:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_repeated.selection__hr_leave__repeat_mode__times
 msgid "Number of Times"
 msgstr "Aantal herhalingen"
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:135
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid "Please set a positive amount of repetitions."
 msgstr "Stel een positief aantal herhaling in."
@@ -90,13 +80,13 @@ msgid "Repeat Mode"
 msgstr "Herhaal modus"
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:139
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid "The Repeat End Date cannot be in the past"
 msgstr "De herhaal einddatum kan niet in het verlegen liggen"
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:58
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid ""
 "The repetition is based on workdays: the duration of the leave request must "
@@ -106,7 +96,7 @@ msgstr ""
 "1 dag."
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:76
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid ""
 "The repetition is every four weeks: the duration of the leave request must "
@@ -116,7 +106,7 @@ msgstr ""
 "dan 28 dagen."
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:70
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid ""
 "The repetition is every two weeks: the duration of the leave request must "
@@ -126,7 +116,7 @@ msgstr ""
 "dan 2 weken."
 
 #. module: hr_holidays_leave_repeated
-#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:64
+#: code:addons/hr_holidays_leave_repeated/models/hr_leave.py:0
 #, python-format
 msgid ""
 "The repetition is every week: the duration of the leave request must not "
@@ -134,3 +124,19 @@ msgid ""
 msgstr ""
 "De herhaling is gebaseerd op elke week: het verlof mag niet langer zijn dan "
 "1 week."
+
+#. module: hr_holidays_leave_repeated
+#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_leave_repeated
+#: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#~ msgid "Leave"
+#~ msgstr "Verlof"
+
+#~ msgid "Leave Type"
+#~ msgstr "Verlofsoort"
