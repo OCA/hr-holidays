@@ -19,8 +19,8 @@ msgstr ""
 #. module: hr_holidays_validity_date
 #: model_terms:ir.ui.view,arch_db:hr_holidays_validity_date.hr_leave_view_form
 msgid ""
-"<i class=\"fa fa-info-circle\" role=\"alert\" aria-label=\"Warning\" "
-"title=\"Warning\"/>"
+"<i class=\"fa fa-info-circle\" role=\"alert\" aria-label=\"Warning\" title="
+"\"Warning\"/>"
 msgstr ""
 "<i class=\"fa fa-info-circle\" role=\"alert\" aria-label=\"Avís\" title="
 "\"Avís\"/>"
