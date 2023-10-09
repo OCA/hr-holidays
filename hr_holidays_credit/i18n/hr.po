@@ -76,8 +76,8 @@ msgstr ""
 #. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__allow_credit
 msgid ""
-"If set to true, employees would be able to make requests for this leave type"
-" even if allocated amount is insufficient."
+"If set to true, employees would be able to make requests for this leave type "
+"even if allocated amount is insufficient."
 msgstr ""
 
 #. module: hr_holidays_credit
