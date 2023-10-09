@@ -61,6 +61,18 @@ msgid "Creditable Employees"
 msgstr "Employé(e)s admissibles"
 
 #. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__allow_credit
 msgid ""
 "If set to true, employees would be able to make requests for this leave type "
@@ -89,6 +101,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_employee_ids
 msgid "If set, limits credit allowance to specified employees"
 msgstr "Si défini, limite l'allocation de crédit à certains employés"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type____last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: hr_holidays_credit
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave
