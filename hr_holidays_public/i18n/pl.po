@@ -186,7 +186,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays_public.menu_hr_public_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays_public.view_holidays_public_tree
 msgid "Public Holidays"
 msgstr "Dni wolne od pracy"
 
