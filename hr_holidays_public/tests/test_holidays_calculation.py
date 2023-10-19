@@ -11,6 +11,16 @@ class TestHolidaysComputeDaysBase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHolidaysComputeDaysBase, cls).setUpClass()
+        # Remove this variable in v16 and put instead:
+        # from odoo.tests.common import DISABLED_MAIL_CONTEXT
+        DISABLED_MAIL_CONTEXT = {
+            "tracking_disable": True,
+            "mail_create_nolog": True,
+            "mail_create_nosubscribe": True,
+            "mail_notrack": True,
+            "no_reset_password": True,
+        }
+        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.HrLeave = cls.env["hr.leave"]
         cls.HrLeaveType = cls.env["hr.leave.type"]
         cls.HrHolidaysPublic = cls.env["hr.holidays.public"]
