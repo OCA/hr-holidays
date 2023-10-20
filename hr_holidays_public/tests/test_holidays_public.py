@@ -7,11 +7,14 @@ from datetime import date
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
+
 
 class TestHolidaysPublicBase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.holiday_model = cls.env["hr.holidays.public"]
         cls.holiday_model_line = cls.env["hr.holidays.public.line"]
         cls.employee_model = cls.env["hr.employee"]
