@@ -77,7 +77,7 @@ class TestHolidaysAutoValidate(TransactionCase):
                 "name": "Test Leave Request 1",
                 "holiday_status_id": self.test_leave_type1_id.id,
                 "date_from": today,
-                "date_to": today + timedelta(days=1),
+                "date_to": today + timedelta(days=3),
                 "holiday_type": "employee",
                 "employee_id": self.test_employee_id.id,
             }
@@ -110,7 +110,7 @@ class TestHolidaysAutoValidate(TransactionCase):
                 "name": "Test Leave Request 1",
                 "holiday_status_id": self.test_leave_type1_id.id,
                 "date_from": today + timedelta(days=10),
-                "date_to": today + timedelta(days=12),
+                "date_to": today + timedelta(days=13),
                 "holiday_type": "employee",
                 "employee_id": self.test_employee_id.id,
             }
@@ -121,8 +121,8 @@ class TestHolidaysAutoValidate(TransactionCase):
                 "name": "Test Leave Request 2",
                 "holiday_status_id": self.test_leave_type2_id.id,
                 "holiday_type": "employee",
-                "date_from": today + timedelta(days=13),
-                "date_to": today + timedelta(days=14),
+                "date_from": today + timedelta(days=14),
+                "date_to": today + timedelta(days=17),
                 "employee_id": self.test_employee_id.id,
             }
         )
@@ -144,7 +144,7 @@ class TestHolidaysAutoValidate(TransactionCase):
                 "name": "Test Leave Request 1",
                 "holiday_status_id": self.test_leave_type1_id.id,
                 "date_from": today + timedelta(days=10),
-                "date_to": today + timedelta(days=12),
+                "date_to": today + timedelta(days=13),
                 "holiday_type": "employee",
                 "employee_id": self.test_employee_id.id,
             }
@@ -155,8 +155,8 @@ class TestHolidaysAutoValidate(TransactionCase):
                 "name": "Test Leave Request 2",
                 "holiday_status_id": self.test_leave_type2_id.id,
                 "holiday_type": "employee",
-                "date_from": today + timedelta(days=13),
-                "date_to": today + timedelta(days=14),
+                "date_from": today + timedelta(days=14),
+                "date_to": today + timedelta(days=17),
                 "employee_id": self.test_employee_id.id,
             }
         )
