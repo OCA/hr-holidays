@@ -14,7 +14,7 @@
         <field name="name">hr.holidays.public.form</field>
         <field name="model">hr.holidays.public</field>
         <field name="arch" type="xml">
-            <form string="Public Holidays">
+            <form>
                 <group name="group_main">
                     <group name="group_main_left">
                         <field name="year" />
