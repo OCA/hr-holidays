@@ -10,7 +10,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="leave_manager_ids" />
+                <field name="leave_manager_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>

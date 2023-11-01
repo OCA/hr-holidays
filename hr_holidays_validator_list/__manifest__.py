@@ -11,7 +11,9 @@
     "license": "AGPL-3",
     "depends": ["hr_holidays"],
     "data": [
-        "views/hr_views.xml"
+        "views/hr_views.xml",
+        "views/hr_leave_allocation_views.xml",
+        "views/hr_leave_views.xml",
     ],
     "installable": True,
 }
