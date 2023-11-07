@@ -1,1 +1,1 @@
-This module allows for an employee to have several leave validators. 
+This module allows for an employee to have several leave validators.
