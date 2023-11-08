@@ -10,7 +10,7 @@ class HolidaysAllocation(models.Model):
     _inherit = "hr.leave.allocation"
 
     def activity_update(self):
-        """uUpdates activity for all leave_manager_ids"""
+        """Updates activity for all leave_manager_ids"""
         res = super().activity_update()
         for manager in self.employee_id.leave_manager_ids:
             old_manager = self.employee_id.leave_manager_id
