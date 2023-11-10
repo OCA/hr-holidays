@@ -5,20 +5,21 @@ from odoo.addons.hr_holidays_public.tests import test_holidays_public
 
 
 class TestHolidaysPublicBase(test_holidays_public.TestHolidaysPublicBase):
-    def setUp(self):
-        super().setUp()
-        self.us_city_a = self.env["res.city"].create(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.us_city_a = cls.env["res.city"].create(
             {
                 "name": "Test city A",
-                "state_id": self.env.ref("base.state_us_4").id,
-                "country_id": self.env.ref("base.us").id,
+                "state_id": cls.env.ref("base.state_us_4").id,
+                "country_id": cls.env.ref("base.us").id,
             }
         )
-        self.us_city_b = self.env["res.city"].create(
+        cls.us_city_b = cls.env["res.city"].create(
             {
                 "name": "Test city B",
-                "state_id": self.env.ref("base.state_us_4").id,
-                "country_id": self.env.ref("base.us").id,
+                "state_id": cls.env.ref("base.state_us_4").id,
+                "country_id": cls.env.ref("base.us").id,
             }
         )
 
