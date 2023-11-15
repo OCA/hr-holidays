@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2023 CGI37 (http://www.cgi37.com/)
+  @author: Pierre Verkest <pierreverkest84@gmail.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+    <record id="edit_holiday_status_form" model="ir.ui.view">
+        <field name="name">hr.leave.type.form</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
+        <field name="arch" type="xml">
+            <field name="create_calendar_meeting" position="after">
+                <field
+                    name="calendar_meeting_leave_template"
+                    attrs="{'invisible': [('create_calendar_meeting', '=', False)]}"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

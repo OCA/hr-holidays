@@ -1,0 +1,101 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_calendar_name
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays_calendar_name
+#: code:addons/hr_holidays_calendar_name/models/hr_leave.py:0
+#, python-format
+msgid "%.2f day(s)"
+msgstr "%.2f jour(s)"
+
+#. module: hr_holidays_calendar_name
+#: code:addons/hr_holidays_calendar_name/models/hr_leave.py:0
+#, python-format
+msgid "%.2f hour(s)"
+msgstr "%.2f heure(s)"
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave_type__calendar_meeting_leave_template
+msgid "Calendar Meeting Leave Template"
+msgstr "Modèle de nom d'évènement du calendrier"
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave_type__display_name
+msgid "Display Name"
+msgstr "Libellé"
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave_type__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays_calendar_name.field_hr_leave_type____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model.fields,help:hr_holidays_calendar_name.field_hr_leave_type__calendar_meeting_leave_template
+msgid ""
+"Template used to generate calendar meeting name, \n"
+"ie: '%(employee_name)s on Time Off : %(formatted_duration)s' which is "
+"roughly the default behavior from odoo if you leave this field empty.Here "
+"the list of possible parameters: \n"
+"* `employee_or_category`: employee name or category if leave has no users "
+"linked\n"
+"* `employee_name`: employee name\n"
+"* `category_name`: hr category name (tag)\n"
+"* `formatted_duration`: number of ours or days with the unit according the "
+"kind of leave\n"
+"* `number_of_hours_display`: number of hours\n"
+"* `number_of_days`: number of days\n"
+"* `start`: start date\n"
+"* `stop`: end date\n"
+"* `leave_type_name`: leave type name\n"
+"* `leave_type_code`: leave type code\n"
+"* `leave_name`: leave name\n"
+msgstr ""
+"Modèle de nom utilisé pour générer le nom de calendrier (format %-string de "
+"python), \n"
+"ie: '%(employee_name)s en congés : %(formatted_duration)s' qui revient au "
+"comportement par défaut d'odoo (comme quand ce champ est vide). \n"
+"Voici la liste des paramètres disponibles : \n"
+"* `employee_or_category`: Nom de l'employée ou de la catégorie (tag) si la "
+"demande \n"
+"de congés n'a pas d'utilisateur lié.\n"
+"* `employee_name`: nom de l'employé\n"
+"* `category_name`: nom de la catégorie (tag)\n"
+"* `formatted_duration`: nombre d'heures ou de jours de congés formatté en "
+"fonction de l'utité confifuré sur le type\n"
+"* `number_of_hours_display`: nombre d'heures de congés\n"
+"* `number_of_days`: number de jours de congés\n"
+"* `start`: date de début\n"
+"* `stop`: date de fin\n"
+"* `leave_type_name`: nom du type de congés\n"
+"* `leave_type_code`: code du type de congés\n"
+"* `leave_name`: nom de la demande de congés\n"
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model,name:hr_holidays_calendar_name.model_hr_leave
+msgid "Time Off"
+msgstr "Congés"
+
+#. module: hr_holidays_calendar_name
+#: model:ir.model,name:hr_holidays_calendar_name.model_hr_leave_type
+msgid "Time Off Type"
+msgstr "Type de congés"
