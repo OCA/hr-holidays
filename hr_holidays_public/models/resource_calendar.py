@@ -15,20 +15,45 @@ class ResourceCalendar(models.Model):
     def _attendance_intervals_batch_exclude_public_holidays(
         self, start_dt, end_dt, intervals, resources, tz
     ):
-        list_by_dates = (
-            self.env["hr.holidays.public"]
-            .get_holidays_list(
-                start_dt=start_dt.date(),
-                end_dt=end_dt.date(),
-                employee_id=self.env.context.get("employee_id", False),
+        holidays_by_country = {
+            False: set(
+                self.env["hr.holidays.public"]
+                .get_holidays_list(
+                    start_dt=start_dt.date(),
+                    end_dt=end_dt.date(),
+                    employee_id=self.env.context.get("employee_id", False),
+                )
+                .filtered(lambda rec: not rec.year_id.country_id)
+                .mapped("date")
             )
-            .mapped("date")
-        )
+        }
+        if resources:
+            employees = self.env["hr.employee.public"].search(
+                [("resource_id", "in", resources.ids)]
+            )
+            resource_country = {}
+            for employee in employees:
+                country = employee.address_id.country_id
+                resource_country[employee.resource_id.id] = country.id
+                if country.id not in holidays_by_country:
+                    holidays_by_country[country.id] = set(
+                        self.env["hr.holidays.public"]
+                        .get_holidays_list(
+                            start_dt=start_dt.date(),
+                            end_dt=end_dt.date(),
+                            employee_id=employee.id,
+                        )
+                        .mapped("date")
+                    )
+        # even if employees and resource_country are empty
+        # we still process holidays, so provide defaults
         for resource in resources:
-            interval_resource = intervals[resource.id]
+            interval_resource = intervals.get(resource.id, Intervals())
             attendances = []
+            country = resource_country.get(resource.id, self.env["res.country"])
+            holidays = holidays_by_country.get(country, set())
             for attendance in interval_resource._items:
-                if attendance[0].date() not in list_by_dates:
+                if attendance[0].date() not in holidays:
                     attendances.append(attendance)
             intervals[resource.id] = Intervals(attendances)
         return intervals
