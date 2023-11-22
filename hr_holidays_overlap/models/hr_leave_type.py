@@ -25,17 +25,17 @@ class HrLeaveType(models.Model):
             for possible_overlap in HrLeave.search(
                 [
                     ("employee_id", "=", employee_id),
-                    ("state", "not in", ("draft", "refuse")),
+                    ("state", "=", "validate"),
                     ("holiday_status_id.can_overlap", "=", True),
                 ]
             ):
                 for overlap in HrLeave.search(
                     [
                         ("employee_id", "=", employee_id),
-                        ("state", "not in", ("draft", "refuse")),
+                        ("state", "in", ("confirm", "validate1", "validate")),
                         ("id", "not in", possible_overlap.ids),
-                        ("date_from", "<", possible_overlap.date_to),
-                        ("date_to", ">", possible_overlap.date_from),
+                        ("date_from", "<=", possible_overlap.date_to),
+                        ("date_to", ">=", possible_overlap.date_from),
                         ("holiday_status_id", "in", self.ids),
                     ]
                 ):
@@ -51,8 +51,9 @@ class HrLeaveType(models.Model):
                     )[employee_id]["days"]
                     for allocation, allocation_days in allocation_dict.items():
                         if (
-                            allocation
-                            and allocation.date_to
+                            not allocation
+                            or isinstance(allocation, str)
+                            or allocation.date_to
                             and (
                                 allocation.date_to < date or allocation.date_from > date
                             )
@@ -60,7 +61,18 @@ class HrLeaveType(models.Model):
                             continue
                         allocation_days["virtual_remaining_leaves"] += number_of_days
                         allocation_days["virtual_leaves_taken"] -= number_of_days
-                        allocation_days["remaining_leaves"] += number_of_days
-                        allocation_days["leaves_taken"] -= number_of_days
+                        if possible_overlap.state == "validate":
+                            allocation_days["remaining_leaves"] += number_of_days
+                            allocation_days["leaves_taken"] -= number_of_days
                         break
+                    if "error" in allocation_dict:
+                        allocation_dict["error"][
+                            "virtual_remaining_leaves"
+                        ] += number_of_days
+                        allocation_dict[False][
+                            "virtual_remaining_leaves"
+                        ] += number_of_days
+                        if not allocation_dict["error"]["virtual_remaining_leaves"]:
+                            del allocation_dict["error"]
+                            del allocation_dict[False]
         return result

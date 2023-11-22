@@ -19,7 +19,7 @@ class TestHrHolidaysOverlap(TransactionCase):
                 "name": "Paid leave",
                 "state": "confirm",
                 "holiday_status_id": self.env.ref("hr_holidays.holiday_status_cl").id,
-                # those two are needed to circumvent hr.leave#copy_data's check
+                # those two are needed to bypass hr.leave#copy_data's check
                 "date_from": demo_sick_leave.date_to,
                 "date_to": demo_sick_leave.date_to + timedelta(days=2),
             }
@@ -47,6 +47,35 @@ class TestHrHolidaysOverlap(TransactionCase):
             paid_leave.holiday_status_id.remaining_leaves,
             19,
         )
+        # be sure we can use all 19 days for leave
+        new_leave = self.paid_leave.copy(
+            default={
+                "name": "Paid leave",
+                "state": "confirm",
+                "holiday_status_id": self.env.ref("hr_holidays.holiday_status_cl").id,
+                "date_from": self.paid_leave.date_to,
+                "date_to": self.paid_leave.date_to + timedelta(days=27),
+            }
+        )
+        new_leave.action_validate()
+        self.assertEqual(new_leave.number_of_days, 19)
+        self.assertEqual(new_leave.holiday_status_id.virtual_remaining_leaves, 0)
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            "The number of remaining time off is not sufficient for this time off type.",
+        ):
+            self.paid_leave.copy(
+                default={
+                    "name": "Paid leave",
+                    "state": "confirm",
+                    "holiday_status_id": self.env.ref(
+                        "hr_holidays.holiday_status_cl"
+                    ).id,
+                    "date_from": new_leave.date_from,
+                    "date_to": new_leave.date_to + timedelta(days=1),
+                }
+            )
 
     def test_no_overlap(self):
         """Test that we still don't allow overlapping for types not configured accordingly"""
