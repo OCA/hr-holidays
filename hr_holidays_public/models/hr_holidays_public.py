@@ -210,6 +210,7 @@ class HrHolidaysPublicLine(models.Model):
             "user_id": SUPERUSER_ID,
             "privacy": "confidential",
             "show_as": "busy",
+            "partner_ids": [],
         }
         if categ_id:
             meeting_values.update({"categ_ids": [(6, 0, categ_id.ids)]})
