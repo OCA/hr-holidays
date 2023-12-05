@@ -45,7 +45,7 @@ class HrHolidaysPublic(models.Model):
     def _compute_display_name(self):
         for line in self:
             if line.country_id:
-                line.display_name = "{} ({})".format(line.year, line.country_id.name)
+                line.display_name = f"{line.year} ({line.country_id.name})"
             else:
                 line.display_name = line.year
 
@@ -185,7 +185,6 @@ class HrHolidaysPublicLine(models.Model):
             holidays = self.search(domain)
 
             for holiday in holidays:
-
                 if self.state_ids & holiday.state_ids:
                     raise ValidationError(
                         _(
@@ -206,7 +205,7 @@ class HrHolidaysPublicLine(models.Model):
         categ_id = self.env.ref("hr_holidays_public.event_type_holiday", False)
         meeting_values = {
             "name": (
-                "{} ({})".format(self.name, self.year_id.country_id.name)
+                f"{self.name} ({self.year_id.country_id.name})"
                 if self.year_id.country_id
                 else self.name
             ),
