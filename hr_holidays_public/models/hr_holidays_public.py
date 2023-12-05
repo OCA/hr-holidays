@@ -49,12 +49,6 @@ class HrHolidaysPublic(models.Model):
             else:
                 line.display_name = line.year
 
-    def name_get(self):
-        result = []
-        for rec in self:
-            result.append((rec.id, rec.display_name))
-        return result
-
     def _get_domain_states_filter(self, pholidays, start_dt, end_dt, employee_id=None):
         employee = False
         if employee_id:

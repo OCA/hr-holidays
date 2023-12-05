@@ -19,15 +19,15 @@ class HrLeave(models.Model):
             )
         return super().action_validate()
 
-    def _get_number_of_days(self, date_from, date_to, employee_id):
+    def _get_duration(self, check_leave_type=True, resource_calendar=None):
         if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
             instance = self.with_context(
-                employee_id=employee_id, exclude_public_holidays=True
+                employee_id=self.employee_id.id, exclude_public_holidays=True
             )
         else:
             instance = self
-        return super(HrLeave, instance)._get_number_of_days(
-            date_from, date_to, employee_id
+        return super(HrLeave, instance)._get_duration(
+            check_leave_type, resource_calendar
         )
 
     @api.depends("number_of_days")

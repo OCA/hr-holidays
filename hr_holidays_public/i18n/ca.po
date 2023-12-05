@@ -129,13 +129,6 @@ msgid "If enabled, public holidays are skipped in leave days calculation."
 msgstr ""
 
 #. module: hr_holidays_public
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public____last_update
-#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line____last_update
-#: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public__write_uid
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public_line__write_uid
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard__write_uid

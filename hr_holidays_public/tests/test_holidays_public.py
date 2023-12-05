@@ -56,10 +56,13 @@ class TestHolidaysPublicBase(TransactionCase):
 
 
 class TestHolidaysPublic(TestHolidaysPublicBase):
-    def test_name_get(self):
-        hol = self.holiday_model.create({"year": 1999})
-        hol_name = hol.name_get()[0]
-        self.assertEqual(hol_name, (hol.id, str(hol.year)))
+    def test_display_name(self):
+        line = self.holiday_model.create({"year": 1999})
+        if line.country_id:
+            display_name = f"{line.year} ({line.country_id.name})"
+        else:
+            display_name = str(line.year)
+        self.assertEqual(line.display_name, display_name)
 
     def test_duplicate_year_country_fail(self):
         # ensures that duplicate year cannot be created for the same country
