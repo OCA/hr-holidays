@@ -29,7 +29,7 @@
                     <tree editable="top">
                         <field
                             name="date"
-                            attrs="{'readonly':[['variable_date', '=', False]]}"
+                            readonly="variable_date == False"
                             force_save="1"
                         />
                         <field name="name" />

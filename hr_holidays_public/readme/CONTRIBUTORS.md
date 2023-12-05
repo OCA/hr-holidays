@@ -16,3 +16,5 @@
   - Iván Todorovich \<<ivan.todorovich@gmail.com>\>
 - [Pesol](https://www.pesol.es):
   - Pedro Evaristo Gonzalez Sanchez \<<pedro.gonzalez@pesol.es>\>
+- [Trobz](https://trobz.com):  
+  - Thao Le \<<thaolt@trobz.com>\>
