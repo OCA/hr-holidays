@@ -369,11 +369,12 @@ ul.auto-toc {
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! source digest: sha256:35758a154bff0a6436ea716464cb544b1d98f65aff8fda7269d6a511a6808221
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_public"><img alt="OCA/hr-holidays" src="https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/hr-holidays-16-0/hr-holidays-16-0-hr_holidays_public"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&amp;target_branch=16.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/hr-holidays/tree/17.0/hr_holidays_public"><img alt="OCA/hr-holidays" src="https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/hr-holidays-17-0/hr-holidays-17-0-hr_holidays_public"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&amp;target_branch=17.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
 <p>This module handles public holidays.</p>
-<p>The calculation of each leave can exclude rest public holiday, depending on
-the leave type configuration.</p>
-<p>In HR holiday app, public holiday will be displayed as unusual days (grey like weekends).</p>
+<p>The calculation of each leave can exclude rest public holiday, depending
+on the leave type configuration.</p>
+<p>In HR holiday app, public holiday will be displayed as unusual days
+(grey like weekends).</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -391,7 +392,8 @@ the leave type configuration.</p>
 </div>
 <div class="section" id="configuration">
 <h1><a class="toc-backref" href="#toc-entry-1">Configuration</a></h1>
-<p>Go to <em>Time Off -&gt; Configuration -&gt; Time Off Types</em> and open a Leave Type</p>
+<p>Go to <em>Time Off -&gt; Configuration -&gt; Time Off Types</em> and open a Leave
+Type</p>
 <ul class="simple">
 <li>Check “Exclude Public Holidays” to exclude public holidays.</li>
 </ul>
@@ -406,43 +408,47 @@ the leave type configuration.</p>
 <p>For using public holidays on leaves:</p>
 <ol class="arabic simple">
 <li>Go to <em>Time Off &gt; Dashboard</em>.</li>
-<li>Select dragging on the calendar the days you want to be on leave, or go
-to the form view for selecting start and end dates.</li>
-<li>Select the proper “Leave Type” that has “Exclude Public Holidays” checked.</li>
-<li>If no leave type is yet specified, then default configuration is to exclude
-public holidays.</li>
-<li>The number of days will be computed excluding public holidays that match the
-selected employee, including global, country and state holidays.</li>
-<li>If no employee is yet selected, only global holidays will be taken into
-account.</li>
+<li>Select dragging on the calendar the days you want to be on leave, or
+go to the form view for selecting start and end dates.</li>
+<li>Select the proper “Leave Type” that has “Exclude Public Holidays”
+checked.</li>
+<li>If no leave type is yet specified, then default configuration is to
+exclude public holidays.</li>
+<li>The number of days will be computed excluding public holidays that
+match the selected employee, including global, country and state
+holidays.</li>
+<li>If no employee is yet selected, only global holidays will be taken
+into account.</li>
 </ol>
-<p>In calendar views in HR holiday app public will be display
-(likes other unusual days) according the current user employee country/state. If not set
-the there is a fallback to the current company country/state to filter public holidays.</p>
+<p>In calendar views in HR holiday app public will be display (likes other
+unusual days) according the current user employee country/state. If not
+set the there is a fallback to the current company country/state to
+filter public holidays.</p>
 </div>
 <div class="section" id="known-issues-roadmap">
 <h1><a class="toc-backref" href="#toc-entry-3">Known issues / Roadmap</a></h1>
-<p>In Odoo 12.0, <cite>_leave_intervals()</cite> returns <cite>Intervals</cite> which is a list of
-tuples (start_timestamp, end_timestamp, <cite>resource.calendar.leaves</cite> record).
-Since this module does not operate with <cite>resource.calendar.leaves</cite>, it’s
-setting third component of a tuple to a <cite>hr.holidays.public.line</cite> record.
-This may or may not be a problem, yet since this component is also being set to
-<cite>resource.calendar.attendance</cite> records in <cite>_attendance_intervals()</cite>, seems it
-should be ok.</p>
-<p>There are no restrictions to block users from modifying or removing calendar
-events linked to public holidays. There’s a suggestion to overload <cite>write</cite> and
-<cite>unlink</cite> methods of <cite>calendar.event</cite>, but it might have other impacts like
-users not being able to edit event tags, or even custom fields.</p>
-<p>Regional public holidays are shown in the public calendar. The regions will be
-noted in the description of the event, but it’ll be shown to all users. It’d
-be good to have it show only for users in these regions.</p>
+<p>In Odoo 12.0, _leave_intervals() returns Intervals which is a list of
+tuples (start_timestamp, end_timestamp, resource.calendar.leaves
+record). Since this module does not operate with
+resource.calendar.leaves, it’s setting third component of a tuple to a
+hr.holidays.public.line record. This may or may not be a problem, yet
+since this component is also being set to resource.calendar.attendance
+records in _attendance_intervals(), seems it should be ok.</p>
+<p>There are no restrictions to block users from modifying or removing
+calendar events linked to public holidays. There’s a suggestion to
+overload write and unlink methods of calendar.event, but it might have
+other impacts like users not being able to edit event tags, or even
+custom fields.</p>
+<p>Regional public holidays are shown in the public calendar. The regions
+will be noted in the description of the event, but it’ll be shown to all
+users. It’d be good to have it show only for users in these regions.</p>
 </div>
 <div class="section" id="bug-tracker">
 <h1><a class="toc-backref" href="#toc-entry-4">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/hr-holidays/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-<a class="reference external" href="https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_public%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<a class="reference external" href="https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_public%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
@@ -497,7 +503,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.</p>
-<p>This module is part of the <a class="reference external" href="https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_public">OCA/hr-holidays</a> project on GitHub.</p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/hr-holidays/tree/17.0/hr_holidays_public">OCA/hr-holidays</a> project on GitHub.</p>
 <p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
 </div>
 </div>

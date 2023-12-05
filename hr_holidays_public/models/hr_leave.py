@@ -17,7 +17,7 @@ class HrLeave(models.Model):
             self = self.with_context(
                 employee_id=self.employee_id.id, exclude_public_holidays=True
             )
-        return super(HrLeave, self).action_validate()
+        return super().action_validate()
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:

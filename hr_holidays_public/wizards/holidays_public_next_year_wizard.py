@@ -28,7 +28,6 @@ class HolidaysPublicNextYearWizard(models.TransientModel):
     )
 
     def create_public_holidays(self):
-
         self.ensure_one()
 
         last_ph_dict = {}
@@ -45,7 +44,6 @@ class HolidaysPublicNextYearWizard(models.TransientModel):
             )
 
         for ph in pholidays:
-
             last_ph_country = last_ph_dict.get(ph.country_id, False)
 
             if last_ph_country:
@@ -56,7 +54,6 @@ class HolidaysPublicNextYearWizard(models.TransientModel):
 
         new_ph_ids = []
         for last_ph in last_ph_dict.values():
-
             new_year = self.year or last_ph.year + 1
 
             new_ph_vals = {"year": new_year}
