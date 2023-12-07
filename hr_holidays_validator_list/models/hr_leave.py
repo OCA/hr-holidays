@@ -4,10 +4,10 @@
 from odoo import models
 
 
-class HolidaysAllocation(models.Model):
+class HolidaysLeave(models.Model):
     """Allocation Requests Access specifications: similar to leave requests"""
 
-    _inherit = "hr.leave.allocation"
+    _inherit = "hr.leave"
 
     def activity_update(self):
         """Updates activity for all leave_manager_ids"""
