@@ -11,22 +11,21 @@ class HolidaysLeave(models.Model):
 
     def activity_update(self):
         """Updates activity for all leave_manager_ids"""
-        res = super().activity_update()
-        for manager in self.employee_id.leave_manager_ids:
-            old_manager = self.employee_id.leave_manager_id
-            self.employee_id.leave_manager_id = manager
+        if not self.employee_id.leave_manager_ids:
             super().activity_update()
-            self.employee_id.leave_manager_id = old_manager
-        return res
+        else:
+            for manager in self.employee_id.leave_manager_ids:
+                self.employee_id.sudo().leave_manager_id = manager
+                super().activity_update()
+                self.employee_id.sudo().leave_manager_id = False
 
     def _check_approval_update(self, state):
         """Checks that the leave manager is in leave_manager_ids"""
-        res = super()._check_approval_update(state)
-        for manager in self.employee_id.leave_manager_ids:
-            if manager == self.env.user:
-                old_manager = self.employee_id.leave_manager_id
-                self.employee_id.leave_manager_id = manager
-                super()._check_approval_update(state)
-                self.employee_id.leave_manager_id = old_manager
-                break
-        return res
+        if not self.employee_id.leave_manager_ids:
+            super()._check_approval_update(state)
+        else:
+            for manager in self.employee_id.leave_manager_ids:
+                if manager == self.env.user:
+                    self.employee_id.sudo().leave_manager_id = manager.id
+                    super()._check_approval_update(state)
+                    self.employee_id.sudo().leave_manager_id = False
