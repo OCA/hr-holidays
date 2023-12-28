@@ -20,19 +20,21 @@ class HrLeave(models.Model):
     def _apply_auto_approve_policy(self):
         self.filtered(lambda r: r._should_auto_approve()).sudo().action_approve()
 
-    @api.model
-    def create(self, values):
-        auto_approve = self._get_auto_approve_on_creation(values)
-        tracking_disable = self.env.context.get("tracking_disable")
-        mail_skip = self.env.context.get("mail_activity_automation_skip")
-        ctx = self.env.context.copy()
-        ctx.update(
-            {
-                "tracking_disable": tracking_disable or auto_approve,
-                "mail_activity_automation_skip": mail_skip or auto_approve,
-            }
-        )
-        res = super(HrLeave, self.with_context(ctx)).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            auto_approve = self._get_auto_approve_on_creation(vals)
+            tracking_disable = self.env.context.get("tracking_disable")
+            mail_skip = self.env.context.get("mail_activity_automation_skip")
+            ctx = self.env.context.copy()
+            ctx.update(
+                {
+                    "tracking_disable": tracking_disable or auto_approve,
+                    "mail_activity_automation_skip": mail_skip or auto_approve,
+                }
+            )
+        # pylint: disable=context-overridden
+        res = super(HrLeave, self.with_context(ctx)).create(vals_list)
         res._apply_auto_approve_policy()
         return res
 
