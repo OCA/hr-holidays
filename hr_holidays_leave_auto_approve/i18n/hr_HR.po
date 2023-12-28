@@ -26,26 +26,32 @@ msgid "Auto Approve Policy"
 msgstr ""
 
 #. module: hr_holidays_leave_auto_approve
-#: selection:hr.leave.type,auto_approve_policy:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__all
 msgid "Auto Validated by Everyone"
 msgstr ""
 
 #. module: hr_holidays_leave_auto_approve
-#: selection:hr.leave.type,auto_approve_policy:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__hr
 msgid "Auto Validated by HR"
 msgstr ""
 
 #. module: hr_holidays_leave_auto_approve
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__no
+msgid "No auto Validation"
+msgstr ""
+
+#. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave
-msgid "Leave"
-msgstr "Odsustvo"
+msgid "Time Off"
+msgstr ""
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Tip odsustva"
-
-#. module: hr_holidays_leave_auto_approve
-#: selection:hr.leave.type,auto_approve_policy:0
-msgid "No auto Validation"
+msgid "Time Off Type"
 msgstr ""
+
+#~ msgid "Leave"
+#~ msgstr "Odsustvo"
+
+#~ msgid "Leave Type"
+#~ msgstr "Tip odsustva"
