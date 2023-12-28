@@ -56,18 +56,12 @@ class TestHolidaysAutoValidate(TransactionCase):
 
     def test_allocation_requests_state(self):
         # Check for leave_allocation1 state
-        self.assertEqual(self.leave_allocation1.state, "confirm")
-
-        # Check for leave_allocation2 state
-        self.assertEqual(self.leave_allocation2.state, "confirm")
-
-    def test_leave_requests_state(self):
-
-        # Validate the leave_allocation2
-        self.leave_allocation2.action_approve()
+        self.assertEqual(self.leave_allocation1.state, "validate")
 
         # Check for leave_allocation2 state
         self.assertEqual(self.leave_allocation2.state, "validate")
+
+    def test_leave_requests_state(self):
 
         today = datetime.today()
 
@@ -134,6 +128,7 @@ class TestHolidaysAutoValidate(TransactionCase):
         self.assertEqual(leave2.state, "confirm")
 
     def test_leave_request_employee_validate_all(self):
+
         self.test_user_id.groups_id = [(6, 0, [self.env.ref("base.group_user").id])]
 
         today = datetime.today()
