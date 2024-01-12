@@ -11,7 +11,9 @@ class HolidaysLeave(models.Model):
 
     def activity_update(self):
         """Updates activity for all leave_manager_ids"""
-        if not self.employee_id.leave_manager_ids:
+        if not self.employee_id.leave_manager_ids or self.env.context.get(
+            "no_leave_manager_ids_trigger"
+        ):
             super().activity_update()
         else:
             for manager in self.employee_id.leave_manager_ids:
@@ -21,7 +23,9 @@ class HolidaysLeave(models.Model):
 
     def _check_approval_update(self, state):
         """Checks that the leave manager is in leave_manager_ids"""
-        if not self.employee_id.leave_manager_ids:
+        if not self.employee_id.leave_manager_ids or self.env.context.get(
+            "no_leave_manager_ids_trigger"
+        ):
             super()._check_approval_update(state)
         else:
             for manager in self.employee_id.leave_manager_ids:
