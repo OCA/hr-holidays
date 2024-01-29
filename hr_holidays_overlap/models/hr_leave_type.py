@@ -12,8 +12,6 @@ class HrLeaveType(models.Model):
 
     def _get_employees_days_per_allocation(self, employee_ids, date=None):
         """Remove overlapping days"""
-        HrLeave = self.env["hr.leave"]
-
         result = super()._get_employees_days_per_allocation(employee_ids, date=date)
 
         if not date:
@@ -22,33 +20,11 @@ class HrLeaveType(models.Model):
             ) or fields.Date.context_today(self)
 
         for employee_id in employee_ids:
-            for possible_overlap in HrLeave.search(
-                [
-                    ("employee_id", "=", employee_id),
-                    ("state", "=", "validate"),
-                    ("holiday_status_id.can_overlap", "=", True),
-                ]
-            ):
-                for overlap in HrLeave.search(
-                    [
-                        ("employee_id", "=", employee_id),
-                        ("state", "in", ("confirm", "validate1", "validate")),
-                        ("id", "not in", possible_overlap.ids),
-                        ("date_from", "<=", possible_overlap.date_to),
-                        ("date_to", ">=", possible_overlap.date_from),
-                        ("holiday_status_id", "in", self.ids),
-                    ]
+            for this in result[employee_id]:
+                allocation_dict = result[employee_id][this]
+                for possible_overlap, _overlap, number_of_days in self._get_overlap(
+                    employee_id
                 ):
-                    allocation_dict = result[employee_id][overlap.holiday_status_id]
-                    number_of_days = overlap.employee_id._get_work_days_data_batch(
-                        possible_overlap.date_from
-                        if possible_overlap.date_from >= overlap.date_from
-                        else overlap.date_from,
-                        possible_overlap.date_to
-                        if possible_overlap.date_to <= overlap.date_to
-                        else overlap.date_to,
-                        compute_leaves=False,
-                    )[employee_id]["days"]
                     for allocation, allocation_days in allocation_dict.items():
                         if (
                             not allocation
@@ -76,3 +52,35 @@ class HrLeaveType(models.Model):
                             del allocation_dict["error"]
                             del allocation_dict[False]
         return result
+
+    def _get_overlap(self, employee_id):
+        """Return overlapping leaves and the working time of the overlap"""
+        HrLeave = self.env["hr.leave"]
+
+        for possible_overlap in HrLeave.search(
+            [
+                ("employee_id", "=", employee_id),
+                ("state", "=", "validate"),
+                ("holiday_status_id.can_overlap", "=", True),
+            ]
+        ):
+            for overlap in HrLeave.search(
+                [
+                    ("employee_id", "=", employee_id),
+                    ("state", "in", ("confirm", "validate1", "validate")),
+                    ("id", "not in", possible_overlap.ids),
+                    ("date_from", "<=", possible_overlap.date_to),
+                    ("date_to", ">=", possible_overlap.date_from),
+                    ("holiday_status_id", "in", self.ids),
+                ]
+            ):
+                number_of_days = overlap.employee_id._get_work_days_data_batch(
+                    possible_overlap.date_from
+                    if possible_overlap.date_from >= overlap.date_from
+                    else overlap.date_from,
+                    possible_overlap.date_to
+                    if possible_overlap.date_to <= overlap.date_to
+                    else overlap.date_to,
+                    compute_leaves=False,
+                )[employee_id]["days"]
+                yield possible_overlap, overlap, number_of_days
