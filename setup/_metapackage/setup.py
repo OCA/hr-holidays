@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-hr-holidays Odoo addons",
     version=version,
     install_requires=[
+        'odoo14-addon-hr_holidays_calendar_name',
         'odoo14-addon-hr_holidays_credit',
         'odoo14-addon-hr_holidays_leave_auto_approve',
         'odoo14-addon-hr_holidays_leave_repeated',
