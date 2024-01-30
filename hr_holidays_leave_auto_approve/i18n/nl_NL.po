@@ -26,35 +26,38 @@ msgid "Auto Approve Policy"
 msgstr ""
 
 #. module: hr_holidays_leave_auto_approve
-#: selection:hr.leave.type,auto_approve_policy:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__all
 #, fuzzy
-#| msgid "Auto Validate"
 msgid "Auto Validated by Everyone"
 msgstr "Automatisch goedkeuren"
 
 #. module: hr_holidays_leave_auto_approve
-#: selection:hr.leave.type,auto_approve_policy:0
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__hr
 #, fuzzy
-#| msgid "Auto Validate"
 msgid "Auto Validated by HR"
 msgstr "Automatisch goedkeuren"
 
 #. module: hr_holidays_leave_auto_approve
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__no
+#, fuzzy
+msgid "No auto Validation"
+msgstr "Automatisch goedkeuren"
+
+#. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave
-msgid "Leave"
-msgstr "Verlof"
+msgid "Time Off"
+msgstr ""
 
 #. module: hr_holidays_leave_auto_approve
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Verloftype"
+msgid "Time Off Type"
+msgstr ""
 
-#. module: hr_holidays_leave_auto_approve
-#: selection:hr.leave.type,auto_approve_policy:0
-#, fuzzy
-#| msgid "Auto Validate"
-msgid "No auto Validation"
-msgstr "Automatisch goedkeuren"
+#~ msgid "Leave"
+#~ msgstr "Verlof"
+
+#~ msgid "Leave Type"
+#~ msgstr "Verloftype"
 
 #~ msgid ""
 #~ "If True, leaves belonging to this leave type will be automatically "
