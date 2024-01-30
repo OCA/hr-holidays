@@ -32,24 +32,6 @@ msgid "Auto Validated by HR"
 msgstr "Auto approvata da RU"
 
 #. module: hr_holidays_leave_auto_approve
-#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave__display_name
-#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave_type__display_name
-msgid "Display Name"
-msgstr "Nome visualizzato"
-
-#. module: hr_holidays_leave_auto_approve
-#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave__id
-#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave_type__id
-msgid "ID"
-msgstr "ID"
-
-#. module: hr_holidays_leave_auto_approve
-#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave____last_update
-#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave_type____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
-
-#. module: hr_holidays_leave_auto_approve
 #: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__no
 msgid "No auto Validation"
 msgstr "No auto validazione"
@@ -63,3 +45,12 @@ msgstr "Ferie"
 #: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Tipo di ferie"
+
+#~ msgid "Display Name"
+#~ msgstr "Nome visualizzato"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Ultima modifica il"
