@@ -24,6 +24,7 @@ addon | version | maintainers | summary
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 16.0.1.0.0 | [![victoralmau](https://github.com/victoralmau.png?size=30px)](https://github.com/victoralmau) | Apply natural days in holidays
 [hr_holidays_public](hr_holidays_public/) | 16.0.1.1.3 |  | Manage Public Holidays
 [hr_holidays_public_city](hr_holidays_public_city/) | 16.0.1.0.0 | [![victoralmau](https://github.com/victoralmau.png?size=30px)](https://github.com/victoralmau) | HR Holidays Public City
+[hr_leave_type_code](hr_leave_type_code/) | 16.0.1.0.0 |  | Add a code field to HR Leaves
 
 [//]: # (end addons)
 

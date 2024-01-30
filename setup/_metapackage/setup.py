@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo-addon-hr_holidays_natural_period>=16.0dev,<16.1dev',
         'odoo-addon-hr_holidays_public>=16.0dev,<16.1dev',
         'odoo-addon-hr_holidays_public_city>=16.0dev,<16.1dev',
+        'odoo-addon-hr_leave_type_code>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
