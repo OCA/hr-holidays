@@ -1,7 +1,8 @@
 # Do NOT update manually; changes here will be overwritten by Copier
-_commit: v1.17.2
+_commit: v1.20
 _src_path: gh:oca/oca-addons-repo-template
 ci: GitHub
+convert_readme_fragments_to_markdown: false
 generate_requirements_txt: true
 github_check_license: true
 github_ci_extra_env: {}
@@ -14,9 +15,12 @@ odoo_test_flavor: Both
 odoo_version: 15.0
 org_name: Odoo Community Association (OCA)
 org_slug: OCA
-rebel_module_groups: []
-repo_description: 'TODO: add repo description.'
+rebel_module_groups:
+- hr_holidays_calendar_event_privacy
+repo_description: 'Modules extending the HR Holidays addon from Odoo. '
 repo_name: hr-holidays
 repo_slug: hr-holidays
 repo_website: https://github.com/OCA/hr-holidays
+use_pyproject_toml: false
+use_ruff: false
 

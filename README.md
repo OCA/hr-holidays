@@ -9,7 +9,7 @@
 
 # hr-holidays
 
-TODO: add repo description.
+Modules extending the HR Holidays addon from Odoo. 
 
 <!-- /!\ do not modify below this line -->
 
