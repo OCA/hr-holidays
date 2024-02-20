@@ -7,22 +7,23 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import common
 
 
-class TestHrLeaveSummaryEmail(common.TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.HrLeave = self.env["hr.leave"]
-        leave_type = self.env.ref("hr_holidays.hr_holiday_status_dv")
+class TestHrLeaveSummaryEmail(common.SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.HrLeave = cls.env["hr.leave"]
+        leave_type = cls.env.ref("hr_holidays.hr_holiday_status_dv")
         # Add allocation days for the test
-        leave_type.write({"allocation_type": "no"})
-        calendar = self.env.ref("resource.resource_calendar_std")
-        partner = self.env["res.partner"].create(
+        leave_type.write({"requires_allocation": "no"})
+        calendar = cls.env.ref("resource.resource_calendar_std")
+        partner = cls.env["res.partner"].create(
             {
                 "name": "Test employee",
                 "type": "private",
-                "country_id": self.env.ref("base.es").id,
+                "country_id": cls.env.ref("base.es").id,
             }
         )
-        self.employee = self.env["hr.employee"].create(
+        cls.employee = cls.env["hr.employee"].create(
             {
                 "name": "Test employee",
                 "address_home_id": partner.id,
@@ -30,13 +31,13 @@ class TestHrLeaveSummaryEmail(common.TransactionCase):
             }
         )
         # Today leave
-        self.leave_1 = (
-            self.env["hr.leave"]
+        cls.leave_1 = (
+            cls.env["hr.leave"]
             .with_context(leave_skip_state_check=True)
             .create(
                 {
                     "name": "Test 1",
-                    "employee_id": self.employee.id,
+                    "employee_id": cls.employee.id,
                     "holiday_status_id": leave_type.id,
                     "date_from": datetime.today(),
                     "date_to": (datetime.today() + relativedelta(days=1)),
@@ -47,13 +48,13 @@ class TestHrLeaveSummaryEmail(common.TransactionCase):
         )
 
         # Week leave
-        self.leave_2 = (
-            self.env["hr.leave"]
+        cls.leave_2 = (
+            cls.env["hr.leave"]
             .with_context(leave_skip_state_check=True)
             .create(
                 {
                     "name": "Test 2",
-                    "employee_id": self.employee.id,
+                    "employee_id": cls.employee.id,
                     "holiday_status_id": leave_type.id,
                     "date_from": (datetime.today() + relativedelta(days=3)),
                     "date_to": (datetime.today() + relativedelta(days=5)),
