@@ -58,7 +58,7 @@ class HrHolidaysPublic(models.Model):
         partner = self._get_partner_deprecated_employee(partner_id, employee_id)
 
         states_filter = [("year_id", "in", pholidays.ids)]
-        if partner.state_id:
+        if partner and partner.state_id:
             states_filter += [
                 "|",
                 ("state_ids", "=", False),
@@ -91,18 +91,19 @@ class HrHolidaysPublic(models.Model):
             end_dt = datetime.date(year, 12, 31)
         years = list(range(start_dt.year, end_dt.year + 1))
         holidays_filter = [("year", "in", years)]
-        if partner.country_id:
-            holidays_filter.append("|")
-            holidays_filter.append(("country_id", "=", False))
-            holidays_filter.append(("country_id", "=", partner.country_id.id))
-        else:
-            holidays_filter.append(("country_id", "=", False))
+        if partner:
+            if partner.country_id:
+                holidays_filter.append("|")
+                holidays_filter.append(("country_id", "=", False))
+                holidays_filter.append(("country_id", "=", partner.country_id.id))
+            else:
+                holidays_filter.append(("country_id", "=", False))
         pholidays = self.search(holidays_filter)
         if not pholidays:
             return self.env["hr.holidays.public.line"]
-
+        partner_id = partner.id if partner else None
         states_filter = self._get_domain_states_filter(
-            pholidays, start_dt, end_dt, partner_id=partner.id
+            pholidays, start_dt, end_dt, partner_id=partner_id
         )
         hhplo = self.env["hr.holidays.public.line"]
         holidays_lines = hhplo.search(states_filter)
@@ -118,8 +119,9 @@ class HrHolidaysPublic(models.Model):
         :return: bool
         """
         partner = self._get_partner_deprecated_employee(partner_id, employee_id)
+        partner_id = partner.id if partner else None
         holidays_lines = self.get_holidays_list(
-            year=selected_date.year, partner_id=partner.id
+            year=selected_date.year, partner_id=partner_id
         )
         if holidays_lines:
             hol_date = holidays_lines.filtered(lambda r: r.date == selected_date)
@@ -140,7 +142,7 @@ class HrHolidaysPublic(models.Model):
             partner = employee.address_id
         if partner_id:
             if partner:
-                _logger.error(
+                _logger.warning(
                     "Cannot use both employee_id and address_id in parameters. "
                     "Ignoring employee_id."
                 )
