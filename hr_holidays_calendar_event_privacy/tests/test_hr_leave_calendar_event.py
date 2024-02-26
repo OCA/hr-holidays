@@ -2,10 +2,13 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl)
 from datetime import timedelta
 
+from freezegun import freeze_time
+
 from odoo import fields
 from odoo.tests import Form, TransactionCase
 
 
+@freeze_time("2024-01-01")
 class TestHrLeaveCalendarEvent(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -24,15 +27,15 @@ class TestHrLeaveCalendarEvent(TransactionCase):
     def test_calendar_event_privacy(self):
         self.assertEqual(self.leave_type.calendar_event_privacy, "confidential")
         leave = self._new_leave_request(
-            fields.Date.today() + timedelta(days=12),
-            fields.Date.today() + timedelta(days=13),
+            fields.Date.today() + timedelta(days=2),
+            fields.Date.today() + timedelta(days=3),
         )
         leave.action_validate()
         self.assertEqual(leave.meeting_id.privacy, "confidential")
         self.leave_type.calendar_event_privacy = "public"
         leave = self._new_leave_request(
-            fields.Date.today() + timedelta(days=13),
-            fields.Date.today() + timedelta(days=14),
+            fields.Date.today() + timedelta(days=3),
+            fields.Date.today() + timedelta(days=4),
         )
         leave.action_validate()
         self.assertEqual(leave.meeting_id.privacy, "public")
