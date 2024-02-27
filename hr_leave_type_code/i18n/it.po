@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-05 13:52+0000\n"
-"PO-Revision-Date: 2024-02-20 17:36+0000\n"
+"PO-Revision-Date: 2024-02-27 13:36+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -25,7 +25,7 @@ msgstr "Codice"
 #. module: hr_leave_type_code
 #: model:ir.model.constraint,message:hr_leave_type_code.constraint_hr_leave_type_code_uniq
 msgid "The code must be unique per company!"
-msgstr "Il codice deve essere univoco per azienda."
+msgstr "Il codice deve essere univoco per azienda!"
 
 #. module: hr_leave_type_code
 #: model:ir.model,name:hr_leave_type_code.model_hr_leave_type
