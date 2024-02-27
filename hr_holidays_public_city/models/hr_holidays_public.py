@@ -6,21 +6,23 @@ from odoo import api, fields, models
 class HrHolidaysPublic(models.Model):
     _inherit = "hr.holidays.public"
 
-    def _get_domain_states_filter(self, pholidays, start_dt, end_dt, employee_id=None):
+    def _get_domain_states_filter(
+        self, pholidays, start_dt, end_dt, employee_id=None, partner_id=None
+    ):
         domain = super()._get_domain_states_filter(
             pholidays=pholidays,
             start_dt=start_dt,
             end_dt=end_dt,
             employee_id=employee_id,
+            partner_id=partner_id,
         )
-        employee = False
-        if employee_id:
-            employee = self.env["hr.employee"].browse(employee_id)
-        if employee and employee.address_id and employee.address_id.city_id:
+        partner = self._get_partner_deprecated_employee(partner_id, employee_id)
+
+        if partner and partner.city_id:
             domain += [
                 "|",
                 ("city_ids", "=", False),
-                ("city_ids", "=", employee.address_id.city_id.id),
+                ("city_ids", "=", partner.city_id.id),
             ]
         else:
             domain.append(("city_ids", "=", False))
