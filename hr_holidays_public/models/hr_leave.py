@@ -13,11 +13,16 @@ class HrLeave(models.Model):
         actions derived from this validation. This is required for example for
         `project_timesheet_holidays` for not generating the timesheet on the public holiday.
         Unfortunately, no regression test can be added, being in a separate module."""
-        if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
-            self = self.with_context(
-                employee_id=self.employee_id.id, exclude_public_holidays=True
-            )
-        return super(HrLeave, self).action_validate()
+        for leave in self:
+            if (
+                leave.holiday_status_id.exclude_public_holidays
+                or not leave.holiday_status_id
+            ):
+                leave = leave.with_context(
+                    employee_id=leave.employee_id.id, exclude_public_holidays=True
+                )
+            super(HrLeave, leave).action_validate()
+        return True
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
