@@ -10,15 +10,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-03 03:37+0000\n"
-"PO-Revision-Date: 2022-02-02 14:33+0000\n"
-"Last-Translator: Olga Marco Puértolas <olga.marco@creublanca.es>\n"
+"PO-Revision-Date: 2024-03-19 11:36+0000\n"
+"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: hr_holidays_public
 #: model_terms:ir.ui.view,arch_db:hr_holidays_public.holidays_public_next_year_wizard_view
@@ -34,11 +34,13 @@ msgid ""
 "button\n"
 "                            \"Create\"."
 msgstr ""
-"Por defect los festivos más recientes de cada país se usan como plantilla "
-"para crear el calendario del año siguiente.\n"
-"<br/><br/>\n"
-"Normalmente no hará falta que se introduzca nada, solo es necesario clica en "
-"'Crear'."
+"Por defecto, los días festivos más recientes\n"
+" de cada país se utilizan como plantilla para crear\n"
+" los días festivos del año siguiente a las plantillas.\n"
+" <br/><br/>\n"
+" Normalmente, no debería ser necesario introducir nada en\n"
+" campos opcionales y sólo tendrá que pulsar el botón\n"
+" \"Crear\"."
 
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_holidays_public__year
@@ -187,7 +189,7 @@ msgstr "Nombre"
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
 #, python-format
 msgid "New public holidays"
-msgstr ""
+msgstr "Nuevos días festivos"
 
 #. module: hr_holidays_public
 #: code:addons/hr_holidays_public/wizards/holidays_public_next_year_wizard.py:0
@@ -258,10 +260,11 @@ msgid ""
 "want to\n"
 "                            replicate the 2010 Italian holidays to 2012.\""
 msgstr ""
-"Los siguientes campos opcionales se usan para lidiar con casos especiales, "
-"por ejemplo en 2011 hubo un festivo extra en Italia por la celebración del "
-"150 aniversario de la unificación, así que lo que se quiere es replicar de "
-"2010 a 2012"
+"Los siguientes campos opcionales están aquí sólo para manejar\n"
+" situaciones especiales como \"2011 fue un año especial con\n"
+" un día festivo adicional por el 150\n"
+" aniversario de la unificación italiana, por lo que desea\n"
+" replicar los días festivos italianos de 2010 en 2012.\""
 
 #. module: hr_holidays_public
 #: model:ir.model,name:hr_holidays_public.model_hr_leave
@@ -285,13 +288,13 @@ msgid ""
 "                            only the templates from 2015 will be taken into\n"
 "                            account)."
 msgstr ""
-"Use este wizard para crear el calendario de Festivos a partir\n"
-"                            de ya existentes.<br/>\n"
-"                            Sólo la plantilla más reciente se utilizará\n"
-"                            para cada país (si selecciona una plantilla de "
-"2012\n"
-"                            y otra de 2015, solo se tendrá en cuenta la del "
-"2015)."
+"Utilice este asistente para crear días festivos basándose en los\n"
+" existentes.<br/>\n"
+" Sólo se tendrán en cuenta las últimas plantillas de cada país\n"
+" se tendrán en cuenta (si selecciona plantillas\n"
+" de 2012 y 2015 del mismo país; '\n"
+" sólo se tendrán en cuenta las plantillas de 2015\n"
+" en la cuenta)."
 
 #. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_public_holidays_next_year_wizard__year
