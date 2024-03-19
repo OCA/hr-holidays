@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="view_hr_leave_allocation_filter_inherited" model="ir.ui.view">
+        <field name="name">hr.holidays.filter_allocations.inherited</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.view_hr_leave_allocation_filter" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//filter[@name='managed_people']" position="attributes">
+                    <attribute
+                        name="domain"
+                    >[('employee_id.leave_manager_ids', 'in', [uid])]</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>
