@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2023 ForgeFlow S.L.
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form - hr_holidays_summary_email</field>
+        <field name="model">res.config.settings</field>
+        <field
+            name="inherit_id"
+            ref="hr_holidays_settings.res_config_settings_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr_holidays']/div" position="after">
+                <div class="row mt16 o_settings_container">
+                    <div
+                        class="col-12 o_setting_box"
+                        id="hr_holidays_summary_weekly_dow"
+                    >
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Weekly Leaves Summary</span>
+                            <div class="text-muted">
+                                Day of week when the weekly leaves summary is sent.
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    for="hr_holidays_summary_weekly_dow"
+                                    string="Sending Day Of Week"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="hr_holidays_summary_weekly_dow"
+                                    class="oe_inline"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
