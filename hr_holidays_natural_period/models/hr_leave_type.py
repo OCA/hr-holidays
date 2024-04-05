@@ -16,8 +16,8 @@ class HrLeaveType(models.Model):
         """We need to set request_unit as 'day' to avoid the calculations being done
         as hours.
         Related code:
-        hr_holidays/models/hr_leave_type.py#L313
-        hr_holidays/models/hr_leave_type.py#L367
+        hr_holidays/models/hr_leave_type.py#L326
+        hr_holidays/models/hr_leave_type.py#L389
         """
         old_request_unit_data = {}
         for item in self.filtered(lambda x: x.request_unit == "natural_day"):
