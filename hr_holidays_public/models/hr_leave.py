@@ -9,10 +9,12 @@ class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     def action_validate(self):
-        """Inject the needed context for excluding public holidays (if applicable) on the
-        actions derived from this validation. This is required for example for
-        `project_timesheet_holidays` for not generating the timesheet on the public holiday.
-        Unfortunately, no regression test can be added, being in a separate module."""
+        """Inject the needed context for excluding public holidays (if applicable) on
+        the actions derived from this validation. This is required for example for
+        `project_timesheet_holidays` for not generating the timesheet on the public
+        holiday. Unfortunately, no regression test can be added, being in a separate
+        module.
+        """
         if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
             self = self.with_context(
                 employee_id=self.employee_id.id, exclude_public_holidays=True
