@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import common
 
 
-class TestHrLeaveSummaryEmail(common.SavepointCase):
+class TestHrLeaveSummaryEmail(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
