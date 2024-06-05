@@ -21,43 +21,70 @@ class TestHrHolidaysCredit(common.TransactionCase):
         self.SudoLeaveType = self.LeaveType.sudo()
         self.Leave = self.env["hr.leave"]
         self.SudoLeave = self.Leave.sudo()
+        self.LeaveAllocation = self.env["hr.leave.allocation"]
 
-    def test_1(self):
-        employee = self.SudoEmployee.create({"name": "Employee #1"})
-        leave_type = self.SudoLeaveType.create(
+        self.in_hours_w_credit_leave_type = self.SudoLeaveType.create(
             {
-                "name": "Leave Type #1",
+                "name": "Recuperation w/ credit",
+                "request_unit": "hour",
+                "allocation_type": "fixed",
+                "allow_credit": True,
+            }
+        )
+
+        self.in_hours_wo_credit_leave_type = self.SudoLeaveType.create(
+            {
+                "name": "Recuperation w/o credit",
+                "request_unit": "hour",
                 "allocation_type": "fixed",
                 "allow_credit": False,
             }
         )
 
+        self.in_days_w_credit_leave_type = self.SudoLeaveType.create(
+            {
+                "name": "Legal w/ credit",
+                "request_unit": "day",
+                "allocation_type": "fixed",
+                "allow_credit": True,
+            }
+        )
+
+        self.in_days_wo_credit_leave_type = self.SudoLeaveType.create(
+            {
+                "name": "Legal w/o credit",
+                "request_unit": "day",
+                "allocation_type": "fixed",
+                "allow_credit": False,
+            }
+        )
+
+    def test_credit_leave_should_not_be_created_if_disabled_on_leave_type(self,):
+        employee = self.SudoEmployee.create({"name": "Employee #1"})
+
         with self.assertRaises(ValidationError):
             self.SudoLeave.create(
                 {
-                    "holiday_status_id": leave_type.id,
+                    "holiday_status_id": self.in_days_wo_credit_leave_type.id,
                     "holiday_type": "employee",
                     "employee_id": employee.id,
                     "number_of_days": 1,
                 }
             )
 
-    def test_2(self):
+    def test_credit_leave_should_be_created_if_enable_on_leave_type(self):
         employee = self.SudoEmployee.create({"name": "Employee #2"})
-        leave_type = self.SudoLeaveType.create(
-            {"name": "Leave Type #2", "allocation_type": "fixed", "allow_credit": True}
-        )
 
         self.SudoLeave.create(
             {
-                "holiday_status_id": leave_type.id,
+                "holiday_status_id": self.in_days_w_credit_leave_type.id,
                 "holiday_type": "employee",
                 "employee_id": employee.id,
                 "number_of_days": 1,
             }
         )
 
-    def test_3(self):
+    def test_leave_credit_conditionned_by_departement(self):
         department = self.SudoDepartment.create({"name": "Department #3"})
         employee_1 = self.SudoEmployee.create(
             {"name": "Employee #3-1", "department_id": department.id}
@@ -91,7 +118,7 @@ class TestHrHolidaysCredit(common.TransactionCase):
                 }
             )
 
-    def test_4(self):
+    def test_leave_credit_conditionned_by_employee(self):
         employee_1 = self.SudoEmployee.create({"name": "Employee #4-1"})
         employee_2 = self.SudoEmployee.create({"name": "Employee #4-2"})
         leave_type = self.SudoLeaveType.create(
@@ -122,42 +149,179 @@ class TestHrHolidaysCredit(common.TransactionCase):
                 }
             )
 
-    def test_5(self):
+    def test_1_day_available_without_credit_display_name(self):
         employee = self.SudoEmployee.create({"name": "Employee #5"})
-        leave_type = self.SudoLeaveType.create(
+        leave_type = self.in_days_wo_credit_leave_type
+        alloc = self.LeaveAllocation.create(
             {
-                "name": "Leave Type #5",
-                "allocation_type": "fixed",
-                "allow_credit": False,
-            }
-        )
-
-        name = leave_type.with_context(employee_id=employee.id,).name_get()[0][1]
-        self.assertTrue("available" in name)
-        self.assertTrue("credit" not in name)
-
-    def test_6(self):
-        employee = self.SudoEmployee.create({"name": "Employee #6"})
-        leave_type = self.SudoLeaveType.create(
-            {"name": "Leave Type #6", "allocation_type": "fixed", "allow_credit": True}
-        )
-
-        name = leave_type.with_context(employee_id=employee.id,).name_get()[0][1]
-        self.assertTrue("available + credit" in name)
-
-    def test_7(self):
-        employee = self.SudoEmployee.create({"name": "Employee #7"})
-        leave_type = self.SudoLeaveType.create(
-            {"name": "Leave Type #7", "allocation_type": "fixed", "allow_credit": True}
-        )
-        self.SudoLeave.create(
-            {
+                "name": "Test Allocation 1",
                 "holiday_status_id": leave_type.id,
                 "holiday_type": "employee",
                 "employee_id": employee.id,
                 "number_of_days": 1,
             }
         )
+        alloc.action_approve()
 
-        name = leave_type.with_context(employee_id=employee.id,).name_get()[0][1]
-        self.assertTrue("used in credit" in name)
+        name = self.in_days_wo_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertEqual("%s (1 day available)" % (leave_type.name), name)
+
+    def test_1_day_available_with_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #5"})
+        leave_type = self.in_days_w_credit_leave_type
+        alloc = self.LeaveAllocation.create(
+            {
+                "name": "Test Allocation 1",
+                "holiday_status_id": leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 1,
+            }
+        )
+        alloc.action_approve()
+
+        name = self.in_days_w_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertEqual("%s (1 day available + credit)" % (leave_type.name), name)
+
+    def test_10_days_available_without_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #5"})
+        leave_type = self.in_days_wo_credit_leave_type
+        alloc = self.LeaveAllocation.create(
+            {
+                "name": "Test Allocation 1",
+                "holiday_status_id": leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 10,
+            }
+        )
+        alloc.action_approve()
+
+        name = self.in_days_wo_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertEqual("%s (10 days available)" % (leave_type.name), name)
+
+    def test_11_days_available_with_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #5"})
+        leave_type = self.in_days_w_credit_leave_type
+        alloc = self.LeaveAllocation.create(
+            {
+                "name": "Test Allocation 1",
+                "holiday_status_id": leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 11,
+            }
+        )
+        alloc.action_approve()
+
+        name = self.in_days_w_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertEqual("%s (11 days available + credit)" % (leave_type.name), name)
+
+    def test_0_hour_leave_available_with_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #6"})
+        name = self.in_hours_w_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertIn("0 hour available", name)
+        self.assertIn(" + credit", name)
+
+    def test_2_days_used_in_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #7"})
+        self.SudoLeave.create(
+            {
+                "holiday_status_id": self.in_days_w_credit_leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 2,
+            }
+        )
+
+        name = self.in_days_w_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertIn("2 days used in credit", name)
+
+    def test_x_hours_used_in_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #8"})
+        leave = self.SudoLeave.create(
+            {
+                "holiday_status_id": self.in_hours_w_credit_leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 1,
+            }
+        )
+
+        name = self.in_hours_w_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertIn(
+            "%g hours used in credit" % abs(leave.number_of_hours_display), name,
+        )
+        self.assertNotIn(" + credit", name)
+
+    def test_less_than_1_hour_available_without_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #9"})
+        alloc = self.LeaveAllocation.create(
+            {
+                "name": "Test Allocation 2",
+                "holiday_status_id": self.in_hours_wo_credit_leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": round(1 / 9, 1),
+            }
+        )
+        alloc.action_approve()
+
+        name = self.in_hours_wo_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertIn("%g hour available" % alloc.number_of_hours_display, name)
+        self.assertNotIn(" + credit", name)
+
+    def test_x_hours_available_without_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #9"})
+        alloc = self.LeaveAllocation.create(
+            {
+                "name": "Test Allocation 2",
+                "holiday_status_id": self.in_hours_wo_credit_leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 1,
+            }
+        )
+        alloc.action_approve()
+
+        name = self.in_hours_wo_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertIn("%g hours available" % alloc.number_of_hours_display, name)
+        self.assertNotIn(" + credit", name)
+
+    def test_x_hours_available_with_credit_display_name(self):
+        employee = self.SudoEmployee.create({"name": "Employee #9"})
+        alloc = self.LeaveAllocation.create(
+            {
+                "name": "Test Allocation 90",
+                "holiday_status_id": self.in_hours_w_credit_leave_type.id,
+                "holiday_type": "employee",
+                "employee_id": employee.id,
+                "number_of_days": 1,
+            }
+        )
+        alloc.action_approve()
+
+        name = self.in_hours_w_credit_leave_type.with_context(
+            employee_id=employee.id
+        ).name_get()[0][1]
+        self.assertIn(
+            "%g hours available + credit" % alloc.number_of_hours_display, name
+        )
