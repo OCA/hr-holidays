@@ -21,7 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[hr_holidays_credit](hr_holidays_credit/) | 13.0.1.0.0 |  | Enable negative leave balance for employees
+[hr_holidays_credit](hr_holidays_credit/) | 13.0.1.1.0 |  | Enable negative leave balance for employees
 [hr_holidays_leave_auto_approve](hr_holidays_leave_auto_approve/) | 13.0.1.0.0 |  | Leave type for auto-validation of Leaves
 [hr_holidays_leave_repeated](hr_holidays_leave_repeated/) | 13.0.1.0.0 |  | Define periodical leaves
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 13.0.1.0.3 | [![victoralmau](https://github.com/victoralmau.png?size=30px)](https://github.com/victoralmau) | Apply natural days in holidays
