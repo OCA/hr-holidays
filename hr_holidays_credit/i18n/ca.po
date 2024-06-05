@@ -25,20 +25,74 @@ msgstr "%(name)s (%(extra)s)"
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
-msgid "%g available"
-msgstr "%g disponible"
+msgid "%g day available"
+msgstr ""
 
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
-msgid "%g available + credit"
-msgstr "%g disponible + crèdit"
+msgid "%g day available + credit"
+msgstr ""
 
 #. module: hr_holidays_credit
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
-msgid "%g used in credit"
-msgstr "%g utilitzat en crèdit"
+msgid "%g day used in credit"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g days available"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g days available + credit"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g days used in credit"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g hour available"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g hour available + credit"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g hour used in credit"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g hours available"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g hours available + credit"
+msgstr ""
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g hours used in credit"
+msgstr ""
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__allow_credit
@@ -100,3 +154,15 @@ msgstr "Temps lliure"
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Tipus de temps lliure"
+
+#, python-format
+#~ msgid "%g available"
+#~ msgstr "%g disponible"
+
+#, python-format
+#~ msgid "%g available + credit"
+#~ msgstr "%g disponible + crèdit"
+
+#, python-format
+#~ msgid "%g used in credit"
+#~ msgstr "%g utilitzat en crèdit"
