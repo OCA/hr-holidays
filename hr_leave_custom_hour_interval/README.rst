@@ -72,6 +72,10 @@ Contributors
    -  Olga Marco
    -  Enric Tobella
 
+-  Trobz
+
+   -  Duy Do Anh
+
 Maintainers
 -----------
 
