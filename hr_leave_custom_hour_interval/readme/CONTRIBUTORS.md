@@ -1,3 +1,4 @@
-- Creu Blanca  
+- Creu Blanca
   - Olga Marco
   - Enric Tobella
+  - Duy Do Anh <duyda@trobz.com>

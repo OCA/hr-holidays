@@ -28,3 +28,16 @@ class HrLeave(models.Model):
     @api.depends("request_time_hour_from", "request_time_hour_to")
     def _compute_date_from_to(self):
         return super()._compute_date_from_to()
+
+    def action_validate(self):
+        """fixed action_validate() override from hr_holidays_public"""
+        for leave in self:
+            if (
+                leave.holiday_status_id.exclude_public_holidays
+                or not leave.holiday_status_id
+            ):
+                leave = leave.with_context(
+                    employee_id=leave.employee_id.id, exclude_public_holidays=True
+                )
+            super(HrLeave, leave).action_validate()
+        return True
