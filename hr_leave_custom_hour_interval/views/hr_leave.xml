@@ -9,30 +9,26 @@
         <field name="arch" type="xml">
             <field name="request_hour_from" position="attributes">
                 <attribute name="invisible">1</attribute>
-                <attribute name="attrs">{}</attribute>
             </field>
             <field name="request_hour_from" position="after">
                 <field
                     name="request_time_hour_from"
                     widget="float_time"
-                    attrs="{
-                        'readonly': [('state', '=', 'validate')],
-                        'required': [('request_unit_hours', '=', True)],
-                        'invisible': [('request_unit_hours', '=', False)]}"
+                    readonly="state == 'validate'"
+                    required="request_unit_hours"
+                    invisible="not request_unit_hours"
                 />
             </field>
             <field name="request_hour_to" position="attributes">
                 <attribute name="invisible">1</attribute>
-                <attribute name="attrs">{}</attribute>
             </field>
             <field name="request_hour_to" position="after">
                 <field
                     name="request_time_hour_to"
                     widget="float_time"
-                    attrs="{
-                        'readonly': [('state', '=', 'validate')],
-                        'required': [('request_unit_hours', '=', True)],
-                        'invisible': [('request_unit_hours', '=', False)]}"
+                    readonly="state == 'validate'"
+                    required="request_unit_hours"
+                    invisible="not request_unit_hours"
                 />
             </field>
         </field>
