@@ -36,12 +36,10 @@ class HolidaysAllocation(models.Model):
         )[employee.id]
 
     def _compute_remaining_leaves(self):
-
         now = fields.Datetime.now()
         now = datetime.combine(now, datetime.min.time())
 
         for allocation in self:
-
             # Get all validated leaves filtered by employee and leave type
             leaves = self.env["hr.leave"].search(
                 [
@@ -89,7 +87,6 @@ class HolidaysAllocation(models.Model):
 
     def _compute_remaining_leaves_display(self):
         for allocation in self:
-
             allocation.remaining_leaves_display = "%g %s" % (
                 (
                     float_round(allocation.remaining_leaves_hours, precision_digits=2)
