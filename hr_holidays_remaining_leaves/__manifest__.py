@@ -4,7 +4,7 @@
         Show remaining leaves per employee in allocation overview.
     """,
     "author": "Mint System GmbH, Odoo Community Association (OCA)",
-    "website": "https://www.mint-system.ch",
+    "website": "https://github.com/OCA/hr-holidays",
     "category": "Human Resources",
     "version": "16.0.1.0.0",
     "license": "AGPL-3",
