@@ -1,11 +1,14 @@
+# Copyright 2024 Janik von Rotz <janik.vonrotz@mint-system.ch>
+# Copyright 2024 Camptocamp
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
 
 from odoo import _, fields, models
+from odoo.tools.float_utils import float_round
+
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 _logger = logging.getLogger(__name__)
-from datetime import datetime
-
-from odoo.tools.float_utils import float_round
 
 
 class HolidaysAllocation(models.Model):
@@ -36,72 +39,49 @@ class HolidaysAllocation(models.Model):
         )[employee.id]
 
     def _compute_remaining_leaves(self):
-        now = fields.Datetime.now()
-        now = datetime.combine(now, datetime.min.time())
-
+        all_consumed_leaves = self.employee_id._get_consumed_leaves(
+            self.holiday_status_id
+        )[0]
+        all_consumed_leaves_current = self.employee_id._get_consumed_leaves(
+            self.holiday_status_id, ignore_future=True
+        )[0]
         for allocation in self:
-            # Get all validated leaves filtered by employee and leave type
-            leaves = self.env["hr.leave"].search(
-                [
-                    ("employee_id", "=", allocation.employee_id.id),
-                    ("state", "=", "validate"),
-                    ("holiday_status_id", "=", allocation.holiday_status_id.id),
-                    "|",
-                    ("holiday_allocation_id", "=", allocation.id),
-                    ("holiday_allocation_id", "=", False),
-                ]
+            consumes_allo = all_consumed_leaves[allocation.employee_id][
+                allocation.holiday_status_id
+            ][allocation]
+            consumes_allo_current = all_consumed_leaves_current[allocation.employee_id][
+                allocation.holiday_status_id
+            ][allocation]
+            allocation_calendar = (
+                allocation.holiday_status_id.company_id.resource_calendar_id
             )
-
-            # Set the remaining leaves
-            allocation.remaining_leaves_hours = (
-                allocation.number_of_hours_display
-                - sum(leaves.mapped("number_of_hours_display"))
+            if allocation.holiday_type == "employee" and allocation.employee_id:
+                allocation_calendar = allocation.employee_id.sudo().resource_calendar_id
+            allocation.remaining_leaves_days = consumes_allo["remaining_leaves"]
+            allocation.remaining_leaves_hours = consumes_allo["remaining_leaves"] * (
+                allocation_calendar.hours_per_day or HOURS_PER_DAY
             )
-            allocation.remaining_leaves_days = allocation.number_of_days - sum(
-                leaves.mapped("number_of_days")
-            )
-
-            # Get past leaves
-            past_leaves = leaves.filtered(lambda l: l.date_to < now)
-            past_leave_hours = sum(past_leaves.mapped("number_of_hours_display"))
-            past_leave_days = sum(past_leaves.mapped("number_of_days"))
-
-            # Check for leaves that are active and calculate the exact number of hours and days
-            active_leave_hours = 0
-            active_leave_days = 0
-            for leave in leaves.filtered(lambda l: l.date_from < now < l.date_to):
-                result = self._get_number_of_days_and_hours(
-                    leave.date_from, now, leave.employee_id.id
-                )
-                active_leave_days = result["days"]
-                active_leave_hours = result["hours"]
-
-            allocation.remaining_leaves_current_hours = (
-                allocation.number_of_hours_display
-                - past_leave_hours
-                - active_leave_hours
-            )
-            allocation.remaining_leaves_current_days = (
-                allocation.number_of_days - past_leave_days - active_leave_days
-            )
+            allocation.remaining_leaves_current_days = consumes_allo_current[
+                "remaining_leaves"
+            ]
+            allocation.remaining_leaves_current_hours = consumes_allo_current[
+                "remaining_leaves"
+            ] * (allocation_calendar.hours_per_day or HOURS_PER_DAY)
 
     def _compute_remaining_leaves_display(self):
         for allocation in self:
-            allocation.remaining_leaves_display = "%g %s" % (
-                (
-                    float_round(allocation.remaining_leaves_hours, precision_digits=2)
-                    if allocation.type_request_unit == "hour"
-                    else float_round(
-                        allocation.remaining_leaves_days, precision_digits=2
-                    )
-                ),
+            allocation.remaining_leaves_display = "{} {}".format(
+                float_round(allocation.remaining_leaves_hours, precision_digits=2)
+                if allocation.type_request_unit == "hour"
+                else float_round(allocation.remaining_leaves_days, precision_digits=2),
                 _("hours") if allocation.type_request_unit == "hour" else _("days"),
             )
 
-            allocation.remaining_leaves_current_display = "%g %s" % (
+            allocation.remaining_leaves_current_display = "{} {}".format(
                 (
                     float_round(
-                        allocation.remaining_leaves_current_hours, precision_digits=2
+                        allocation.remaining_leaves_current_hours,
+                        precision_digits=2,
                     )
                     if allocation.type_request_unit == "hour"
                     else float_round(
