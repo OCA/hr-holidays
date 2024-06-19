@@ -1,3 +1,6 @@
+# Copyright 2024 Janik von Rotz <janik.vonrotz@mint-system.ch>
+# Copyright 2024 Camptocamp
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from collections import defaultdict
 
 from odoo import models
@@ -15,7 +18,7 @@ class ResourceCalendar(models.Model):
         OVERWRITE: Calculate number of days against company hours per day.
         """
         day_hours = defaultdict(float)
-        for start, stop, meta in intervals:
+        for start, stop, _ in intervals:
             day_hours[start.date()] += (stop - start).total_seconds() / 3600
 
         # compute number of days as quarters
