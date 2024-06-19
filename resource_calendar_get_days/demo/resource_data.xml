@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
 
     <record id="resource_calendar_std_42h" model="resource.calendar">
         <field name="name">Standard 42 hours/week</field>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="base.main_company" />
         <field name="hours_per_day">8.4</field>
-        <field name="attendance_ids"
+        <field
+            name="attendance_ids"
             eval="[(5, 0, 0),
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7.5, 'hour_to': 11.75, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.33333, 'hour_to': 17.66666, 'day_period': 'afternoon'}),
@@ -23,9 +24,10 @@
 
     <record id="resource_calendar_std_25_2h" model="resource.calendar">
         <field name="name">Standard 25.2 hours/week</field>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="base.main_company" />
         <field name="hours_per_day">5.04</field>
-        <field name="attendance_ids"
+        <field
+            name="attendance_ids"
             eval="[(5, 0, 0),
                 (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11.7, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 10.5, 'hour_to': 12, 'day_period': 'morning'}),
