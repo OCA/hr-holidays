@@ -1,0 +1,1 @@
+Show remaining leaves per employee in allocation overview.
