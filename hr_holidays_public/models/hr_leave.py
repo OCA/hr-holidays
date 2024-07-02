@@ -55,6 +55,12 @@ class HrLeave(models.Model):
 
     def _get_domain_from_get_unusual_days(self, date_from, date_to=None):
         domain = [("date", ">=", date_from)]
+        # Use the employee of the user or the one who has the context
+        employee = self.env.user.employee_id
+        if self.env.context.get(
+            "active_model"
+        ) == "hr.employee" and self.env.context.get("active_id"):
+            employee = self.env["hr.employee"].browse(self.env.context.get("active_id"))
         if date_to:
             domain.append(
                 (
@@ -63,7 +69,7 @@ class HrLeave(models.Model):
                     date_to,
                 )
             )
-        country_id = self.env.user.employee_id.address_id.country_id.id
+        country_id = employee.address_id.country_id.id
         if not country_id:
             country_id = self.env.company.country_id.id or False
         if country_id:
@@ -74,7 +80,7 @@ class HrLeave(models.Model):
                     ("year_id.country_id", "=", country_id),
                 ]
             )
-        state_id = self.env.user.employee_id.address_id.state_id.id
+        state_id = employee.address_id.state_id.id
         if not state_id:
             state_id = self.env.company.state_id.id or False
         if state_id:
