@@ -31,6 +31,7 @@ class TestHolidaysPublicBase(TransactionCase):
         cls.holiday_model_line = cls.env["hr.holidays.public.line"]
         cls.employee_model = cls.env["hr.employee"]
         cls.wizard_next_year = cls.env["public.holidays.next.year.wizard"]
+        cls.leave_model = cls.env["hr.leave"]
 
         # Remove possibly existing public holidays that would interfer.
         cls.holiday_model_line.search([]).unlink()
@@ -220,8 +221,7 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         self, expected, country_id=None, state_ids=False
     ):
         self.assertFalse(
-            self.env["hr.leave"]
-            .with_user(self.env.ref("base.user_demo").id)
+            self.leave_model.with_user(self.env.ref("base.user_demo").id)
             .get_unusual_days("2019-07-01", date_to="2019-07-31")
             .get("2019-07-30", False)
         )
@@ -235,10 +235,22 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             }
         )
         self.assertEqual(
-            self.env["hr.leave"]
-            .with_user(self.env.ref("base.user_demo").id)
-            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
+            self.leave_model.with_user(
+                self.env.ref("base.user_demo").id
+            ).get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
             expected,
+        )
+
+    def test_public_holidays_context(self):
+        self.env.ref("base.user_demo").employee_id.address_id.country_id = False
+        self.leave_model = self.leave_model.with_context(
+            active_model="hr.employee", active_id=self.employee.id
+        )
+        self.assertPublicHolidayIsUnusualDay(
+            True,
+            country_id=self.env.ref(
+                "base.user_demo"
+            ).employee_id.address_id.country_id.id,
         )
 
     def test_get_unusual_days_return_public_holidays_same_country(self):
