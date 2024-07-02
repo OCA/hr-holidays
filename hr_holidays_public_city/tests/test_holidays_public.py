@@ -29,8 +29,7 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         self, expected, country_id=None, state_ids=False, city_ids=False
     ):
         self.assertFalse(
-            self.env["hr.leave"]
-            .with_user(self.env.ref("base.user_demo").id)
+            self.leave_model.with_user(self.env.ref("base.user_demo").id)
             .get_unusual_days("2019-07-01", date_to="2019-07-31")
             .get("2019-07-30", False)
         )
@@ -45,10 +44,27 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             }
         )
         self.assertEqual(
-            self.env["hr.leave"]
-            .with_user(self.env.ref("base.user_demo").id)
-            .get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
+            self.leave_model.with_user(
+                self.env.ref("base.user_demo").id
+            ).get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
             expected,
+        )
+
+    def test_public_holidays_context(self):
+        self.env.ref("base.user_demo").employee_id.address_id.country_id = False
+        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
+        self.env.ref("base.user_demo").employee_id.address_id.city_id = False
+        self.employee.address_id.country_id = self.env.ref("base.us")
+        self.employee.address_id.state_id = self.env.ref("base.state_us_4")
+        self.employee.address_id.city_id = self.us_city_a
+        self.leave_model = self.leave_model.with_context(employee_id=self.employee.id)
+        self.assertPublicHolidayIsUnusualDay(
+            True,
+            country_id=self.env.ref(
+                "base.user_demo"
+            ).employee_id.address_id.country_id.id,
+            state_ids=[(6, 0, [self.employee.address_id.state_id.id])],
+            city_ids=[(6, 0, [self.employee.address_id.city_id.id])],
         )
 
     def test_get_unusual_days_return_public_holidays_same_state_same_city(self):
