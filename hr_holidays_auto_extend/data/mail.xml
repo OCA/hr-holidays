@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_activity_error_auto_extend" model="mail.activity.type">
+            <field name="name">Leave cannot be extended due to overlapping</field>
+            <field name="summary">note</field>
+            <field name="category">default</field>
+            <field name="res_model_id" ref="hr_holidays.model_hr_leave" />
+            <field name="icon">fa-tasks</field>
+            <field name="delay_count">0</field>
+        </record>
+    </data>
+</odoo>
