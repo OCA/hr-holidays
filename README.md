@@ -21,6 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
+[hr_holidays_auto_extend](hr_holidays_auto_extend/) | 14.0.1.0.0 |  | Allow to extend some kind of holidays
 [hr_holidays_calendar_name](hr_holidays_calendar_name/) | 14.0.1.0.0 | [![petrus-v](https://github.com/petrus-v.png?size=30px)](https://github.com/petrus-v) | Control leave employee calendar meeting name
 [hr_holidays_credit](hr_holidays_credit/) | 14.0.1.0.0 |  | Enable negative leave balance for employees
 [hr_holidays_leave_auto_approve](hr_holidays_leave_auto_approve/) | 14.0.1.0.1 |  | Leave type for auto-validation of Leaves
