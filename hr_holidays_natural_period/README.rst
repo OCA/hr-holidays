@@ -17,18 +17,19 @@ Holidays natural period
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github
-    :target: https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_natural_period
+    :target: https://github.com/OCA/hr-holidays/tree/17.0/hr_holidays_natural_period
     :alt: OCA/hr-holidays
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/hr-holidays-16-0/hr-holidays-16-0-hr_holidays_natural_period
+    :target: https://translation.odoo-community.org/projects/hr-holidays-17-0/hr-holidays-17-0-hr_holidays_natural_period
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=17.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module was written to define natural day option in request unit on holidays type.
+This module was written to define natural day option in request unit on
+holidays type.
 
 **Table of contents**
 
@@ -40,13 +41,14 @@ Usage
 
 For using natural period on leaves:
 
-#. Go to *Leaves > Dashboard*.
-#. Select dragging on the calendar the days you want to be on leave, or go
-   to the form view for selecting start and end dates.
-#. Select the proper "Leave Type" that has "Natural day" selected in "Request unit".
-#. If no leave type is yet specified, then default configuration is to exclude
-   public holidays.
-#. The number of days will be computed without employee calendar used.
+1. Go to *Leaves > Dashboard*.
+2. Select dragging on the calendar the days you want to be on leave, or
+   go to the form view for selecting start and end dates.
+3. Select the proper "Leave Type" that has "Natural day" selected in
+   "Request unit".
+4. If no leave type is yet specified, then default configuration is to
+   exclude public holidays.
+5. The number of days will be computed without employee calendar used.
 
 Bug Tracker
 ===========
@@ -54,7 +56,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/hr-holidays/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_natural_period%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_natural_period%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -62,20 +64,20 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Tecnativa
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Tecnativa <https://www.tecnativa.com>
+-  Tecnativa <https://www.tecnativa.com>
 
-    * Víctor Martínez
-    * Pedro Baeza
+      -  Víctor Martínez
+      -  Pedro Baeza
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -95,6 +97,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-victoralmau| 
 
-This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_natural_period>`_ project on GitHub.
+This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/17.0/hr_holidays_natural_period>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
