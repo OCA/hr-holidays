@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14,6 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_holidays_natural_period
+#: model:ir.model,name:hr_holidays_natural_period.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_natural_period
+#: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_allocation__type_request_unit__natural_day
 #: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_type__request_unit__natural_day
 msgid "Natural day"
 msgstr ""
@@ -39,6 +45,16 @@ msgid "Time Off"
 msgstr ""
 
 #. module: hr_holidays_natural_period
+#: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr ""
+
+#. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_type
 msgid "Time Off Type"
+msgstr ""
+
+#. module: hr_holidays_natural_period
+#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_allocation__type_request_unit
+msgid "Type Request Unit"
 msgstr ""

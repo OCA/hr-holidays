@@ -13,11 +13,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.3.2\n"
 
 #. module: hr_holidays_natural_period
+#: model:ir.model,name:hr_holidays_natural_period.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_natural_period
+#: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_allocation__type_request_unit__natural_day
 #: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_type__request_unit__natural_day
 msgid "Natural day"
 msgstr "Cijeli dan"
@@ -43,9 +49,19 @@ msgid "Time Off"
 msgstr "Slobodno vrijeme"
 
 #. module: hr_holidays_natural_period
+#: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr ""
+
+#. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Tip slobodnog vremena"
+
+#. module: hr_holidays_natural_period
+#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_allocation__type_request_unit
+msgid "Type Request Unit"
+msgstr ""
 
 #~ msgid "Display Name"
 #~ msgstr "Prikazani naziv"
