@@ -8,7 +8,7 @@ from pytz import timezone
 
 from odoo import models
 
-from odoo.addons.resource.models.resource import Intervals
+from odoo.addons.resource.models.utils import Intervals
 
 
 class ResourceCalendar(models.Model):
@@ -41,10 +41,15 @@ class ResourceCalendar(models.Model):
         return intervals
 
     def _attendance_intervals_batch(
-        self, start_dt, end_dt, resources=None, domain=None, tz=None
+        self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False
     ):
         res = super()._attendance_intervals_batch(
-            start_dt=start_dt, end_dt=end_dt, resources=resources, domain=domain, tz=tz
+            start_dt=start_dt,
+            end_dt=end_dt,
+            resources=resources,
+            domain=domain,
+            tz=tz,
+            lunch=lunch,
         )
         if self.env.context.get("natural_period"):
             return self._natural_period_intervals_batch(

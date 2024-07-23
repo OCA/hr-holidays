@@ -76,6 +76,10 @@ Contributors
       -  Víctor Martínez
       -  Pedro Baeza
 
+-  APSL-Nagarro <https://www.apsl.tech>
+
+      -  Antoni Marroig <amarroig@apsl.net>
+
 Maintainers
 -----------
 
