@@ -3,25 +3,17 @@
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form, common, new_test_user
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import users
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
 @freeze_time("2023-01-01", tick=True)
-class TestHrLeave(common.TransactionCase):
+class TestHrLeave(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(
-            context=dict(
-                cls.env.context,
-                mail_create_nolog=True,
-                mail_create_nosubscribe=True,
-                mail_notrack=True,
-                no_reset_password=True,
-            )
-        )
-        cls.HrLeave = cls.env["hr.leave"]
         cls.leave_type = cls.env.ref(
             "hr_holidays_natural_period.hr_leave_type_natural_day_test"
         )
@@ -43,7 +35,7 @@ class TestHrLeave(common.TransactionCase):
         partner = cls.env["res.partner"].create(
             {
                 "name": "Test employee",
-                "type": "private",
+                "type": "other",
                 "country_id": cls.env.ref("base.es").id,
             }
         )
@@ -51,7 +43,7 @@ class TestHrLeave(common.TransactionCase):
         cls.employee = cls.env["hr.employee"].create(
             {
                 "name": "Test employee",
-                "address_home_id": partner.id,
+                "address_id": partner.id,
                 "resource_calendar_id": calendar.id,
                 "user_id": cls.user.id,
             }
@@ -64,7 +56,7 @@ class TestHrLeave(common.TransactionCase):
                 default_date_to="%s-12-31" % (fields.Date.today().year),
             )
         )
-        leave_allocation_form.name = "TEST"
+
         leave_allocation_form.holiday_status_id = leave_type
         leave_allocation_form.number_of_days_display = days
         return leave_allocation_form.save()
@@ -79,14 +71,17 @@ class TestHrLeave(common.TransactionCase):
     @users("test-user")
     def test_hr_leave_natural_day(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 5)
-        leave_allocation.action_confirm()
         leave_allocation.sudo().action_validate()
-        res_leave_type = self.env["hr.leave.type"].get_days_all_request()[0][1]
-        self.assertEqual(res_leave_type["remaining_leaves"], "5")
-        self.assertEqual(res_leave_type["virtual_remaining_leaves"], "5")
-        self.assertEqual(res_leave_type["max_leaves"], "5")
-        self.assertEqual(res_leave_type["leaves_taken"], "0")
-        self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
+        res_leave_type = (
+            self.env["hr.leave.type"]
+            .with_company(self.env.company)
+            .get_allocation_data_request()[0][1]
+        )
+        self.assertEqual(res_leave_type["remaining_leaves"], 5)
+        self.assertEqual(res_leave_type["virtual_remaining_leaves"], 5)
+        self.assertEqual(res_leave_type["max_leaves"], 5)
+        self.assertEqual(res_leave_type["leaves_taken"], 0)
+        self.assertEqual(res_leave_type["virtual_leaves_taken"], 0)
         self.assertEqual(res_leave_type["request_unit"], "natural_day")
         leave = self._create_hr_leave(self.leave_type, "2023-01-02", "2023-01-05")
         self.assertEqual(leave.number_of_days, 4.0)
@@ -95,14 +90,17 @@ class TestHrLeave(common.TransactionCase):
     @users("test-user")
     def test_hr_leave_day(self):
         leave_allocation = self._create_leave_allocation(self.leave_type_day, 5)
-        leave_allocation.action_confirm()
         leave_allocation.sudo().action_validate()
-        res_leave_type = self.env["hr.leave.type"].get_days_all_request()[0][1]
-        self.assertEqual(res_leave_type["remaining_leaves"], "5")
-        self.assertEqual(res_leave_type["virtual_remaining_leaves"], "5")
-        self.assertEqual(res_leave_type["max_leaves"], "5")
-        self.assertEqual(res_leave_type["leaves_taken"], "0")
-        self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
+        res_leave_type = (
+            self.env["hr.leave.type"]
+            .with_company(self.env.company)
+            .get_allocation_data_request()[0][1]
+        )
+        self.assertEqual(res_leave_type["remaining_leaves"], 5)
+        self.assertEqual(res_leave_type["virtual_remaining_leaves"], 5)
+        self.assertEqual(res_leave_type["max_leaves"], 5)
+        self.assertEqual(res_leave_type["leaves_taken"], 0)
+        self.assertEqual(res_leave_type["virtual_leaves_taken"], 0)
         self.assertEqual(res_leave_type["request_unit"], "day")
         leave = self._create_hr_leave(self.leave_type_day, "2023-01-08", "2023-01-15")
         self.assertEqual(leave.number_of_days, 5)
