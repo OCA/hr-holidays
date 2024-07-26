@@ -185,7 +185,6 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
-        leave_request.action_validate()
 
         self.assertEqual(leave_request.number_of_days, 2)
         self.assertEqual(leave_request.number_of_hours_display, 16)
