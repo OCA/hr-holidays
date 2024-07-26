@@ -10,8 +10,15 @@ class HrLeave(models.Model):
         domain = super()._get_domain_from_get_unusual_days(
             date_from=date_from, date_to=date_to
         )
+        # Use the employee of the user or the one who has the context
+        employee_id = self.env.context.get("employee_id", False)
+        employee = (
+            self.env["hr.employee"].browse(employee_id)
+            if employee_id
+            else self.env.user.employee_id
+        )
         # Add city domain
-        city_id = self.env.user.employee_id.address_id.city_id.id
+        city_id = employee.address_id.city_id.id
         if not city_id:
             city_id = self.env.company.partner_id.city_id.id or False
         if city_id:
