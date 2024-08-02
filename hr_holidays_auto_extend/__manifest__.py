@@ -5,7 +5,7 @@
     "name": "Hr Holidays Auto Extend",
     "summary": """
         Allow to extend some kind of holidays""",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "author": "CreuBlanca,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/hr-holidays",
