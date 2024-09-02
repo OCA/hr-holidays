@@ -3,9 +3,9 @@
 
 from collections import defaultdict
 
-from odoo import models
+from odoo import fields, models
 
-from odoo.addons.resource.models.resource import Intervals, make_aware
+from odoo.addons.resource.models.resource import Intervals
 
 
 class ResourceCalendar(models.Model):
@@ -22,8 +22,13 @@ class ResourceCalendar(models.Model):
         # Iterate all matching leaves
         state_interval_map = defaultdict(Intervals)
         for res_cal_leave in self.env["resource.calendar.leaves"].search(domain):
-            dttf, _f = make_aware(res_cal_leave.date_from)
-            dttt, _f = make_aware(res_cal_leave.date_to)
+            # Convert to aware datetime with user timezone
+            dttf = fields.Datetime.context_timestamp(
+                res_cal_leave, res_cal_leave.date_from
+            )
+            dttt = fields.Datetime.context_timestamp(
+                res_cal_leave, res_cal_leave.date_to
+            )
             # Add the interval to the corresponding State or False if no state
             if res_cal_leave.state_ids:
                 for state in res_cal_leave.state_ids:
