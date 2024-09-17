@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="hr_leave_type_natural_day_test" model="hr.leave.type">
+        <field name="name">Test Time Off (natural day)</field>
+        <field name="request_unit">natural_day</field>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]" />
+        <field name="employee_requests">yes</field>
+    </record>
+</odoo>
