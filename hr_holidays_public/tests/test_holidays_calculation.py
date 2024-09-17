@@ -2,7 +2,9 @@
 # Copyright 2017-2018 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Brainbean Apps
 # Copyright 2020 InitOS Gmbh
+# Copyright 2024 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+from datetime import datetime
 
 from odoo.tests import common
 
@@ -191,3 +193,27 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
 
         self.assertEqual(leave_request.number_of_days, 2)
         self.assertEqual(leave_request.number_of_hours_display, 16)
+
+    def test_compute_week_hours_without_public_holidays(self):
+        self.assertEqual(
+            self.calendar.with_context(
+                employee_id=self.employee_1.id, exclude_public_holidays=True
+            ).get_work_hours_count(
+                datetime.combine(datetime(1946, 12, 16), datetime.min.time()),
+                datetime.combine(datetime(1946, 12, 22), datetime.max.time()),
+                compute_leaves=False,
+            ),
+            40,
+        )
+
+    def test_compute_week_hours_with_public_holidays(self):
+        self.assertEqual(
+            self.calendar.with_context(
+                employee_id=self.employee_1.id, exclude_public_holidays=True
+            ).get_work_hours_count(
+                datetime.combine(datetime(1946, 12, 23), datetime.min.time()),
+                datetime.combine(datetime(1946, 12, 29), datetime.max.time()),
+                compute_leaves=False,
+            ),
+            32,
+        )
