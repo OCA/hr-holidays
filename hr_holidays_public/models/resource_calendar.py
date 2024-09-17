@@ -2,6 +2,7 @@
 # Copyright 2018 Brainbean Apps
 # Copyright 2020 InitOS Gmbh
 # Copyright 2021 Tecnativa - Víctor Martínez
+# Copyright 2024 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import models
@@ -44,6 +45,8 @@ class ResourceCalendar(models.Model):
             tz=tz,
             lunch=lunch,
         )
+        if resources is None:
+            resources = [self.env["resource.resource"]]
         if self.env.context.get("exclude_public_holidays") and resources:
             return self._attendance_intervals_batch_exclude_public_holidays(
                 start_dt, end_dt, res, resources, tz
