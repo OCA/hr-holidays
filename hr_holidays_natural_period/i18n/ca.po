@@ -17,6 +17,12 @@ msgstr ""
 "X-Generator: Weblate 4.3.2\n"
 
 #. module: hr_holidays_natural_period
+#: model:ir.model,name:hr_holidays_natural_period.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_natural_period
+#: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_allocation__type_request_unit__natural_day
 #: model:ir.model.fields.selection,name:hr_holidays_natural_period.selection__hr_leave_type__request_unit__natural_day
 msgid "Natural day"
 msgstr "Dia natural"
@@ -42,6 +48,16 @@ msgid "Time Off"
 msgstr "Temps lliure"
 
 #. module: hr_holidays_natural_period
+#: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr ""
+
+#. module: hr_holidays_natural_period
 #: model:ir.model,name:hr_holidays_natural_period.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Tipus de temps lliure"
+
+#. module: hr_holidays_natural_period
+#: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_allocation__type_request_unit
+msgid "Type Request Unit"
+msgstr ""
