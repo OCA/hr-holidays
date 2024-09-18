@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_view_form_responsible" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager" />
+        <field name="arch" type="xml">
+            <field name="payslip_status" position="attributes">
+                <attribute
+                    name="groups"
+                    add="hr_holidays.group_hr_holidays_responsible"
+                    separator=","
+                />
+            </field>
+            <field name="employee_id" position="after">
+                <field
+                    name="employee_id"
+                    groups="hr_holidays.group_hr_holidays_responsible,!hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'employee')], 'invisible': [('holiday_type', '!=', 'employee')]}"
+                    domain="['|', ('leave_manager_id', '=', uid), ('user_id', '=', uid)]"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

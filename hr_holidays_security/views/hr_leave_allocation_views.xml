@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_allocation_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form" />
+        <field name="arch" type="xml">
+            <field name="holiday_status_id" position="before">
+                <field name="allowed_holyday_status_ids" invisible="1" />
+            </field>
+            <field name="holiday_status_id" position="attributes">
+                <attribute
+                    name="domain"
+                >[('id', 'in', allowed_holyday_status_ids)]</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="hr_leave_allocation_view_form_manager" model="ir.ui.view">
+        <field name="model">hr.leave.allocation</field>
+        <field
+            name="inherit_id"
+            ref="hr_holidays.hr_leave_allocation_view_form_manager"
+        />
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field
+                    name="employee_id"
+                    groups="hr_holidays.group_hr_holidays_responsible,!hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'employee')], 'invisible': [('holiday_type', '!=', 'employee')]}"
+                    domain="['|', ('leave_manager_id', '=', uid), ('user_id', '=', uid)]"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
