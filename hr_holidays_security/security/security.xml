@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_holidays.hr_leave_allocation_rule_officer_update" model="ir.rule">
+        <field
+            name="groups"
+            eval="[(4, ref('hr_holidays.group_hr_holidays_responsible'))]"
+        />
+    </record>
+</odoo>
