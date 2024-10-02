@@ -88,7 +88,7 @@ class HolidaysPublicNextYearWizard(models.TransientModel):
 
         action = {
             "type": "ir.actions.act_window",
-            "name": "New public holidays",
+            "name": _("New public holidays"),
             "view_mode": "tree,form",
             "res_model": "hr.holidays.public",
             "domain": domain,
