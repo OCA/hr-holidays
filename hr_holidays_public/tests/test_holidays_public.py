@@ -110,7 +110,7 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         # ensures that correct holidays are identified for a country
         self.assertFalse(
             self.holiday_model.is_public_holiday(
-                date(1994, 11, 14), employee_id=self.employee.id
+                date(1994, 11, 14), partner_id=self.employee.address_id.id
             )
         )
 
@@ -118,7 +118,7 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         # ensures that correct holidays are identified for a country
         self.assertTrue(
             self.holiday_model.is_public_holiday(
-                date(1994, 10, 14), employee_id=self.employee.id
+                date(1994, 10, 14), partner_id=self.employee.address_id.id
             )
         )
 
@@ -132,7 +132,9 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
 
     def test_list_holidays_in_list_country_specific(self):
         # ensures that correct holidays are identified for a country
-        lines = self.holiday_model.get_holidays_list(1994, employee_id=self.employee.id)
+        lines = self.holiday_model.get_holidays_list(
+            1994, partner_id=self.employee.address_id.id
+        )
         res = lines.filtered(lambda r: r.date == date(1994, 10, 14))
         self.assertEqual(len(res), 1)
         self.assertEqual(len(lines), 1)
@@ -234,7 +236,9 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
 
     def test_public_holidays_context(self):
         self.env.ref("base.user_demo").employee_id.address_id.country_id = False
-        self.leave_model = self.leave_model.with_context(employee_id=self.employee.id)
+        self.leave_model = self.leave_model.with_context(
+            partner_id=self.employee.address_id.id
+        )
         self.assertPublicHolidayIsUnusualDay(
             True,
             country_id=self.env.ref(

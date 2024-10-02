@@ -3,13 +3,10 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import datetime
-import logging
 from datetime import date
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import ValidationError
-
-_logger = logging.getLogger(__name__)
 
 
 class HrHolidaysPublic(models.Model):
@@ -52,10 +49,8 @@ class HrHolidaysPublic(models.Model):
             else:
                 line.display_name = line.year
 
-    def _get_domain_states_filter(
-        self, pholidays, start_dt, end_dt, employee_id=None, partner_id=None
-    ):
-        partner = self._get_partner_deprecated_employee(partner_id, employee_id)
+    def _get_domain_states_filter(self, pholidays, start_dt, end_dt, partner_id=None):
+        partner = self._get_partner(partner_id)
         states_filter = [("year_id", "in", pholidays.ids)]
         if partner and partner.state_id:
             states_filter += [
@@ -71,19 +66,17 @@ class HrHolidaysPublic(models.Model):
 
     @api.model
     @api.returns("hr.holidays.public.line")
-    def get_holidays_list(
-        self, year=None, start_dt=None, end_dt=None, employee_id=None, partner_id=None
-    ):
+    def get_holidays_list(self, year=None, start_dt=None, end_dt=None, partner_id=None):
         """
         Returns recordset of hr.holidays.public.line
         for the specified year and employee
         :param year: year as string (optional if start_dt and end_dt defined)
         :param start_dt: start_dt as date
         :param end_dt: end_dt as date
-        :param employee_id: ID of the employee
+        :param partner_id: ID of the partner
         :return: recordset of hr.holidays.public.line
         """
-        partner = self._get_partner_deprecated_employee(partner_id, employee_id)
+        partner = self._get_partner(partner_id)
         if not start_dt and not end_dt:
             start_dt = datetime.date(year, 1, 1)
             end_dt = datetime.date(year, 12, 31)
@@ -108,15 +101,14 @@ class HrHolidaysPublic(models.Model):
         return holidays_lines
 
     @api.model
-    def is_public_holiday(self, selected_date, employee_id=None, partner_id=None):
+    def is_public_holiday(self, selected_date, partner_id=None):
         """
         Returns True if selected_date is a public holiday for the employee
         :param selected_date: datetime object
-        :param employee_id: ID of the employee
         :param partner_id: ID of the partner
         :return: bool
         """
-        partner = self._get_partner_deprecated_employee(partner_id, employee_id)
+        partner = self._get_partner(partner_id)
         partner_id = partner.id if partner else None
         holidays_lines = self.get_holidays_list(
             year=selected_date.year, partner_id=partner_id
@@ -127,25 +119,8 @@ class HrHolidaysPublic(models.Model):
                 return True
         return False
 
-    def _get_partner_deprecated_employee(self, partner_id, employee_id):
-        # TODO: Drop function in next migration
-        employee = False
-        partner = False
-        if employee_id is not None:
-            _logger.warning(
-                "Use of employee_id for hr.public.holidays is deprecated. "
-                "Please use partner_id instead."
-            )
-            employee = self.env["hr.employee"].browse(employee_id)
-            partner = employee.address_id
-        if partner_id:
-            if partner:
-                _logger.warning(
-                    "Cannot use both employee_id and address_id in parameters. "
-                    "Ignoring employee_id."
-                )
-            partner = self.env["res.partner"].browse(partner_id)
-        return partner
+    def _get_partner(self, partner_id):
+        return self.env["res.partner"].browse(partner_id)
 
 
 class HrHolidaysPublicLine(models.Model):

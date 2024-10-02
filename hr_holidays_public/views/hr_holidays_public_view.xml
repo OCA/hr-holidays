@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="view_holidays_public_tree" model="ir.ui.view">
-        <field name="name">hr.holidays.public.tree</field>
+    <record id="view_holidays_public_list" model="ir.ui.view">
+        <field name="name">hr.holidays.public.list</field>
         <field name="model">hr.holidays.public</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="display_name" />
                 <field name="country_id" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="view_holidays_public_form" model="ir.ui.view">
@@ -17,7 +17,7 @@
             <form>
                 <group name="group_main">
                     <group name="group_main_left">
-                        <field name="year" />
+                        <field name="year" options="{'type': 'number'}" />
                         <field name="country_id" />
                     </group>
                     <group name="group_main_right">
@@ -26,7 +26,7 @@
                 </group>
                 <separator string="Public Holidays" name="group_detail" />
                 <field name="line_ids" nolabel="1">
-                    <tree editable="top">
+                    <list editable="top">
                         <field
                             name="date"
                             readonly="variable_date == False"
@@ -39,7 +39,7 @@
                             domain="[('country_id','=',parent.country_id)]"
                         />
                         <field name="variable_date" />
-                    </tree>
+                    </list>
                 </field>
             </form>
         </field>
@@ -47,7 +47,7 @@
     <record id="open_holidays_public_view" model="ir.actions.act_window">
         <field name="name">Public Holidays</field>
         <field name="res_model">hr.holidays.public</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <menuitem
         id="menu_hr_public_holidays"

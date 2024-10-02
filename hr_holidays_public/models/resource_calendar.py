@@ -20,7 +20,7 @@ class ResourceCalendar(models.Model):
             .get_holidays_list(
                 start_dt=start_dt.date(),
                 end_dt=end_dt.date(),
-                employee_id=self.env.context.get("employee_id", False),
+                partner_id=self.env.context.get("partner_id", False),
             )
             .mapped("date")
         )

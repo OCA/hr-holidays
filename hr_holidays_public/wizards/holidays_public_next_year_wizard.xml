@@ -39,7 +39,7 @@
                             </div>
                             <group>
                                 <field name="template_ids" />
-                                <field name="year" />
+                                <field name="year" options="{'type': 'number'}" />
                             </group>
                         </page>
                     </notebook>
