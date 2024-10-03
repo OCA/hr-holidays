@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+  <record id="hr_leave_allocation_view_tree" model="ir.ui.view">
+    <field
+            name="name"
+        >hr_holidays_remaining_leaves.hr_leave_allocation_view_tree</field>
+    <field name="model">hr.leave.allocation</field>
+    <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_tree" />
+    <field name="arch" type="xml">
+      <field name="duration_display" position="after">
+        <field name="remaining_leaves_display" />
+        <field name="remaining_leaves_current_display" />
+      </field>
+    </field>
+  </record>
+
+  <record id="hr_leave_allocation_view_form_manager" model="ir.ui.view">
+    <field
+            name="name"
+        >hr_holidays_remaining_leaves.hr_leave_allocation_view_form_manager</field>
+    <field name="model">hr.leave.allocation</field>
+    <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager" />
+    <field name="arch" type="xml">
+      <field name="employee_ids" position="after">
+        <field name="remaining_leaves_display" />
+        <field name="remaining_leaves_current_display" />
+      </field>
+    </field>
+  </record>
+
+</odoo>
