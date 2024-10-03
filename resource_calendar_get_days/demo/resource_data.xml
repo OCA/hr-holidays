@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record id="resource_calendar_std_42h" model="resource.calendar">
+        <field name="name">Standard 42 hours/week</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="hours_per_day">8.4</field>
+        <field
+            name="attendance_ids"
+            eval="[(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7.5, 'hour_to': 11.75, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.33333, 'hour_to': 17.66666, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7.5, 'hour_to': 11.75, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13.33333, 'hour_to': 17.66666, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13.25, 'hour_to': 17.75, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7.5, 'hour_to': 11.75, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.33333, 'hour_to': 17.66666, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7.5, 'hour_to': 11.75, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.16666, 'hour_to': 16.16666, 'day_period': 'afternoon'})
+            ]"
+        />
+    </record>
+
+    <record id="resource_calendar_std_25_2h" model="resource.calendar">
+        <field name="name">Standard 25.2 hours/week</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="hours_per_day">5.04</field>
+        <field
+            name="attendance_ids"
+            eval="[(5, 0, 0),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11.7, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 10.5, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 15.5, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.5, 'hour_to': 17.5, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.5, 'hour_to': 16, 'day_period': 'afternoon'})
+            ]"
+        />
+    </record>
+
+</odoo>
