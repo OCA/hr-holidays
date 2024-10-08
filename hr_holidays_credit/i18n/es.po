@@ -17,28 +17,48 @@ msgstr ""
 "X-Generator: Weblate 4.17\n"
 
 #. module: hr_holidays_credit
+#. odoo-python
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid " + credit"
+msgstr " + crédito"
+
+#. module: hr_holidays_credit
+#. odoo-python
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid " available"
+msgstr " disponibles"
+
+#. module: hr_holidays_credit
+#. odoo-python
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid " days"
+msgstr " días"
+
+#. module: hr_holidays_credit
+#. odoo-python
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid " hours"
+msgstr " horas"
+
+#. module: hr_holidays_credit
+#. odoo-python
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid " used in credit"
+msgstr " utilizados en crédito"
+
+#. module: hr_holidays_credit
+#. odoo-python
 #: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
 #, python-format
 msgid "%(name)s (%(extra)s)"
 msgstr "%(name)s (%(extra)s)"
-
-#. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
-#, python-format
-msgid "%g available"
-msgstr "%g disponible"
-
-#. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
-#, python-format
-msgid "%g available + credit"
-msgstr "%g disponible + crédito"
-
-#. module: hr_holidays_credit
-#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
-#, python-format
-msgid "%g used in credit"
-msgstr "%g utilizado en el crédito"
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__allow_credit
@@ -61,25 +81,13 @@ msgid "Creditable Employees"
 msgstr "Empleados Acreditados"
 
 #. module: hr_holidays_credit
-#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__display_name
-#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__display_name
-msgid "Display Name"
-msgstr "Mostrar Nombre"
-
-#. module: hr_holidays_credit
-#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__id
-#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__id
-msgid "ID"
-msgstr "ID"
-
-#. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__allow_credit
 msgid ""
 "If set to true, employees would be able to make requests for this leave type"
 " even if allocated amount is insufficient."
 msgstr ""
-"Si se establece en true, los empleados podrán solicitar este tipo de permiso "
-"aunque la cantidad asignada sea insuficiente."
+"Si se establece en true, los empleados podrán solicitar este tipo de permiso"
+" aunque la cantidad asignada sea insuficiente."
 
 #. module: hr_holidays_credit
 #: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_department_ids
@@ -103,17 +111,18 @@ msgid "If set, limits credit allowance to specified employees"
 msgstr "Si se fija, limita la concesión de créditos a determinados empleados"
 
 #. module: hr_holidays_credit
-#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave____last_update
-#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type____last_update
-msgid "Last Modified on"
-msgstr "Última Modificación el"
-
-#. module: hr_holidays_credit
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave
 msgid "Time Off"
 msgstr "Tiempo Libre"
 
 #. module: hr_holidays_credit
+#: model:ir.model,name:hr_holidays_credit.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr "Asignación de ausencias"
+
+#. module: hr_holidays_credit
 #: model:ir.model,name:hr_holidays_credit.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_allocation__holiday_status_id
 msgid "Time Off Type"
 msgstr "Tipo de Tiempo Libre"
