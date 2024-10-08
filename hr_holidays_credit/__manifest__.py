@@ -4,7 +4,7 @@
 
 {
     "name": "Leave Credit",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Human Resources",
     "website": "https://github.com/OCA/hr-holidays",
     "author": "CorporateHub, Odoo Community Association (OCA)",
@@ -13,5 +13,8 @@
     "application": False,
     "summary": "Enable negative leave balance for employees",
     "depends": ["hr_holidays"],
-    "data": ["views/hr_leave_type.xml"],
+    "data": [
+        "views/hr_leave_type.xml",
+        "views/hr_leave_views.xml",
+    ],
 }
