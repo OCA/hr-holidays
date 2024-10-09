@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_credit
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-07-10 14:09+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%(name)s (%(extra)s)"
+msgstr "%(name)s (%(extra)s)"
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g available"
+msgstr "%g disponibile"
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g available + credit"
+msgstr "%g disponibile + crediti"
+
+#. module: hr_holidays_credit
+#: code:addons/hr_holidays_credit/models/hr_leave_type.py:0
+#, python-format
+msgid "%g used in credit"
+msgstr "%g utilizzato nel credito"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__allow_credit
+msgid "Allow Credit"
+msgstr "Consenti credito"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__creditable_department_ids
+msgid "Creditable Departments"
+msgstr "Reparto accreditabile"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__creditable_employee_category_ids
+msgid "Creditable Employee Tags"
+msgstr "Etichette dipendente accreditabile"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__creditable_employee_ids
+msgid "Creditable Employees"
+msgstr "Dipendenti accreditabili"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__allow_credit
+msgid ""
+"If set to true, employees would be able to make requests for this leave type "
+"even if allocated amount is insufficient."
+msgstr ""
+"Se impostata a vero, i dipendenti saranno abilitati a fare richieste per "
+"questo tipo di permesso anche se l'ammontare allocato è insufficiente."
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_department_ids
+msgid "If set, limits credit allowance to employees of specified departments"
+msgstr ""
+"Se impostata, limita la concessione di credito ai dipendenti di reparti "
+"specifici"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_employee_category_ids
+msgid ""
+"If set, limits credit allowance to employees with at least one of specified "
+"tags"
+msgstr ""
+"Se impostata, limita la concessione di credito ai dipendenti con almeno una "
+"etichetta specifica"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,help:hr_holidays_credit.field_hr_leave_type__creditable_employee_ids
+msgid "If set, limits credit allowance to specified employees"
+msgstr "Se impostata, limita la concessione di credito a dipendenti specifici"
+
+#. module: hr_holidays_credit
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays_credit.field_hr_leave_type____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: hr_holidays_credit
+#: model:ir.model,name:hr_holidays_credit.model_hr_leave
+msgid "Time Off"
+msgstr "Ferie"
+
+#. module: hr_holidays_credit
+#: model:ir.model,name:hr_holidays_credit.model_hr_leave_type
+msgid "Time Off Type"
+msgstr "Tipo di ferie"
