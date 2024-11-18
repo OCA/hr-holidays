@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_leave_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.view.form</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='request_unit_half']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('leave_type_request_unit', 'in', ['day', 'natural_day'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_unit_half']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'not in', ('draft', 'confirm'))], 'invisible': [('leave_type_request_unit', 'in', ['day', 'natural_day'])]}</attribute>
+            </xpath>
+            <xpath expr="//div[field[@name='request_unit_half']]" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('leave_type_request_unit', 'in', ['day', 'natural_day'])]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
