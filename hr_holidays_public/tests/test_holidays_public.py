@@ -376,3 +376,10 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         self.assertEqual(
             intervals_sl[resource_sl.id]._items, intervals_sk_sl[resource_sl.id]._items
         )
+
+    def _test_get_unusual_days(self):
+        # Test for _get_unusual_days
+        unusual_days = self.employee._get_unusual_days("1994-11-14", "1994-11-14")
+        self.assertIn("1994-10-14", unusual_days)
+        self.assertTrue(unusual_days["1994-10-14"])
+        self.assertNotIn("1994-10-15", unusual_days)
