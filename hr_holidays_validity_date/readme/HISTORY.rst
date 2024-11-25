@@ -8,3 +8,7 @@ simply a message.
 In 12.0 Odoo added the range feature in their Leaves module (validity_start and
 validity_stop) so nowadays this just
 adds the feature that lets you chose if you want a warning or a constraint.
+
+In 15.0 validity dates are in the allocation but in some business scenarios
+we may want to restrict the dates on leave types where allocations are not
+mandatoty.

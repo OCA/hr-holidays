@@ -1,7 +1,7 @@
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -40,4 +40,46 @@ class HolidaysRequest(models.Model):
     def _check_leave_type_validity(self):
         if not self.env.context.get("compute_warning_range", False):
             self = self.filtered("restrict_dates")
-        return super(HolidaysRequest, self)._check_leave_type_validity()
+            # TODO: filter out the ones with allocation?
+        # copied from the code before in Odoo standard
+        # https://github.com/odoo/odoo/pull/96545/files
+        for leave in self:
+            vstart = leave.holiday_status_id.date_start
+            vstop = leave.holiday_status_id.date_end
+            dfrom = leave.date_from
+            dto = leave.date_to
+            if vstart and vstop:
+                if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
+                    raise ValidationError(
+                        _(
+                            "%(leave_type)s are only valid between %(start)s and %(end)s",
+                            leave_type=leave.holiday_status_id.display_name,
+                            start=vstart,
+                            end=vstop,
+                        )
+                    )
+            elif vstart:
+                if dfrom and (dfrom.date() < vstart):
+                    raise ValidationError(
+                        _(
+                            "%(leave_type)s are only valid starting from %(date)s",
+                            leave_type=leave.holiday_status_id.display_name,
+                            date=vstart,
+                        )
+                    )
+            elif vstop:
+                if dto and (dto.date() > vstop):
+                    raise ValidationError(
+                        _(
+                            "%(leave_type)s are only valid until %(date)s",
+                            leave_type=leave.holiday_status_id.display_name,
+                            date=vstop,
+                        )
+                    )
+
+    def action_validate(self):
+        # Prevent to validate a leave request if it is not in the validity range
+        for holiday in self:
+            if holiday.warning_validity:
+                raise ValidationError(holiday.warning_validity)
+        return super().action_validate()

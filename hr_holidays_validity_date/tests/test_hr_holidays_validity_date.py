@@ -17,7 +17,7 @@ class TestHrHolidaysValidityDate(common.TransactionCase):
         super(TestHrHolidaysValidityDate, self).setUp()
         self.holidays_obj = self.env["hr.leave"]
         self.type01 = self.env["hr.leave.type"].create(
-            {"name": "Leave Type", "allocation_type": "no", "validity_start": False}
+            {"name": "Leave Type", "requires_allocation": "no"}
         )
         self.employee01 = self.env["hr.employee"].create({"name": "Employee"})
 
@@ -45,9 +45,9 @@ class TestHrHolidaysValidityDate(common.TransactionCase):
             DEFAULT_SERVER_DATETIME_FORMAT
         )
 
-        self.type01.restrict_dates = True
-        self.type01.validity_start = yesterday
-        self.type01.validity_stop = today
+        self.type01.use_validity_dates = True
+        self.type01.date_start = yesterday
+        self.type01.date_end = today
 
         leave_vals = {
             "employee_id": self.employee01.id,
@@ -58,7 +58,8 @@ class TestHrHolidaysValidityDate(common.TransactionCase):
             "number_of_days": 2,
         }
         with self.assertRaises(ValidationError):
-            self.holidays_obj.create(leave_vals)
+            new_time_off_request = self.holidays_obj.create(leave_vals)
+            new_time_off_request.action_validate()
 
         self.type01.restrict_dates = False
         leave_vals = {

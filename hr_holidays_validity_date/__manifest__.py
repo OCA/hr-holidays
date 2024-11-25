@@ -7,10 +7,13 @@
     "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/hr-holidays",
     "category": "Human Resources",
-    "version": "15.0.1.0.0",
+    "version": "15.0.2.0.0",
     "license": "AGPL-3",
     "depends": ["hr_holidays"],
-    "data": ["views/hr_holidays_view.xml"],
+    "data": [
+        "views/hr_holidays_view.xml",
+        "views/hr_leave_type_view.xml",
+    ],
     "development_status": "Production/Stable",
     "installable": True,
 }

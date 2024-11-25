@@ -20,7 +20,7 @@
                 <div
                     class="alert alert-warning text-center mb-3"
                     role="alert"
-                    attrs="{'invisible': ['|', ('warning_validity', '=', False), ('restrict_dates', '=', True)]}"
+                    attrs="{'invisible': [('warning_validity', '=', False)]}"
                     style="padding-bottom:0.1rem;"
                 >
                     <p>

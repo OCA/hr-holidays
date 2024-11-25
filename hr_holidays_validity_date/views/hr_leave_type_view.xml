@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_leave_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="priority" eval="99" />
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='visual']" position="before">
+                <group
+                    name="validity_date"
+                    groups="base.group_no_one"
+                    style="width:50%"
+                >
+                    <h2>Validity Dates</h2>
+                    <field name="use_validity_dates" />
+                    <field
+                        name="date_start"
+                        attrs="{'invisible': [('use_validity_dates', '=', False)]}"
+                    />
+                    <field
+                        name="date_end"
+                        attrs="{'invisible': [('use_validity_dates', '=', False)]}"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
