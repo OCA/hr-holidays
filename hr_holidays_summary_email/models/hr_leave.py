@@ -71,12 +71,12 @@ class HrLeave(models.Model):
         if str(fields.Date.today().weekday()) != company.hr_holidays_summary_weekly_dow:
             return
         domain = self._get_hr_leave_summary_weekly_domain(company.id)
-        today_time_offs = self.env["hr.leave"].sudo().search(domain)
+        weekly_time_offs = self.env["hr.leave"].sudo().search(domain)
         template = self._get_hr_leave_summary_mail_template("weekly")
         if not template:
             return
         for employee in employees_to_notify:
-            template.with_context(time_offs=today_time_offs).send_mail(
+            template.with_context(time_offs=weekly_time_offs).send_mail(
                 employee.id, force_send=False
             )
         employees_to_notify.write({"last_hr_leave_summary_sent": fields.Date.today()})
