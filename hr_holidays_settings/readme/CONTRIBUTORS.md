@@ -5,3 +5,5 @@
 - [CorporateHub](https://corporatehub.eu/)
   - Alexey Pelykh \<<alexey.pelykh@corphub.eu>\>
 - Murtaza Mithaiwala \<<https://twitter.com/MurtazaMithaiw4>\>
+- [APSL-Nagarro](<https://apsl.tech>):
+  - Antoni Marroig \<<amarroig@apsl.net>\>

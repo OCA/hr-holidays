@@ -4,20 +4,19 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div
-                    class="app_settings_block"
+            <xpath expr="//form" position="inside">
+                <app
                     data-string="Leaves management"
                     string="Leaves Management"
-                    data-key="hr_holidays"
+                    name="hr_holidays"
                     groups="hr.group_hr_manager"
                 >
-                    <h2>Leaves Management</h2>
-                    <div
-                        class="row mt16 o_settings_container"
+                    <block
                         title="Leaves Management"
-                    />
-                </div>
+                        name="leaves_management_setting_container"
+                    >
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>
