@@ -113,6 +113,11 @@ msgid "Display Name"
 msgstr ""
 
 #. module: hr_holidays_public
+#: model:ir.model,name:hr_holidays_public.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_public
 #: model:ir.model.fields,field_description:hr_holidays_public.field_hr_leave_type__exclude_public_holidays
 #, fuzzy
 msgid "Exclude Public Holidays"
