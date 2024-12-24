@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 Camptocamp
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_hr_public_holidays"
+        name="Public Holidays (OCA)"
+        parent="hr_holidays.menu_hr_holidays_configuration"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_holidays_public_view"
+        parent="menu_hr_public_holidays"
+        sequence="10"
+        action="calendar_public_holiday.open_calendar_public_holiday_view"
+    />
+    <menuitem
+        id="menu_create_next_year_public_holidays"
+        parent="menu_hr_public_holidays"
+        groups="hr_holidays.group_hr_holidays_manager"
+        action="calendar_public_holiday.action_create_next_year_public_holidays"
+        sequence="30"
+    />
+</odoo>

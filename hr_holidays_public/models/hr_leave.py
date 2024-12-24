@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
-    def action_validate(self):
+    def action_validate(self, check_state=True):
         """Inject the needed context for excluding public holidays (if applicable) on
         the actions derived from this validation. This is required for example for
         `project_timesheet_holidays` for not generating the timesheet on the public
@@ -23,37 +23,24 @@ class HrLeave(models.Model):
                 leave = leave.with_context(
                     employee_id=leave.employee_id.id, exclude_public_holidays=True
                 )
-            super(HrLeave, leave).action_validate()
+            super(HrLeave, leave).action_validate(check_state=check_state)
         return True
 
-    def _get_duration(self, check_leave_type=True, resource_calendar=None):
-        if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
-            instance = self.with_context(
-                employee_id=self.employee_id.id, exclude_public_holidays=True
+    def _get_durations(self, check_leave_type=True, resource_calendar=None):
+        for leave in self:
+            if (
+                leave.holiday_status_id.exclude_public_holidays
+                or not leave.holiday_status_id
+            ):
+                leave = leave.with_context(
+                    employee_id=leave.employee_id.id, exclude_public_holidays=True
+                )
+            return super(HrLeave, leave)._get_durations(
+                check_leave_type=check_leave_type, resource_calendar=resource_calendar
             )
-        else:
-            instance = self
-        return super(HrLeave, instance)._get_duration(
-            check_leave_type, resource_calendar
+        return super()._get_durations(
+            check_leave_type=check_leave_type, resource_calendar=resource_calendar
         )
-
-    @api.depends("number_of_days")
-    def _compute_number_of_hours_display(self):
-        """If the leave is validated, no call to `_get_number_of_days` is done, so we
-        need to inject the context here for including the public holidays if applicable.
-
-        For such cases, we need to serialize the call to super in fragments.
-        """
-        to_serialize = self.filtered(
-            lambda x: x.state == "validate"
-            and x.holiday_status_id.exclude_public_holidays
-        )
-        for leave in to_serialize:
-            leave = leave.with_context(
-                exclude_public_holidays=True, employee_id=leave.employee_id.id
-            )
-            super(HrLeave, leave)._compute_number_of_hours_display()
-        return super(HrLeave, self - to_serialize)._compute_number_of_hours_display()
 
     def _get_domain_from_get_unusual_days(self, date_from, date_to=None):
         domain = [("date", ">=", date_from)]
@@ -65,32 +52,20 @@ class HrLeave(models.Model):
             else self.env.user.employee_id
         )
         if date_to:
-            domain.append(
-                (
-                    "date",
-                    "<",
-                    date_to,
-                )
-            )
+            domain.append(("date", "<", date_to))
         country_id = employee.address_id.country_id.id
         if not country_id:
             country_id = self.env.company.country_id.id or False
         if country_id:
-            domain.extend(
-                [
-                    "|",
-                    ("year_id.country_id", "=", False),
-                    ("year_id.country_id", "=", country_id),
-                ]
-            )
+            domain.append(("public_holiday_id.country_id", "in", (False, country_id)))
         state_id = employee.address_id.state_id.id
         if not state_id:
-            state_id = self.env.company.state_id.id or False
+            state_id = self.env.company.state_id.ids or False
         if state_id:
             domain.extend(
                 [
                     "|",
-                    ("state_ids", "in", [state_id]),
+                    ("state_ids", "in", state_id),
                     ("state_ids", "=", False),
                 ]
             )
@@ -98,11 +73,11 @@ class HrLeave(models.Model):
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
-        res = super().get_unusual_days(date_from, date_to=date_to)
+        res = super().get_unusual_days(date_from=date_from, date_to=date_to)
         domain = self._get_domain_from_get_unusual_days(
             date_from=date_from, date_to=date_to
         )
-        public_holidays = self.env["hr.holidays.public.line"].search(domain)
+        public_holidays = self.env["calendar.public.holiday.line"].search(domain)
         for public_holiday in public_holidays:
             res[fields.Date.to_string(public_holiday.date)] = True
         return res

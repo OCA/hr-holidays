@@ -4,19 +4,17 @@
 # Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
+    TestCalendarPublicHoliday,
+)
 
-from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
-
-class TestHolidaysComputeDaysBase(TransactionCase):
+class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.HrLeave = cls.env["hr.leave"]
         cls.HrLeaveType = cls.env["hr.leave.type"]
-        cls.HrHolidaysPublic = cls.env["hr.holidays.public"]
         cls.calendar = cls.env["resource.calendar"].create(
             {"name": "Calendar", "attendance_ids": []}
         )
@@ -68,13 +66,13 @@ class TestHolidaysComputeDaysBase(TransactionCase):
             }
         )
         # Use a very old year for avoiding to collapse with current data
-        cls.public_holiday_global = cls.HrHolidaysPublic.create(
+        cls.public_holiday_global = cls.holiday_model.create(
             {
                 "year": 1946,
                 "line_ids": [(0, 0, {"name": "Christmas", "date": "1946-12-25"})],
             }
         )
-        cls.public_holiday_country = cls.HrHolidaysPublic.create(
+        cls.public_holiday_country = cls.holiday_model.create(
             {
                 "year": 1946,
                 "country_id": cls.address_2.country_id.id,
@@ -93,7 +91,7 @@ class TestHolidaysComputeDaysBase(TransactionCase):
             }
         )
 
-        cls.public_holiday_global_1947 = cls.HrHolidaysPublic.create(
+        cls.public_holiday_global_1947 = cls.holiday_model.create(
             {
                 "year": 1947,
                 "line_ids": [
@@ -124,7 +122,6 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_1.id,
             }
         )
-        leave_request._compute_duration()
         self.assertEqual(leave_request.number_of_days, 4)
 
     def _test_number_days_excluding_employee_2(self):
@@ -136,7 +133,6 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
-        leave_request._compute_duration()
         self.assertEqual(leave_request.number_of_days, 2)
 
     def test_number_days_not_excluding(self):
@@ -148,7 +144,6 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_1.id,
             }
         )
-        leave_request._compute_duration()
         self.assertEqual(leave_request.number_of_days, 5)
 
     def test_number_days_across_year(self):
@@ -160,7 +155,6 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_1.id,
             }
         )
-        leave_request._compute_duration()
         self.assertEqual(leave_request.number_of_days, 7)
 
     def test_number_days_across_year_2(self):
@@ -172,7 +166,6 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
-        leave_request._compute_duration()
         self.assertEqual(leave_request.number_of_days, 5)
 
     def test_number_of_hours_excluding_employee_2(self):
@@ -185,6 +178,4 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
-
         self.assertEqual(leave_request.number_of_days, 2)
-        self.assertEqual(leave_request.number_of_hours_display, 16)

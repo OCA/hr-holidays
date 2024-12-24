@@ -4,7 +4,7 @@
 
 {
     "name": "HR Holidays Public",
-    "version": "17.0.1.0.6",
+    "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "category": "Human Resources",
     "author": "Michael Telahun Makonnen, "
@@ -14,13 +14,14 @@
     "Odoo Community Association (OCA),",
     "summary": "Manage Public Holidays",
     "website": "https://github.com/OCA/hr-holidays",
-    "depends": ["hr_holidays"],
+    "depends": [
+        "hr_holidays",
+        "calendar_public_holiday",
+    ],
     "data": [
-        "data/data.xml",
         "security/ir.model.access.csv",
-        "views/hr_holidays_public_view.xml",
         "views/hr_leave_type.xml",
-        "wizards/holidays_public_next_year_wizard.xml",
+        "views/menu.xml",
     ],
     "installable": True,
 }

@@ -1,5 +1,3 @@
-This module handles public holidays.
-
 The calculation of each leave can exclude rest public holiday, depending
 on the leave type configuration.
 

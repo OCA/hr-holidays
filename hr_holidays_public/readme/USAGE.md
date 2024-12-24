@@ -1,6 +1,6 @@
 For adding public holidays:
 
-1.  Go to the menu *Leaves \> Public Holidays \> Public Holidays*.
+1.  Go to the menu *Calendar \> Configuration > Public Holidays \> Public Holidays*.
 2.  Create your public holidays.
 
 For using public holidays on leaves:

@@ -13,12 +13,12 @@ class HrEmployee(models.Model):
         domain = self.env["hr.leave"]._get_domain_from_get_unusual_days(
             date_from=date_start, date_to=date_end
         )
-        return self.env["hr.holidays.public.line"].search(domain)
+        return self.env["calendar.public.holiday.line"].search(domain)
 
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
         # Include public holidays in the calendar summary
-        res = super().get_public_holidays_data(date_start, date_end)
+        res = super().get_public_holidays_data(date_start=date_start, date_end=date_end)
         self = self._get_contextual_employee()
         public_holidays = self._get_public_holiday_lines(date_start, date_end).sorted(
             "date"
