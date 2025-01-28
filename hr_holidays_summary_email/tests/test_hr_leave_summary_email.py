@@ -16,17 +16,9 @@ class TestHrLeaveSummaryEmail(common.TransactionCase):
         # Add allocation days for the test
         leave_type.write({"requires_allocation": "no"})
         calendar = cls.env.ref("resource.resource_calendar_std")
-        partner = cls.env["res.partner"].create(
-            {
-                "name": "Test employee",
-                "type": "private",
-                "country_id": cls.env.ref("base.es").id,
-            }
-        )
         cls.employee = cls.env["hr.employee"].create(
             {
                 "name": "Test employee",
-                "address_home_id": partner.id,
                 "resource_calendar_id": calendar.id,
             }
         )
@@ -39,8 +31,8 @@ class TestHrLeaveSummaryEmail(common.TransactionCase):
                     "name": "Test 1",
                     "employee_id": cls.employee.id,
                     "holiday_status_id": leave_type.id,
-                    "date_from": datetime.today(),
-                    "date_to": (datetime.today() + relativedelta(days=1)),
+                    "request_date_from": datetime.today(),
+                    "request_date_to": (datetime.today() + relativedelta(days=1)),
                     "number_of_days": 1,
                     "state": "validate",
                 }
@@ -56,8 +48,8 @@ class TestHrLeaveSummaryEmail(common.TransactionCase):
                     "name": "Test 2",
                     "employee_id": cls.employee.id,
                     "holiday_status_id": leave_type.id,
-                    "date_from": (datetime.today() + relativedelta(days=3)),
-                    "date_to": (datetime.today() + relativedelta(days=5)),
+                    "request_date_from": (datetime.today() + relativedelta(days=3)),
+                    "request_date_to": (datetime.today() + relativedelta(days=5)),
                     "number_of_days": 2,
                     "state": "validate",
                 }
