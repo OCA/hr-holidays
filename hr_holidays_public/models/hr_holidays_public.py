@@ -89,7 +89,11 @@ class HrHolidaysPublic(models.Model):
         :param employee_id: ID of the employee
         :return: recordset of hr.holidays.public.line
         """
-        partner = self._get_partner_deprecated_employee(partner_id, employee_id)
+        partner = (
+            self.env["hr.employee"].browse(employee_id).address_id
+            if employee_id and not partner_id
+            else self._get_partner_deprecated_employee(partner_id, employee_id)
+        )
         if not start_dt and not end_dt:
             start_dt = datetime.date(year, 1, 1)
             end_dt = datetime.date(year, 12, 31)
