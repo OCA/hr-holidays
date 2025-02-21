@@ -18,12 +18,12 @@ class HrLeave(models.Model):
     @api.depends("request_time_hour_from")
     def _compute_hour_from(self):
         for leave in self:
-            leave.request_hour_from = "%.2f" % self.request_time_hour_from
+            leave.request_hour_from = "%.2f" % leave.request_time_hour_from
 
     @api.depends("request_time_hour_to")
     def _compute_hour_to(self):
         for leave in self:
-            leave.request_hour_to = "%.2f" % self.request_time_hour_to
+            leave.request_hour_to = "%.2f" % leave.request_time_hour_to
 
     @api.depends("request_time_hour_from", "request_time_hour_to")
     def _compute_date_from_to(self):
