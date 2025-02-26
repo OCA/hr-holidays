@@ -4,22 +4,19 @@
 from odoo import api, fields, models
 
 
-class HrHolidaysPublic(models.Model):
-    _inherit = "hr.holidays.public"
+class CalendarPublicHoliday(models.Model):
+    _inherit = "calendar.public.holiday"
 
-    def _get_domain_states_filter(
-        self, pholidays, start_dt, end_dt, employee_id=None, partner_id=None
-    ):
+    def _get_domain_states_filter(self, pholidays, start_dt, end_dt, partner_id=None):
         domain = super()._get_domain_states_filter(
             pholidays=pholidays,
             start_dt=start_dt,
             end_dt=end_dt,
-            employee_id=employee_id,
             partner_id=partner_id,
         )
         # To check for holidays in work locations, we must use the employee's
         # information instead of the partner's information
-        employee_id = employee_id or self.env.context.get("employee_id", False)
+        employee_id = self.env.context.get("employee_id", False)
         employee = self.env["hr.employee"].browse(employee_id) if employee_id else False
         # We check if the employee has a work location set, and we add that
         # restriction to the domain
@@ -35,7 +32,7 @@ class HrHolidaysPublic(models.Model):
 
 
 class HrHolidaysPublicLine(models.Model):
-    _inherit = "hr.holidays.public.line"
+    _inherit = "calendar.public.holiday.line"
 
     work_location_ids = fields.Many2many(
         "hr.work.location",

@@ -4,10 +4,11 @@
 from odoo.addons.hr_holidays_public.tests import test_holidays_public
 
 
-class TestHolidaysPublicBase(test_holidays_public.TestHolidaysPublicBase):
+class TestHolidaysPublicBase(test_holidays_public.TestHolidaysPublic):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.holiday_model_line = cls.env["calendar.public.holiday.line"]
         cls.work_location_model = cls.env["hr.work.location"]
         cls.work_location_a = cls.work_location_model.create(
             {
@@ -37,7 +38,7 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             {
                 "name": "holiday x",
                 "date": "2019-07-30",
-                "year_id": holiday.id,
+                "public_holiday_id": holiday.id,
                 "state_ids": state_ids,
                 "work_location_ids": work_location_ids,
             }
