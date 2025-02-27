@@ -56,6 +56,10 @@ class ResourceCalendar(models.Model):
         return False
 
     def _natural_period_intervals_batch(self, start_dt, end_dt, intervals, resources):
+        # Re-define start_dt and end_dt to ensure that we always iterate through the
+        # last day.
+        start_dt = datetime.combine(start_dt.date(), time.min)
+        end_dt = datetime.combine(end_dt.date(), time.max)
         for resource in resources or []:
             interval_resource = intervals[resource.id]
             tz = timezone(resource.tz)

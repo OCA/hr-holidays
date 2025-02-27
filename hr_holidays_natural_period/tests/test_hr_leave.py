@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Tecnativa - Víctor Martínez
+# Copyright 2020-2025 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from freezegun import freeze_time
 
@@ -69,7 +69,7 @@ class TestHrLeave(BaseCommon):
         return leave_form.save()
 
     @users("test-user")
-    def test_hr_leave_natural_day(self):
+    def test_hr_leave_natural_day_01(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 5)
         leave_allocation.sudo().action_validate()
         res_leave_type = (
@@ -86,6 +86,34 @@ class TestHrLeave(BaseCommon):
         leave = self._create_hr_leave(self.leave_type, "2023-01-02", "2023-01-05")
         self.assertEqual(leave.number_of_days, 4.0)
         self.assertEqual(leave.number_of_days_display, 4.0)
+
+    @users("test-user")
+    def test_hr_leave_natural_day_02(self):
+        attendances = [(0, 16, 21), (1, 9, 14), (2, 9, 14), (3, 9, 14), (4, 9, 14)]
+        r_sudo = self.env["resource.calendar"].sudo()
+        calendar = r_sudo.create(
+            {
+                "name": "Test calendar",
+                "tz": "Europe/Brussels",
+                "attendance_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": index,
+                            "dayofweek": str(att[0]),
+                            "hour_from": att[1],
+                            "hour_to": att[2],
+                        },
+                    )
+                    for index, att in enumerate(attendances)
+                ],
+            }
+        )
+        self.employee.resource_calendar_id = calendar
+        leave = self._create_hr_leave(self.leave_type, "2022-12-31", "2023-01-08")
+        self.assertEqual(leave.number_of_days, 9.0)
+        self.assertEqual(leave.number_of_days_display, 9.0)
 
     @users("test-user")
     def test_hr_leave_day(self):
