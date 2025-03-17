@@ -7,3 +7,7 @@
 - APSL-Nagarro \<<https://www.apsl.tech>\>
 
   > - Antoni Marroig \<<amarroig@apsl.net>\>
+
+- Grupo Isonor \<<https://www.grupoisonor.es>\>
+
+  > - Alexandre D. Díaz
