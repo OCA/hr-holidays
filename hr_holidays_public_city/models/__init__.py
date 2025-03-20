@@ -1,2 +1,2 @@
-from . import hr_holidays_public
+from . import calendar_public_holiday_line
 from . import hr_leave

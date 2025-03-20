@@ -1,34 +1,10 @@
-# Copyright 2023 Tecnativa - Víctor Martínez
+# Copyright 2023-2025 Tecnativa - Víctor Martínez
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo import api, fields, models
 
 
-class HrHolidaysPublic(models.Model):
-    _inherit = "hr.holidays.public"
-
-    def _get_domain_states_filter(self, pholidays, start_dt, end_dt, employee_id=None):
-        domain = super()._get_domain_states_filter(
-            pholidays=pholidays,
-            start_dt=start_dt,
-            end_dt=end_dt,
-            employee_id=employee_id,
-        )
-        employee = False
-        if employee_id:
-            employee = self.env["hr.employee"].browse(employee_id)
-        if employee and employee.address_id and employee.address_id.city_id:
-            domain += [
-                "|",
-                ("city_ids", "=", False),
-                ("city_ids", "=", employee.address_id.city_id.id),
-            ]
-        else:
-            domain.append(("city_ids", "=", False))
-        return domain
-
-
-class HrHolidaysPublicLine(models.Model):
-    _inherit = "hr.holidays.public.line"
+class CalendarHolidaysPublicLine(models.Model):
+    _inherit = "calendar.public.holiday.line"
 
     city_ids = fields.Many2many(
         "res.city",

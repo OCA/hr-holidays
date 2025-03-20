@@ -1,13 +1,31 @@
-# Copyright 2023 Tecnativa - Víctor Martínez
+# Copyright 2023-2025 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo.addons.hr_holidays_public.tests import test_holidays_public
+from odoo import Command
+
+from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
+    TestCalendarPublicHoliday,
+)
 
 
-class TestHolidaysPublicBase(test_holidays_public.TestHolidaysPublicBase):
+class TestHolidaysPublic(TestCalendarPublicHoliday):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.employee_model = cls.env["hr.employee"]
+        cls.leave_model = cls.env["hr.leave"]
+        cls.st_state_1 = cls.env["res.country.state"].create(
+            {"name": "DE State 1", "code": "de", "country_id": cls.country_1.id}
+        )
+        cls.st_state_2 = cls.env["res.country.state"].create(
+            {"name": "ST State 2", "code": "st", "country_id": cls.country_1.id}
+        )
+        cls.employee = cls.employee_model.create(
+            {
+                "name": "Employee 1",
+                "address_id": cls.res_partner.id,
+            }
+        )
         cls.us_city_a = cls.env["res.city"].create(
             {
                 "name": "Test city A",
@@ -23,8 +41,6 @@ class TestHolidaysPublicBase(test_holidays_public.TestHolidaysPublicBase):
             }
         )
 
-
-class TestHolidaysPublic(TestHolidaysPublicBase):
     def assertPublicHolidayIsUnusualDay(
         self, expected, country_id=None, state_ids=False, city_ids=False
     ):
@@ -34,11 +50,11 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             .get("2019-07-30", False)
         )
         holiday = self.holiday_model.create({"year": 2019, "country_id": country_id})
-        self.holiday_model_line.create(
+        self.holiday_line_model.create(
             {
                 "name": "holiday x",
                 "date": "2019-07-30",
-                "year_id": holiday.id,
+                "public_holiday_id": holiday.id,
                 "state_ids": state_ids,
                 "city_ids": city_ids,
             }
@@ -63,8 +79,8 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             country_id=self.env.ref(
                 "base.user_demo"
             ).employee_id.address_id.country_id.id,
-            state_ids=[(6, 0, [self.employee.address_id.state_id.id])],
-            city_ids=[(6, 0, [self.employee.address_id.city_id.id])],
+            state_ids=[Command.set(self.employee.address_id.state_id.ids)],
+            city_ids=[Command.set(self.employee.address_id.city_id.ids)],
         )
 
     def test_get_unusual_days_return_public_holidays_same_state_same_city(self):
@@ -77,8 +93,8 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             country_id=self.env.ref(
                 "base.user_demo"
             ).employee_id.address_id.country_id.id,
-            state_ids=[(6, 0, [demo_user_empl_addr.state_id.id])],
-            city_ids=[(6, 0, [demo_user_empl_addr.city_id.id])],
+            state_ids=[Command.set(demo_user_empl_addr.state_id.ids)],
+            city_ids=[Command.set(demo_user_empl_addr.city_id.ids)],
         )
 
     def test_get_unusual_days_return_public_holidays_same_state_differente_city(self):
@@ -91,8 +107,8 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
             country_id=self.env.ref(
                 "base.user_demo"
             ).employee_id.address_id.country_id.id,
-            state_ids=[(6, 0, [demo_user_empl_addr.state_id.id])],
-            city_ids=[(6, 0, [self.us_city_b.id])],
+            state_ids=[Command.set(demo_user_empl_addr.state_id.ids)],
+            city_ids=[Command.set(self.us_city_b.ids)],
         )
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_state_city(
@@ -103,8 +119,8 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         self.assertPublicHolidayIsUnusualDay(
             True,
             country_id=self.env.company.country_id.id,
-            state_ids=[(6, 0, [self.env.company.state_id.id])],
-            city_ids=[(6, 0, [self.env.company.partner_id.city_id.id])],
+            state_ids=[Command.set(self.env.company.state_id.ids)],
+            city_ids=[Command.set(self.env.company.partner_id.city_id.ids)],
         )
 
     def test_get_unusual_days_not_return_public_holidays_fallback_to_company_state_city(
@@ -117,6 +133,6 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         self.assertPublicHolidayIsUnusualDay(
             False,
             country_id=demo_user_empl_addr.country_id.id,
-            state_ids=[(6, 0, [demo_user_empl_addr.state_id.id])],
-            city_ids=[(6, 0, [self.us_city_b.id])],
+            state_ids=[Command.set(demo_user_empl_addr.state_id.ids)],
+            city_ids=[Command.set(self.us_city_b.ids)],
         )
