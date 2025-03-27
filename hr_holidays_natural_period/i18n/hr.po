@@ -62,12 +62,3 @@ msgstr "Tip slobodnog vremena"
 #: model:ir.model.fields,field_description:hr_holidays_natural_period.field_hr_leave_allocation__type_request_unit
 msgid "Type Request Unit"
 msgstr ""
-
-#~ msgid "Display Name"
-#~ msgstr "Prikazani naziv"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "Last Modified on"
-#~ msgstr "Zadnje modificirano"
