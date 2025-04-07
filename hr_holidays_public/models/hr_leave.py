@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from odoo.tools.misc import frozendict
 
 
 class HrLeave(models.Model):
@@ -25,15 +26,22 @@ class HrLeave(models.Model):
         return True
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
+        # propagate context upwards
+        # solves compatibility issue w/ hr_work_entry_holidays
         if self.holiday_status_id.exclude_public_holidays or not self.holiday_status_id:
-            instance = self.with_context(
-                employee_id=employee_id, exclude_public_holidays=True
+            new_context = frozendict(
+                self.env.context, employee_id=employee_id, exclude_public_holidays=True
             )
         else:
-            instance = self
-        return super(HrLeave, instance)._get_number_of_days(
-            date_from, date_to, employee_id
-        )
+            new_context = frozendict(
+                {
+                    k: v
+                    for k, v in self.env.context.items()
+                    if k not in ["employee_id", "exclude_public_holidays"]
+                }
+            )
+        self.env.context = new_context
+        return super(HrLeave, self)._get_number_of_days(date_from, date_to, employee_id)
 
     @api.depends("number_of_days")
     def _compute_number_of_hours_display(self):

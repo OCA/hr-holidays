@@ -145,6 +145,10 @@ Contributors
 
   * Pedro Evaristo Gonzalez Sanchez <pedro.gonzalez@pesol.es>
 
+* `Pytech SRL <https://www.pytech.it>`__:
+
+  * Sebastiano Picchi <sebastiano.picchi@pytech.it>
+
 Maintainers
 ~~~~~~~~~~~
 
