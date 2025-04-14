@@ -1,7 +1,9 @@
 # Copyright 2016-2019 Onestein (<https://www.onestein.eu>)
+# Copyright 2024- Le Filament (https://le-filament.com)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
+from pytz import utc
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -26,30 +28,26 @@ class HrLeave(models.Model):
     repeat_end_date = fields.Date(default=lambda self: fields.Date.today())
 
     @api.model
-    def _update_repeated_workday_dates(self, employee, from_dt, to_dt, days):
+    def _update_repeated_workday_dates(self, resource_calendar, from_dt, to_dt, days):
         user = self.env.user
-        calendar = employee.resource_calendar_id
-        orig_from_dt = fields.Datetime.context_timestamp(user, from_dt)
-        orig_to_dt = fields.Datetime.context_timestamp(user, to_dt)
-        work_hours = calendar.get_work_hours_count(from_dt, to_dt, compute_leaves=False)
+        from_dt = fields.Datetime.context_timestamp(user, from_dt)
+        to_dt = fields.Datetime.context_timestamp(user, to_dt)
+        work_hours = resource_calendar.get_work_hours_count(
+            from_dt, to_dt, compute_leaves=False
+        )
         while work_hours:
             from_dt = from_dt + relativedelta(days=days)
             to_dt = to_dt + relativedelta(days=days)
 
-            new_work_hours = calendar.get_work_hours_count(
+            new_work_hours = resource_calendar.get_work_hours_count(
                 from_dt, to_dt, compute_leaves=True
             )
             if new_work_hours and work_hours <= new_work_hours:
                 break
 
-        user_from_dt = fields.Datetime.context_timestamp(user, from_dt)
-        user_to_dt = fields.Datetime.context_timestamp(user, to_dt)
-        from_dt = from_dt - user_from_dt.tzinfo._utcoffset
-        from_dt = from_dt + orig_from_dt.tzinfo._utcoffset
-        to_dt = to_dt - user_to_dt.tzinfo._utcoffset
-        to_dt = to_dt + orig_to_dt.tzinfo._utcoffset
-
-        return from_dt, to_dt
+        return from_dt.astimezone(utc).replace(tzinfo=None), to_dt.astimezone(
+            utc
+        ).replace(tzinfo=None)
 
     @api.model
     def _get_repeated_vals_dict(self):
@@ -85,61 +83,86 @@ class HrLeave(models.Model):
         }
 
     @api.model
-    def _update_repeated_leave_vals(self, vals, employee):
+    def _update_repeated_leave_vals(self, leave, resource_calendar):
         vals_dict = self._get_repeated_vals_dict()
-        param_dict = vals_dict[vals.get("repeat_every")]
-        from_dt = fields.Datetime.from_string(vals.get("date_from"))
-        to_dt = fields.Datetime.from_string(vals.get("date_to"))
-        end_date = fields.Datetime.from_string(vals.get("repeat_end_date"))
+        param_dict = vals_dict[leave.repeat_every]
+        from_dt = fields.Datetime.from_string(leave.date_from)
+        to_dt = fields.Datetime.from_string(leave.date_to)
 
         if (to_dt - from_dt).days > param_dict["days"]:
             raise UserError(param_dict["user_error_msg"])
 
         from_dt, to_dt = self._update_repeated_workday_dates(
-            employee, from_dt, to_dt, param_dict["days"]
+            resource_calendar, from_dt, to_dt, param_dict["days"]
         )
 
-        vals["request_date_from"] = vals["date_from"] = from_dt
-        vals["request_date_to"] = vals["date_to"] = to_dt
-        vals["repeat_end_date"] = end_date
-        return vals
+        return {
+            "employee_ids": [(6, 0, leave.employee_ids.ids)],
+            "date_from": from_dt,
+            "date_to": to_dt,
+            "multi_employee": leave.multi_employee,
+        }
 
     @api.model
-    def create_repeated_handler(self, vals, employee):
-        def _check_repeating(count, vals):
-            repeat_mode = vals.get("repeat_mode", "times")
-            if repeat_mode == "times" and count < vals.get("repeat_limit", 0):
+    def create_repeated_handler(self, leave, resource_calendar):
+        def _check_repeating(count, leave, date_to):
+            repeat_mode = leave.repeat_mode
+            if repeat_mode == "times" and count < leave.repeat_limit:
                 return True
-            repeat_end_date = vals.get("repeat_end_date", fields.Date.today())
-            if repeat_mode == "date" and vals["date_to"] <= repeat_end_date:
+            if repeat_mode == "date" and date_to.date() <= leave.repeat_end_date:
                 return True
             return False
 
         count = 1
-        vals = self._update_repeated_leave_vals(vals, employee)
-        while _check_repeating(count, vals):
-            self.with_context(skip_create_handler=True).create(vals)
+        leaves = self.env["hr.leave"]
+        vals = self._update_repeated_leave_vals(leave, resource_calendar)
+        while _check_repeating(count, leave, vals.get("date_to")):
+            leave = leave.with_context(skip_create_handler=True).copy(vals)
+            leaves += leave
             count += 1
-            vals = self._update_repeated_leave_vals(vals, employee)
+            vals = self._update_repeated_leave_vals(leave, resource_calendar)
+        return leaves
 
-    @api.model
-    def create(self, vals):
-        res = super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
         skip_create_handler = self.env.context.get("skip_create_handler")
-        all_vals_set = vals.get("repeat_every") and vals.get("repeat_mode")
-        if not skip_create_handler and all_vals_set:
-            employee = self.env["hr.employee"].browse(vals.get("employee_id"))
-            if employee.resource_calendar_id:
-                self.create_repeated_handler(vals, employee)
+        if skip_create_handler:
+            return res
+        for leave in res.filtered(
+            lambda leave: leave.repeat_every
+            and leave.repeat_mode
+            and leave.holiday_type == "employee"
+        ):
+            employees = leave.employee_ids
+            resource_calendars = employees.mapped("resource_calendar_id")
+            if len(resource_calendars) == 1:
+                res += self.create_repeated_handler(leave, resource_calendars[0])
+            elif len(resource_calendars) == 0:
+                raise ValidationError(
+                    _(
+                        "Please define resource calendar on employee(s) in order "
+                        "to compute repeated leaves."
+                    )
+                )
+            else:
+                raise ValidationError(
+                    _(
+                        "Creating leaves for multiple employees with different "
+                        "resource calendar is not supported."
+                    )
+                )
         return res
 
-    @api.constrains("repeat_limit", "repeat_end_date")
+    @api.constrains("repeat_mode", "repeat_limit", "repeat_end_date")
     def _check_repeat_limit(self):
         for record in self:
             if record.repeat_mode == "times" and record.repeat_limit < 0:
                 raise ValidationError(_("Please set a positive amount of repetitions."))
             if (
                 record.repeat_mode == "date"
-                and record.repeat_end_date < fields.Date.today()
+                and record.repeat_end_date < record.date_from.date()
             ):
-                raise ValidationError(_("The Repeat End Date cannot be in the past"))
+                raise ValidationError(
+                    _("The Repeat End Date cannot be before the leave.")
+                )

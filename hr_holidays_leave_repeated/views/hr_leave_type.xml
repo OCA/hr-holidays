@@ -4,7 +4,7 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
         <field name="arch" type="xml">
-            <group name="description">
+            <group name="leave_validation">
                 <field name="repeat" />
             </group>
         </field>

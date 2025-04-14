@@ -4,10 +4,10 @@
 {
     "name": "HR Holidays leave repeated",
     "summary": "Define periodical leaves",
-    "author": "Onestein, Odoo Community Association (OCA)",
+    "author": "Onestein, Le Filament, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/hr-holidays",
     "category": "Human Resources",
-    "version": "14.0.1.1.0",
+    "version": "16.0.1.1.0",
     "license": "AGPL-3",
     "depends": ["hr_holidays"],
     "data": ["views/hr_leave_type.xml", "views/hr_leave.xml"],

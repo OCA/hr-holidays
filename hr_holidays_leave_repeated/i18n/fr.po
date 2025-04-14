@@ -74,7 +74,7 @@ msgstr "Veuillez définir un nombre de répétitions positif."
 #: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave__holiday_type_repeat
 #: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave_type__repeat
 msgid "Repeat"
-msgstr "Répeter"
+msgstr "Répéter"
 
 #. module: hr_holidays_leave_repeated
 #: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave__repeat_limit
@@ -84,7 +84,7 @@ msgstr "Répéter # fois"
 #. module: hr_holidays_leave_repeated
 #: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave__repeat_end_date
 msgid "Repeat End Date"
-msgstr "Répéter la date de fin"
+msgstr "Date de fin de répétition"
 
 #. module: hr_holidays_leave_repeated
 #: model:ir.model.fields,field_description:hr_holidays_leave_repeated.field_hr_leave__repeat_every
@@ -145,15 +145,9 @@ msgstr ""
 #. module: hr_holidays_leave_repeated
 #: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave
 msgid "Time Off"
-msgstr ""
+msgstr "Congés"
 
 #. module: hr_holidays_leave_repeated
 #: model:ir.model,name:hr_holidays_leave_repeated.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
-
-#~ msgid "Leave"
-#~ msgstr "Congé"
-
-#~ msgid "Leave Type"
-#~ msgstr "Type de congé"
+msgstr "Type de congés"
