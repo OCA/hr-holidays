@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HolidaysType(models.Model):
@@ -6,16 +6,21 @@ class HolidaysType(models.Model):
 
     code = fields.Char()
 
-    def name_get(self):
-        if self.requested_name_get():
-            return super().name_get()
+    @api.depends_context("requested_name_get")
+    @api.depends("code", "name")
+    def _compute_display_name(self):
+        for record in self:
+            if record.requested_name_get():
+                convert = self._fields[self._rec_name].convert_to_display_name
+                record.display_name = convert(record[self._rec_name], record)
+            else:
+                if record.code:
+                    record.display_name = f"{record.code} - {record.name}"
+                else:
+                    record.display_name = record.name
 
-        return [
-            (record.id, f"{record.code} - {record.name}")
-            if record.code
-            else (record.id, f"{record.name}")
-            for record in self
-        ]
+    def requested_name_get(self):
+        return self.env.context.get("requested_name_get")
 
     _sql_constraints = [
         (

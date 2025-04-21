@@ -29,10 +29,17 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.hr_holiday_status_view_kanban" />
         <field name="arch" type="xml">
-            <xpath expr="//strong[field[@name='name']]" position="before">
-                <t t-if="record.code.raw_value">
-                    <field name="code" /> -
-                </t>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="before">
+                <span class="fw-bold">
+                    <t t-if="record.code.value">
+                        <field name="code" />
+                        -
+                    </t>
+                    <field name="name" />
+                </span>
             </xpath>
         </field>
     </record>
