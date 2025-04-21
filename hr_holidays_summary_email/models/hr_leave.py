@@ -13,8 +13,7 @@ class HrLeave(models.Model):
     @api.model
     def _get_hr_leave_summary_mail_template(self, summary_type):
         return self.env.ref(
-            "hr_holidays_summary_email.hr_holidays_summary_mail_template_%s"
-            % summary_type,
+            f"hr_holidays_summary_email.hr_holidays_summary_mail_template_{summary_type}",
             raise_if_not_found=False,
         )
 
@@ -93,12 +92,9 @@ class HrLeave(models.Model):
                     stype, company.id
                 )
                 employees_to_notify = self.env["hr.employee"].search(employee_domain)
-                if employees_to_notify and hasattr(
-                    self, "_cron_send_hr_leave_summary_emails_%s" % stype
-                ):
-                    getattr(self, "_cron_send_hr_leave_summary_emails_%s" % stype)(
-                        employees_to_notify, company
-                    )
+                method_name = f"_cron_send_hr_leave_summary_emails_{stype}"
+                if employees_to_notify and hasattr(self, method_name):
+                    getattr(self, method_name)(employees_to_notify, company)
 
     def format_hr_leave_summary_date(self, date_from=True):
         self.ensure_one()
@@ -107,31 +103,25 @@ class HrLeave(models.Model):
         else:
             res = self.date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
         if self.request_unit_half:
-            res += (
-                " %s"
-                % dict(
-                    self.env["hr.leave"].fields_get(["request_date_from_period"])[
-                        "request_date_from_period"
-                    ]["selection"]
-                )[self.request_date_from_period]
+            selection = dict(
+                self.env["hr.leave"].fields_get(["request_date_from_period"])[
+                    "request_date_from_period"
+                ]["selection"]
             )
+            res += f" {selection[self.request_date_from_period]}"
         elif self.request_unit_hours:
             if date_from:
-                res += (
-                    " %s"
-                    % dict(
-                        self.env["hr.leave"].fields_get(["request_hour_from"])[
-                            "request_hour_from"
-                        ]["selection"]
-                    )[self.request_hour_from]
+                selection = dict(
+                    self.env["hr.leave"].fields_get(["request_hour_from"])[
+                        "request_hour_from"
+                    ]["selection"]
                 )
+                res += f" {selection[self.request_hour_from]}"
             else:
-                res += (
-                    " %s"
-                    % dict(
-                        self.env["hr.leave"].fields_get(["request_hour_to"])[
-                            "request_hour_to"
-                        ]["selection"]
-                    )[self.request_hour_to]
+                selection = dict(
+                    self.env["hr.leave"].fields_get(["request_hour_to"])[
+                        "request_hour_to"
+                    ]["selection"]
                 )
+                res += f" {selection[self.request_hour_to]}"
         return res
