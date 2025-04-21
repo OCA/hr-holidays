@@ -14,8 +14,7 @@
                     <block
                         title="Leaves Management"
                         name="leaves_management_setting_container"
-                    >
-                    </block>
+                    />
                 </app>
             </xpath>
         </field>
