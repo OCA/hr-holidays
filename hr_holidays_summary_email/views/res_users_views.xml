@@ -8,10 +8,7 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
             <field name="email" position="after">
-                <field
-                    name="hr_leave_summary_type"
-                    attrs="{'readonly': [('can_edit', '=', False)]}"
-                />
+                <field name="hr_leave_summary_type" readonly="not can_edit" />
             </field>
         </field>
     </record>
