@@ -17,20 +17,20 @@ Auto Approve Leaves
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github
-    :target: https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_leave_auto_approve
+    :target: https://github.com/OCA/hr-holidays/tree/17.0/hr_holidays_leave_auto_approve
     :alt: OCA/hr-holidays
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/hr-holidays-16-0/hr-holidays-16-0-hr_holidays_leave_auto_approve
+    :target: https://translation.odoo-community.org/projects/hr-holidays-17-0/hr-holidays-17-0-hr_holidays_leave_auto_approve
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=17.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module allows the user to define a leave type in order to make the system
-automatically validating all the leave requests (and leave allocation requests)
-belonging to that leave type.
+This module allows the user to define a leave type in order to make the
+system automatically validating all the leave requests (and leave
+allocation requests) belonging to that leave type.
 
 **Table of contents**
 
@@ -43,13 +43,14 @@ Configuration
 If you wish that the system automatically validates the leave requests
 belonging to a specific leave type, please follow the steps below.
 
-#. Go on the leave type configuration menu
-#. Select the leave type you wish to setup
-#. Select the auto approve policy for that leave type.
+1. Go on the leave type configuration menu
+2. Select the leave type you wish to setup
+3. Select the auto approve policy for that leave type.
 
-The option 'Auto Validated by HR' will auto validate leave requests created by
-HR Officers while option 'Auto Validated by Everyone' will auto validate all
-leave requests of the selected type, no matter who requested it.
+The option 'Auto Validated by HR' will auto validate leave requests
+created by HR Officers while option 'Auto Validated by Everyone' will
+auto validate all leave requests of the selected type, no matter who
+requested it.
 
 Bug Tracker
 ===========
@@ -57,7 +58,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/hr-holidays/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_leave_auto_approve%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_leave_auto_approve%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -65,19 +66,19 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Onestein
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Andrea Stirpe <a.stirpe@onestein.nl>
-* Antonio Esposito <a.esposito@onestein.nl>
-* Jaime Arroyo <jaime.arroyo@creublanca.es>
+- Andrea Stirpe <a.stirpe@onestein.nl>
+- Antonio Esposito <a.esposito@onestein.nl>
+- Jaime Arroyo <jaime.arroyo@creublanca.es>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -89,6 +90,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_leave_auto_approve>`_ project on GitHub.
+This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/17.0/hr_holidays_leave_auto_approve>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
