@@ -32,7 +32,7 @@
         <field name="arch" type="xml">
             <xpath expr="//strong[field[@name='name']]" position="before">
                 <t t-if="record.code.raw_value">
-                    <field name="code" /> -
+                    <strong><field name="code" /> - </strong>
                 </t>
             </xpath>
         </field>
