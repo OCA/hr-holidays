@@ -14,12 +14,12 @@
                     name="auto_extend"
                     groups="hr_holidays.group_hr_holidays_user"
                     widget="boolean_toggle"
-                    attrs="{'invisible':[('auto_extend_type', '=', False), ('auto_extend', '=', False)]}"
+                    invisible="not auto_extend_type and not auto_extend"
                 />
                 <field
                     name="auto_extend_period"
                     groups="hr_holidays.group_hr_holidays_user"
-                    attrs="{'invisible':[('auto_extend', '=', False)]}"
+                    invisible="not auto_extend"
                 />
             </field>
         </field>

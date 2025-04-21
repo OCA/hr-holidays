@@ -16,6 +16,7 @@ class TestExtend(TestHrHolidaysCommon):
                 "name": "Paid Time Off",
                 "time_type": "leave",
                 "auto_extend": True,
+                "requires_allocation": "no",
             }
         )
         date_to = fields.Date.today() - timedelta(days=2)
@@ -51,12 +52,14 @@ class TestExtend(TestHrHolidaysCommon):
                 "name": "Paid Time Off",
                 "time_type": "leave",
                 "auto_extend": True,
+                "requires_allocation": "no",
             }
         )
         leave_type_02 = self.env["hr.leave.type"].create(
             {
                 "name": "Another leave type",
                 "time_type": "leave",
+                "requires_allocation": "no",
             }
         )
         date_to = fields.Date.today() - timedelta(days=2)
@@ -103,6 +106,7 @@ class TestExtend(TestHrHolidaysCommon):
                 "name": "Paid Time Off",
                 "time_type": "leave",
                 "auto_extend": True,
+                "requires_allocation": "no",
             }
         )
         leave = (
