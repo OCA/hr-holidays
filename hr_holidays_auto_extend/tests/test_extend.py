@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -15,6 +15,7 @@ class TestExtend(TestHrHolidaysCommon):
             {
                 "name": "Paid Time Off",
                 "time_type": "leave",
+                "requires_allocation": "no",
                 "auto_extend": True,
             }
         )
@@ -50,12 +51,14 @@ class TestExtend(TestHrHolidaysCommon):
             {
                 "name": "Paid Time Off",
                 "time_type": "leave",
+                "requires_allocation": "no",
                 "auto_extend": True,
             }
         )
         leave_type_02 = self.env["hr.leave.type"].create(
             {
                 "name": "Another leave type",
+                "requires_allocation": "no",
                 "time_type": "leave",
             }
         )
@@ -102,6 +105,7 @@ class TestExtend(TestHrHolidaysCommon):
             {
                 "name": "Paid Time Off",
                 "time_type": "leave",
+                "requires_allocation": "no",
                 "auto_extend": True,
             }
         )

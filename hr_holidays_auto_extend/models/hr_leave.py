@@ -69,11 +69,12 @@ class HrLeave(models.Model):
                 )
                 continue
             vals = {"request_date_to": request_date_to}
-            vals.update(
-                leave.onchange(vals, ["request_date_to"], leave._onchange_spec())[
-                    "value"
-                ]
-            )
+            fields_spec = {}
+            result = leave.onchange(vals, ["request_date_to"], fields_spec)
+
+            if result and "value" in result:
+                vals.update(result["value"])
+
             leave.write(vals)
             leave._remove_resource_leave()
             leave._create_resource_leave()

@@ -9,10 +9,7 @@
         <field name="arch" type="xml">
             <field name="request_unit" position="after">
                 <field name="auto_extend" widget="boolean_toggle" />
-                <field
-                    name="auto_extend_period"
-                    attrs="{'invisible':[('auto_extend', '=', False)]}"
-                />
+                <field name="auto_extend_period" invisible="not auto_extend" />
             </field>
         </field>
     </record>
