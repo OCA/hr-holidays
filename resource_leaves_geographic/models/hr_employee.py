@@ -36,8 +36,8 @@ class HrEmployee(models.Model):
             any_calendar=False,
         )
         local_leave_days = set()
-        for state_interval_map in state_interval_map.values():
-            for start, end, _rcl in state_interval_map:
+        for interval_map in state_interval_map.values():
+            for start, end, _rcl in interval_map:
                 local_leave_days.update(
                     {
                         fields.Date.to_string(day.date())

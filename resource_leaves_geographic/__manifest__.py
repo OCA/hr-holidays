@@ -4,7 +4,7 @@
 {
     "name": "Resource Leaves Geographic",
     "summary": "Add geographic State to Resource Calendar Leaves",
-    "version": "16.0.1.0.1",
+    "version": "18.0.1.0.0",
     "development_status": "Alpha",
     "category": "Human Resources/Time Off",
     "website": "https://github.com/OCA/hr-holidays",
