@@ -119,7 +119,6 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
             self.assertEqual(len(leaves), 1)
 
     def test_03_weeks(self):
-
         for i in range(0, 4):
             check_from = self.date_start + timedelta(days=i * 7)
             check_to = self.date_end + timedelta(days=i * 7)
@@ -290,7 +289,6 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
             )
 
     def test_12_count_repetitions_multi_employees(self):
-
         employee_a = self.env["hr.employee"].create(
             {"name": "Employee 6", "resource_calendar_id": self.calendar.id}
         )
