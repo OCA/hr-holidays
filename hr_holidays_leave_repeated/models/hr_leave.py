@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
-from pytz import utc
+from pytz import timezone, utc
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -95,11 +95,16 @@ class HrLeave(models.Model):
         from_dt, to_dt = self._update_repeated_workday_dates(
             resource_calendar, from_dt, to_dt, param_dict["days"]
         )
+        client_tz = timezone(self._context.get("tz") or self.env.user.tz or "UTC")
+        request_date_from = utc.localize(from_dt).astimezone(client_tz)
+        request_date_to = utc.localize(to_dt).astimezone(client_tz)
 
         return {
             "employee_ids": [(6, 0, leave.employee_ids.ids)],
             "date_from": from_dt,
             "date_to": to_dt,
+            "request_date_from": request_date_from,
+            "request_date_to": request_date_to,
             "multi_employee": leave.multi_employee,
         }
 
