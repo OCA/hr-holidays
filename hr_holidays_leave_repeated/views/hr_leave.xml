@@ -8,19 +8,23 @@
 	        <field name="holiday_type_repeat" invisible="1" />
 	        <field
                     name="repeat_every"
-                    attrs="{'invisible':['|', ('holiday_type', '!=', 'employee'), ('holiday_type_repeat','!=',True)], 'readonly': [('id', '!=', False)]}"
+                    invisible="holiday_type != 'employee' or not holiday_type_repeat"
+                    readonly="id != False"
                 />
 	        <field
                     name="repeat_mode"
-                    attrs="{'invisible':['|', '|', ('holiday_type', '!=', 'employee'), ('holiday_type_repeat','!=',True), ('repeat_every', '=', False)], 'readonly': [('id', '!=', False)]}"
+                    invisible="holiday_type != 'employee' or not holiday_type_repeat or not repeat_every"
+                    readonly="id != False"
                 />
 	        <field
                     name="repeat_end_date"
-                    attrs="{'invisible':['|', '|', '|', ('holiday_type', '!=', 'employee'), ('repeat_mode','=','times'), ('holiday_type_repeat','!=',True), ('repeat_every', '=', False)], 'readonly': [('id', '!=', False)]}"
+                    invisible="holiday_type != 'employee' or not holiday_type_repeat or not repeat_every or repeat_mode == 'times'"
+                    readonly="id != False"
                 />
 	        <field
                     name="repeat_limit"
-                    attrs="{'invisible':['|', '|', '|', ('holiday_type', '!=', 'employee'), ('repeat_mode','=','date'), ('holiday_type_repeat','!=',True), ('repeat_every', '=', False)], 'readonly': [('id', '!=', False)]}"
+                    invisible="holiday_type != 'employee' or not holiday_type_repeat or not repeat_every or repeat_mode == 'date'"
+                    readonly="id != False"
                 />
             </label>
         </field>

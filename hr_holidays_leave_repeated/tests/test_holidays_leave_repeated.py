@@ -4,6 +4,8 @@
 
 from datetime import date, datetime, timedelta
 
+from pytz import timezone, utc
+
 import odoo.tests.common as common
 from odoo.exceptions import UserError, ValidationError
 
@@ -13,18 +15,22 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.client_tz = timezone(cls.env.user.tz or "UTC")
         cls.date_start = datetime(2016, 12, 5, 8, 0, 0, 0)
         cls.date_end = datetime(2016, 12, 5, 18, 0, 0, 0)
 
         cls.calendar = cls.env["resource.calendar"].create({"name": "Calendar 1"})
 
+        # Remove default attendances
+        cls.calendar.attendance_ids.unlink()
+        # Create full day attendance for every week day
         for i in range(0, 7):
             cls.env["resource.calendar.attendance"].create(
                 {
                     "name": "Day " + str(i),
                     "dayofweek": str(i),
                     "hour_from": 8.0,
-                    "hour_to": 16.0,
+                    "hour_to": 18.0,
                     "calendar_id": cls.calendar.id,
                 }
             )
@@ -56,8 +62,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "workday",
                 "repeat_mode": "times",
                 "repeat_limit": 5,
-                "date_from": cls.date_start,
-                "date_to": cls.date_end,
+                "request_date_from": cls.date_start,
+                "request_date_to": cls.date_end,
                 "employee_id": cls.employee_1.id,
             }
         )
@@ -68,8 +74,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "week",
                 "repeat_mode": "times",
                 "repeat_limit": 4,
-                "date_from": cls.date_start,
-                "date_to": cls.date_end,
+                "request_date_from": cls.date_start,
+                "request_date_to": cls.date_end,
                 "employee_id": cls.employee_2.id,
             }
         )
@@ -80,8 +86,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "biweek",
                 "repeat_mode": "times",
                 "repeat_limit": 3,
-                "date_from": cls.date_start,
-                "date_to": cls.date_end,
+                "request_date_from": cls.date_start,
+                "request_date_to": cls.date_end,
                 "employee_id": cls.employee_3.id,
             }
         )
@@ -92,8 +98,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "month",
                 "repeat_mode": "times",
                 "repeat_limit": 2,
-                "date_from": cls.date_start,
-                "date_to": cls.date_end,
+                "request_date_from": cls.date_start,
+                "request_date_to": cls.date_end,
                 "employee_id": cls.employee_4.id,
             }
         )
@@ -106,8 +112,12 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
 
     def test_02_workdays(self):
         for i in range(0, 5):
-            check_from = self.date_start + timedelta(days=i)
-            check_to = self.date_end + timedelta(days=i)
+            check_from = self.client_tz.localize(self.date_start).astimezone(
+                utc
+            ) + timedelta(days=i)
+            check_to = self.client_tz.localize(self.date_end).astimezone(
+                utc
+            ) + timedelta(days=i)
             leaves = self.env["hr.leave"].search(
                 [
                     ("holiday_status_id", "=", self.status_1.id),
@@ -120,8 +130,12 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
 
     def test_03_weeks(self):
         for i in range(0, 4):
-            check_from = self.date_start + timedelta(days=i * 7)
-            check_to = self.date_end + timedelta(days=i * 7)
+            check_from = self.client_tz.localize(self.date_start).astimezone(
+                utc
+            ) + timedelta(days=i * 7)
+            check_to = self.client_tz.localize(self.date_end).astimezone(
+                utc
+            ) + timedelta(days=i * 7)
             leaves = self.env["hr.leave"].search(
                 [
                     ("holiday_status_id", "=", self.status_1.id),
@@ -134,8 +148,12 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
 
     def test_04_biweeks(self):
         for i in range(0, 3):
-            check_from = self.date_start + timedelta(days=i * 14)
-            check_to = self.date_end + timedelta(days=i * 14)
+            check_from = self.client_tz.localize(self.date_start).astimezone(
+                utc
+            ) + timedelta(days=i * 14)
+            check_to = self.client_tz.localize(self.date_end).astimezone(
+                utc
+            ) + timedelta(days=i * 14)
             leaves = self.env["hr.leave"].search(
                 [
                     ("holiday_status_id", "=", self.status_1.id),
@@ -148,8 +166,12 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
 
     def test_05_months(self):
         for i in range(0, 2):
-            check_from = self.date_start + timedelta(days=i * 28)
-            check_to = self.date_end + timedelta(days=i * 28)
+            check_from = self.client_tz.localize(self.date_start).astimezone(
+                utc
+            ) + timedelta(days=i * 28)
+            check_to = self.client_tz.localize(self.date_end).astimezone(
+                utc
+            ) + timedelta(days=i * 28)
             leaves = self.env["hr.leave"].search(
                 [
                     ("holiday_status_id", "=", self.status_1.id),
@@ -168,8 +190,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                     "holiday_type": "employee",
                     "repeat_every": "workday",
                     "repeat_limit": -1,
-                    "date_from": self.date_start,
-                    "date_to": self.date_end,
+                    "request_date_from": self.date_start,
+                    "request_date_to": self.date_end,
                     "employee_id": self.employee_5.id,
                 }
             )
@@ -185,8 +207,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                     "repeat_every": "workday",
                     "repeat_mode": "times",
                     "repeat_limit": 5,
-                    "date_from": date_start,
-                    "date_to": date_end,
+                    "request_date_from": date_start,
+                    "request_date_to": date_end,
                     "employee_id": self.employee_5.id,
                 }
             )
@@ -201,14 +223,18 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "workday",
                 "repeat_mode": "times",
                 "repeat_limit": 5,
-                "date_from": date_start,
-                "date_to": date_end,
+                "request_date_from": date_start,
+                "request_date_to": date_end,
                 "employee_id": self.employee_1.id,
             }
         )
         for i in range(0, 7):
-            datetime_from = date_start + timedelta(days=i)
-            datetime_to = date_end + timedelta(days=i)
+            datetime_from = self.client_tz.localize(self.date_start).astimezone(
+                utc
+            ) + timedelta(days=i)
+            datetime_to = self.client_tz.localize(self.date_end).astimezone(
+                utc
+            ) + timedelta(days=i)
             leaves = self.env["hr.leave"].search(
                 [
                     ("holiday_status_id", "=", self.status_1.id),
@@ -233,8 +259,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "week",
                 "repeat_mode": "date",
                 "repeat_end_date": old_date,
-                "date_from": date_start,
-                "date_to": date_end,
+                "request_date_from": date_start,
+                "request_date_to": date_end,
                 "employee_id": self.employee_5.id,
             }
         )
@@ -259,8 +285,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                     "repeat_every": "workday",
                     "repeat_mode": "times",
                     "repeat_limit": 5,
-                    "date_from": self.date_start,
-                    "date_to": self.date_end,
+                    "request_date_from": self.date_start,
+                    "request_date_to": self.date_end,
                     "multi_employee": True,
                     "employee_ids": [(6, False, [employee_a.id, employee_b.id])],
                 }
@@ -281,8 +307,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                     "repeat_every": "workday",
                     "repeat_mode": "times",
                     "repeat_limit": 5,
-                    "date_from": self.date_start,
-                    "date_to": self.date_end,
+                    "request_date_from": self.date_start,
+                    "request_date_to": self.date_end,
                     "multi_employee": True,
                     "employee_id": employee.id,
                 }
@@ -309,8 +335,8 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "repeat_every": "workday",
                 "repeat_mode": "times",
                 "repeat_limit": 5,
-                "date_from": self.date_start,
-                "date_to": self.date_end,
+                "request_date_from": self.date_start,
+                "request_date_to": self.date_end,
                 "multi_employee": True,
                 "employee_ids": [(6, False, [employee_a.id, employee_b.id])],
             }
