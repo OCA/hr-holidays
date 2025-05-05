@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    ~ Copyright 2025 Simone Rubino - PyTech
+    ~ License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="hr_leave_view_form" model="ir.ui.view">
+        <field name="name">Add end date to custom hours mode</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
+        <field name="arch" type="xml">
+            <field name="request_date_from" position="before">
+                <span class="text-muted">From</span>
+            </field>
+            <field name="request_date_from" position="after">
+                <span class="text-muted">To</span>
+                <field
+                    name="custom_hours_request_date_to"
+                    widget="daterange"
+                    options="{
+                        'related_start_date': 'request_date_from',
+                    }"
+                />
+            </field>
+            <field name="request_date_from" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{
+                    'related_end_date': 'custom_hours_request_date_to',
+                }</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
