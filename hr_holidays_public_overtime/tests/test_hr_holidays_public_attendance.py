@@ -3,11 +3,11 @@
 
 
 from odoo.addons.hr_holidays_public.tests.test_holidays_public import (
-    TestHolidaysPublicBase,
+    TestHolidaysPublic,
 )
 
 
-class TestHrHolidaysPublicOvertime(TestHolidaysPublicBase):
+class TestHrHolidaysPublicOvertime(TestHolidaysPublic):
     def setUp(self):
         super().setUp()
         self.employee.resource_calendar_id = self.env.ref(
@@ -15,8 +15,8 @@ class TestHrHolidaysPublicOvertime(TestHolidaysPublicBase):
         )
         self.employee.company_id.write(
             {
-                "overtime_start_date": "1994-10-13",
-                "hr_attendance_overtime": True,
+                # "overtime_start_date": "1994-10-13",
+                "hr_attendance_display_overtime": True,
             }
         )
 
@@ -24,16 +24,16 @@ class TestHrHolidaysPublicOvertime(TestHolidaysPublicBase):
         attendance = self.env["hr.attendance"].create(
             {
                 "employee_id": self.employee.id,
-                "check_in": "1994-10-14 12:00:00",
-                "check_out": "1994-10-14 13:00:00",
+                "check_in": "2024-12-25 12:00:00",
+                "check_out": "2024-12-25 13:00:00",
             }
         )
         overtime = self.env["hr.attendance.overtime"].search(
             [
-                ("date", "=", "1994-10-14"),
+                ("date", "=", "2024-12-25"),
                 ("employee_id", "=", self.employee.id),
             ]
         )
         self.assertEqual(overtime.duration, 1)
-        attendance.check_out = "1994-10-14 14:00:00"
+        attendance.check_out = "2024-12-25 14:00:00"
         self.assertEqual(overtime.duration, 2)
