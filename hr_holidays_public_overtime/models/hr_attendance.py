@@ -13,7 +13,8 @@ class HrAttendance(models.Model):
         """Set the flag in context to exclude public holidays"""
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
-        # also set the flag on the employees' context as some code paths get dates from there
+        # also set the flag on the employees' context as
+        # some code paths get dates from there
         employee_attendance_dates = defaultdict(
             employee_attendance_dates.default_factory,
             {
