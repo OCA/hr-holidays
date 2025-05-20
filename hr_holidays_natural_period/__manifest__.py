@@ -13,4 +13,5 @@
     "depends": ["hr_holidays"],
     "maintainers": ["victoralmau"],
     "demo": ["demo/hr_leave_type_data.xml"],
+    "data": ["views/hr_leave_views.xml"],
 }
