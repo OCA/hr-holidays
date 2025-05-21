@@ -10,7 +10,6 @@
     "author": "ForgeFlow, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/hr-holidays",
     "depends": ["hr_holidays_public", "hr_holidays_natural_period"],
-    "data": ["views/hr_leave_views.xml"],
     "demo": ["demo/hr_leave_type_data.xml"],
     "installable": True,
     "application": False,
