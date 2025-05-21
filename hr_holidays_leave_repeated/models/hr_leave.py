@@ -5,7 +5,7 @@
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, utc
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -54,28 +54,28 @@ class HrLeave(models.Model):
         return {
             "workday": {
                 "days": 1,
-                "user_error_msg": _(
+                "user_error_msg": self.env._(
                     "The repetition is based on workdays: the duration of "
                     "the leave request must not exceed 1 day."
                 ),
             },
             "week": {
                 "days": 7,
-                "user_error_msg": _(
+                "user_error_msg": self.env._(
                     "The repetition is every week: the duration of the "
                     "leave request must not exceed 1 week."
                 ),
             },
             "biweek": {
                 "days": 14,
-                "user_error_msg": _(
+                "user_error_msg": self.env._(
                     "The repetition is every two weeks: the duration of the "
                     "leave request must not exceed 2 weeks."
                 ),
             },
             "month": {
                 "days": 28,
-                "user_error_msg": _(
+                "user_error_msg": self.env._(
                     "The repetition is every four weeks: the duration of the "
                     "leave request must not exceed 28 days."
                 ),
@@ -100,12 +100,11 @@ class HrLeave(models.Model):
         request_date_to = utc.localize(to_dt).astimezone(client_tz)
 
         return {
-            "employee_ids": [(6, 0, leave.employee_ids.ids)],
+            "employee_id": leave.employee_id.id,
             "date_from": from_dt,
             "date_to": to_dt,
             "request_date_from": request_date_from,
             "request_date_to": request_date_to,
-            "multi_employee": leave.multi_employee,
         }
 
     @api.model
@@ -135,39 +134,23 @@ class HrLeave(models.Model):
         if skip_create_handler:
             return res
         for leave in res.filtered(
-            lambda leave: leave.repeat_every
-            and leave.repeat_mode
-            and leave.holiday_type == "employee"
+            lambda leave: leave.repeat_every and leave.repeat_mode
         ):
-            employees = leave.employee_ids
-            resource_calendars = employees.mapped("resource_calendar_id")
-            if len(resource_calendars) == 1:
-                res += self.create_repeated_handler(leave, resource_calendars[0])
-            elif len(resource_calendars) == 0:
-                raise ValidationError(
-                    _(
-                        "Please define resource calendar on employee(s) in order "
-                        "to compute repeated leaves."
-                    )
-                )
-            else:
-                raise ValidationError(
-                    _(
-                        "Creating leaves for multiple employees with different "
-                        "resource calendar is not supported."
-                    )
-                )
+            resource_calendar = leave.resource_calendar_id
+            res += self.create_repeated_handler(leave, resource_calendar)
         return res
 
     @api.constrains("repeat_mode", "repeat_limit", "repeat_end_date")
     def _check_repeat_limit(self):
         for record in self:
             if record.repeat_mode == "times" and record.repeat_limit < 0:
-                raise ValidationError(_("Please set a positive amount of repetitions."))
+                raise ValidationError(
+                    self.env._("Please set a positive amount of repetitions.")
+                )
             if (
                 record.repeat_mode == "date"
                 and record.repeat_end_date < record.date_from.date()
             ):
                 raise ValidationError(
-                    _("The Repeat End Date cannot be before the leave.")
+                    self.env._("The Repeat End Date cannot be before the leave.")
                 )
