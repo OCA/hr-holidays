@@ -27,20 +27,22 @@ class HrLeave(models.Model):
         return True
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
-        for leave in self:
-            if (
-                leave.holiday_status_id.exclude_public_holidays
-                or not leave.holiday_status_id
-            ):
-                leave = leave.with_context(
-                    employee_id=leave.employee_id.id, exclude_public_holidays=True
-                )
-            return super(HrLeave, leave)._get_durations(
-                check_leave_type=check_leave_type, resource_calendar=resource_calendar
-            )
-        return super()._get_durations(
+        exclude_public_holidays_leaves = self.filtered(
+            lambda x: x.holiday_status_id.exclude_public_holidays
+            or not x.holiday_status_id
+        )
+        res = super(HrLeave, (self - exclude_public_holidays_leaves))._get_durations(
             check_leave_type=check_leave_type, resource_calendar=resource_calendar
         )
+        for leave in exclude_public_holidays_leaves:
+            leave = leave.with_context(
+                employee_id=leave.employee_id.id, exclude_public_holidays=True
+            )
+            _res = super(HrLeave, leave)._get_durations(
+                check_leave_type=check_leave_type, resource_calendar=resource_calendar
+            )
+            res[leave.id] = _res[leave.id]
+        return res
 
     def _get_domain_from_get_unusual_days(self, date_from, date_to=None):
         domain = [("date", ">=", date_from)]
