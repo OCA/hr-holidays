@@ -14,6 +14,16 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_holidays_public
+#: model:ir.model,name:hr_holidays_public.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_holidays_public
+#: model:ir.model,name:hr_holidays_public.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: hr_holidays_public
 #: model:ir.ui.menu,name:hr_holidays_public.menu_create_next_year_public_holidays
 msgid "Create Next Year Public Holidays"
 msgstr ""
@@ -31,6 +41,13 @@ msgstr ""
 #. module: hr_holidays_public
 #: model:ir.model.fields,help:hr_holidays_public.field_hr_leave_type__exclude_public_holidays
 msgid "If enabled, public holidays are skipped in leave days calculation."
+msgstr ""
+
+#. module: hr_holidays_public
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_employee__is_public_holiday
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_employee_base__is_public_holiday
+#: model:ir.model.fields,field_description:hr_holidays_public.field_hr_employee_public__is_public_holiday
+msgid "Public Holiday Today"
 msgstr ""
 
 #. module: hr_holidays_public
@@ -57,4 +74,9 @@ msgstr ""
 #. module: hr_holidays_public
 #: model:ir.model,name:hr_holidays_public.model_hr_leave_type
 msgid "Time Off Type"
+msgstr ""
+
+#. module: hr_holidays_public
+#: model:ir.model,name:hr_holidays_public.model_res_users
+msgid "User"
 msgstr ""

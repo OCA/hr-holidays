@@ -1,6 +1,11 @@
 # Copyright 2015 Salton Massally <smassally@idtlabs.sl>
 # Copyright 2018 Brainbean Apps (https://brainbeanapps.com)
+# Copyright 2025 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+from freezegun import freeze_time
+
+from odoo.tests import new_test_user
 
 from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
     TestCalendarPublicHoliday,
@@ -137,3 +142,17 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
             country_id=self.employee.address_id.country_id.id,
             state_ids=[(6, 0, [self.st_state_1.id])],
         )
+
+    @freeze_time("2024-12-25")
+    def test_user_im_status(self):
+        self.assertTrue(self.employee.is_public_holiday)
+        self.assertEqual(self.employee.hr_icon_display, "presence_holiday_absent")
+        self.assertTrue(self.employee.is_absent)
+        user = new_test_user(self.env, login="test-user")
+        self.assertEqual(user.im_status, "offline")
+        self.assertEqual(user.partner_id.im_status, "offline")
+        self.employee.user_id = user
+        user.invalidate_recordset()
+        self.assertEqual(user.im_status, "leave_offline")
+        user.partner_id.invalidate_recordset()
+        self.assertEqual(user.partner_id.im_status, "leave_offline")
