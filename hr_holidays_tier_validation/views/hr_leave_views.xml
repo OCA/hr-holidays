@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_hr_leave_form_tier_validation" model="ir.ui.view">
+        <field name="name">hr_leave_form_tier_validation</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="before">
+                <field name="validation_type" invisible="1" readonly="1" />
+            </xpath>
+            <!-- Hide upstream approve button only for tier validation -->
+            <xpath expr="//button[@name='action_approve']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{"invisible": [('validation_type', '=', 'tier_validation')]}</attribute>
+            </xpath>
+
+            <!-- Hide refuse button only for tier validation -->
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="attrs">
+        {
+          'invisible': [
+            '|',
+            '&amp;', ('validation_type', '=', 'tier_validation'), ('state', '!=', 'validate'),
+            '|','|','|',
+              ('id', '=', False),
+              ('active', '=', False),
+              ('can_approve', '=', False),
+              ('state', 'not in', ('confirm','validate1','validate'))
+          ]
+        }
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Replace upstream approve and refuse button from kaban view by validate and reject tier validaton buttons-->
+     <record id="view_hr_leave_kanban_tier_validation" model="ir.ui.view">
+        <field name="name">hr_leave_kanban_tier_validation</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_kanban" />
+        <field
+            name="priority"
+            eval="99"
+        /> <!-- yes, we really want to replace the buttons -->
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="before">
+                <field name="validation_type" invisible="1" readonly="1" />
+            </xpath>
+            <xpath expr="//button[@name='action_approve']" position="replace">
+                <field
+                    name="can_review"
+                    invisible="1"
+                /> <!-- Used to control visibility of buttons -->
+                <button
+                    t-if="record.validation_type == 'tier_validation' and record.can_review.raw_value"
+                    name="validate_tier"
+                    type="object"
+                    class="btn btn-link btn-sm ps-0"
+                >
+                        <i class="fa fa-thumbs-up" /> Validate
+                    </button>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="replace">
+                <button
+                    t-if="record.validation_type == 'tier_validation' and record.can_review.raw_value"
+                    name="reject_tier"
+                    type="object"
+                    class="btn btn-link btn-sm ps-0"
+                >
+                        <i class="fa fa-thumbs-down" /> Reject
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
