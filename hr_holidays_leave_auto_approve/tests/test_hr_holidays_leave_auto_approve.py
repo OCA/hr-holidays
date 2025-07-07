@@ -9,6 +9,7 @@ from odoo.tests.common import TransactionCase
 class TestHolidaysAutoValidate(TransactionCase):
     def setUp(self):
         super().setUp()
+        self.env["hr.leave.stress.day"].search([]).unlink()
         self.employee_model = self.env["hr.employee"]
         self.user_model = self.env["res.users"]
         self.leave_type_model = self.env["hr.leave.type"]
@@ -132,6 +133,8 @@ class TestHolidaysAutoValidate(TransactionCase):
         self.test_user_id.groups_id = [(6, 0, [self.env.ref("base.group_user").id])]
 
         today = datetime.today()
+        # Ensure today is a Friday to avoid weekend issues
+        today += timedelta(days=4 - today.weekday())
         self.test_leave_type2_id.write({"auto_approve_policy": "all"})
 
         leave1 = self.leave_request_model.with_user(self.test_user_id).create(
