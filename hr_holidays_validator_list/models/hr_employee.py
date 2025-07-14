@@ -23,20 +23,29 @@ class HrEmployeeBase(models.AbstractModel):
             if employee.leave_manager_ids:
                 employee.leave_manager_id = employee.leave_manager_ids[0]
             else:
-                super()._compute_leave_manager()
+                return super()._compute_leave_manager()
 
     def _add_leave_manager_ids_in_group(self, values):
         if "leave_manager_ids" in values:
             approver_group = self.env.ref(
                 "hr_holidays.group_hr_holidays_responsible", raise_if_not_found=False
             )
-            for manager_id in values["leave_manager_ids"][0][-1]:
-                if approver_group:
-                    approver_group.sudo().write({"users": [(4, manager_id)]})
+            manager_ids_to_add = set()
+            for command in values["leave_manager_ids"]:
+                command_type = command[0]
+                if command_type == 4:
+                    manager_ids_to_add.add(command[1])
+                elif command_type == 6:
+                    manager_ids_to_add.update(command[2])
+            if manager_ids_to_add:
+                approver_group.sudo().write(
+                    {"users": [(4, manager_id) for manager_id in manager_ids_to_add]}
+                )
 
-    def create(self, values):
-        res = super().create(values)
-        self._add_leave_manager_ids_in_group(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self._add_leave_manager_ids_in_group(vals_list)
         return res
 
     def write(self, values):

@@ -6,10 +6,14 @@
         <field name="inherit_id" ref="hr_holidays.view_hr_leave_allocation_filter" />
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//filter[@name='managed_people']" position="attributes">
-                    <attribute
-                        name="domain"
-                    >[('employee_id.leave_manager_ids', 'in', [uid])]</attribute>
+                <xpath expr="//filter[@name='waiting_for_me']" position="attributes">
+                    <attribute name="domain">[
+                        ('state','in',['confirm']),
+                        '|',
+                        ('employee_id.user_id', '!=', uid),
+                        '&amp;',
+                        ('employee_id.user_id', '=', uid),
+                        ('employee_id.leave_manager_ids', '=', uid)]</attribute>
                 </xpath>
             </data>
         </field>

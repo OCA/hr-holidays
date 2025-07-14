@@ -3,11 +3,11 @@
 
 from datetime import datetime
 
-import odoo.tests.common as common
 from odoo.exceptions import UserError
+from odoo.tests import TransactionCase
 
 
-class TestHrLeave(common.TransactionCase):
+class TestHrLeave(TransactionCase):
     def setUp(self):
         super().setUp()
         employee = self.env["hr.employee"].search([])[0]
@@ -15,7 +15,6 @@ class TestHrLeave(common.TransactionCase):
         hr_leave_type = self.env["hr.leave.type"].create(
             {
                 "name": "Leave Test",
-                "color_name": "red",
                 "request_unit": "hour",
             }
         )
@@ -23,7 +22,6 @@ class TestHrLeave(common.TransactionCase):
             {
                 "employee_id": employee.id,
                 "holiday_status_id": hr_leave_type.id,
-                "holiday_type": "employee",
                 "date_from": datetime(year=2023, month=10, day=1, hour=8, minute=0),
                 "date_to": datetime(year=2023, month=10, day=3, hour=8, minute=0),
             }
@@ -42,6 +40,13 @@ class TestHrLeave(common.TransactionCase):
         """Test that checks if all leave managers in field leave_manager_ids can
         confirm a hr_leave and hr_leave_allocations"""
         self.env.user = self.env["res.users"].browse(6)
+        self.env.user.write(
+            {
+                "groups_id": [
+                    (4, self.env.ref("hr_holidays.group_hr_holidays_manager").id)
+                ],
+            }
+        )
         self.hr_leave.with_user(self.env.user).action_validate()
         self.assertEqual(self.hr_leave.state, "validate")
         self.hr_leave.state = "confirm"
