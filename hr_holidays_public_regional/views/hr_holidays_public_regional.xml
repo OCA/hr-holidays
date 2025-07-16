@@ -1,0 +1,62 @@
+<odoo>
+    <!-- Copyright 2025 Miquel Alzanillas, Antoni Marroig  (APSL-Nagarro) <malzanillas@apsl.net><amarroig@apsl.net>
+       License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_holidays_public_regional_tree" model="ir.ui.view">
+        <field name="name">hr.holidays.public.regional.tree</field>
+        <field name="model">hr.holidays.public.regional</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="display_name" />
+                <field name="year" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_search_holidays_public_regional" model="ir.ui.view">
+        <field name="name">Holidays Public Regional Filters</field>
+        <field name="model">hr.holidays.public.regional</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="group_year" string="Year" context="{'group_by':'year'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="view_holidays_public_regional_form" model="ir.ui.view">
+        <field name="name">hr.holidays.public.regional.form</field>
+        <field name="model">hr.holidays.public.regional</field>
+        <field name="arch" type="xml">
+            <form string="Public Regional Holidays">
+                <group name="group_main">
+                    <group>
+                        <field name="name" />
+                    </group>
+                    <group>
+                        <field name="year" />
+                    </group>
+                </group>
+                <separator string="Public Regional Holidays" />
+                <field name="line_ids" nolabel="1">
+                    <tree editable="top">
+                        <field name="date" />
+                        <field name="name" width="300" />
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_holidays_public_regional_view" model="ir.actions.act_window">
+        <field name="name">Public Regional Holidays</field>
+        <field name="res_model">hr.holidays.public.regional</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="open_holidays_public_regional_view"
+        id="menu_holidays_public_regional_view"
+        parent="hr_holidays_public.menu_hr_public_holidays"
+        sequence="10"
+    />
+</odoo>
