@@ -8,10 +8,10 @@ class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
     def _attendance_intervals_batch(
-        self, start_dt, end_dt, resources=None, domain=None, tz=None
+        self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False
     ):
         result = super()._attendance_intervals_batch(
-            start_dt, end_dt, resources=resources, domain=domain, tz=tz
+            start_dt, end_dt, resources=resources, domain=domain, tz=tz, lunch=lunch
         )
         if self.env.context.get("exclude_public_holidays") and resources:
             return self._attendance_intervals_batch_exclude_public_holidays(
