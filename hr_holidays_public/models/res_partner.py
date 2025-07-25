@@ -11,6 +11,7 @@ class ResPartner(models.Model):
         res = super()._compute_im_status()
         for item in self.filtered(
             lambda x: x.user_ids.employee_id.is_public_holiday
+            and x.im_status != "im_partner"
             and "leave_" not in x.im_status
         ):
             item.im_status = (
