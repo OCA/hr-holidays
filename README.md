@@ -22,7 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 17.0.1.0.3 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | Apply natural days in holidays
-[hr_holidays_public](hr_holidays_public/) | 17.0.1.0.7 |  | Manage Public Holidays
+[hr_holidays_public](hr_holidays_public/) | 17.0.1.0.8 |  | Manage Public Holidays
 [hr_holidays_public_city](hr_holidays_public_city/) | 17.0.1.0.1 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | HR Holidays Public City
 [hr_holidays_settings](hr_holidays_settings/) | 17.0.1.0.0 |  | Enables Settings Form for HR Holidays.
 [hr_leave_custom_hour_interval](hr_leave_custom_hour_interval/) | 17.0.1.0.1 |  | Edit start and end of leaves using time intervals
