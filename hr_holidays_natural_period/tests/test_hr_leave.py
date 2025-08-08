@@ -14,8 +14,12 @@ class TestHrLeave(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.leave_type = cls.env.ref(
-            "hr_holidays_natural_period.hr_leave_type_natural_day_test"
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Test Natural Day Leave",
+                "request_unit": "natural_day",
+                "employee_requests": "yes",
+            }
         )
         cls.leave_type_day = cls.env.ref("hr_holidays.holiday_status_cl")
         cls.leave_type_day.employee_requests = "yes"
@@ -119,7 +123,20 @@ class TestHrLeave(BaseCommon):
 
     @users("test-user")
     def test_hr_leave_day(self):
-        leave_allocation = self._create_leave_allocation(self.leave_type_day, 5)
+        # Create a leave type with explicit "day" request_unit
+        day_leave_type = (
+            self.env["hr.leave.type"]
+            .sudo()
+            .create(
+                {
+                    "name": "Test Day Leave",
+                    "request_unit": "day",
+                    "employee_requests": "yes",
+                }
+            )
+        )
+
+        leave_allocation = self._create_leave_allocation(day_leave_type, 5)
         leave_allocation.sudo().action_validate()
         res_leave_type = (
             self.env["hr.leave.type"]
@@ -132,6 +149,37 @@ class TestHrLeave(BaseCommon):
         self.assertEqual(res_leave_type["leaves_taken"], 0)
         self.assertEqual(res_leave_type["virtual_leaves_taken"], 0)
         self.assertEqual(res_leave_type["request_unit"], "day")
-        leave = self._create_hr_leave(self.leave_type_day, "2023-01-08", "2023-01-15")
+        leave = self._create_hr_leave(day_leave_type, "2023-01-08", "2023-01-15")
         self.assertEqual(leave.number_of_days, 5)
         self.assertEqual(leave.number_of_days_display, 5)
+
+    @users("test-user")
+    def test_natural_days_unchanged_by_attendance_changes(self):
+        """Test that natural days calculation is independent of attendance changes."""
+        leave_allocation = self._create_leave_allocation(self.leave_type, 15)
+        leave_allocation.sudo().action_validate()
+
+        # Create initial leave
+        leave1 = self._create_hr_leave(self.leave_type, "2023-01-02", "2023-01-05")
+        original_days = leave1.number_of_days
+        self.assertEqual(original_days, 4.0)
+
+        # Modify calendar by adding attendance
+        self.employee.resource_calendar_id.attendance_ids.create(
+            {
+                "name": "Extra Attendance",
+                "calendar_id": self.employee.resource_calendar_id.id,
+                "dayofweek": "0",  # Monday
+                "hour_from": 8,
+                "hour_to": 12,
+            }
+        )
+
+        # Create new leave after calendar modification
+        leave2 = self._create_hr_leave(self.leave_type, "2023-01-09", "2023-01-12")
+        # For natural days, adding attendance shouldn't change the day count
+        self.assertEqual(
+            leave2.number_of_days,
+            4.0,
+            "Natural days should remain the same regardless of attendance changes",
+        )
