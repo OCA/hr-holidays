@@ -9,16 +9,23 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
-        """We need to set request_unit as 'day' to avoid the calculations being done
-        as hours.
+        """Calculate consumed leaves with natural day support via context.
+
+
+        We need to handle natural_day leave types by using context instead of
+        directly modifying the request_unit field to avoid ORM violations.
         """
-        mod_leave_type_ids = self.env["hr.leave.type"]
-        for item in leave_types:
-            if item.request_unit == "natural_day":
-                item.sudo().request_unit = "day"
-                mod_leave_type_ids |= item
-        self = self.with_context(mod_holidays_status_ids=mod_leave_type_ids.ids)
-        res = super()._get_consumed_leaves(leave_types, target_date, ignore_future)
-        for item in mod_leave_type_ids:
-            item.sudo().request_unit = "natural_day"
-        return res
+        natural_day_types = leave_types.filtered(
+            lambda t: t.request_unit == "natural_day"
+        )
+        if natural_day_types:
+            # Use context to signal natural day calculation without field modification
+            ctx = dict(
+                self.env.context,
+                mod_holidays_status_ids=natural_day_types.ids,
+                natural_day_computation=True,
+            )
+            return super(HrEmployee, self.with_context(**ctx))._get_consumed_leaves(
+                leave_types, target_date, ignore_future
+            )
+        return super()._get_consumed_leaves(leave_types, target_date, ignore_future)
