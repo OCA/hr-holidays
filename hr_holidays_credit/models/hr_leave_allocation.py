@@ -9,7 +9,7 @@ class HolidaysAllocation(models.Model):
     _inherit = "hr.leave.allocation"
 
     def _domain_holiday_status_id(self):
-        res = super(HolidaysAllocation, self)._domain_holiday_status_id()
+        res = super()._domain_holiday_status_id()
         return expression.OR([[("allow_credit", "=", True)], res])
 
     holiday_status_id = fields.Many2one(
