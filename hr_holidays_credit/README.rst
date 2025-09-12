@@ -28,13 +28,26 @@ Leave Credit
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-With this module installed, HR Officer can configure specific leave
-types to allow negative balance, or allow employees take leave credit.
+This module extends the feature that allows negative cap on leave types.
+It lets HR Officers restrict which employees, categories, or departments
+are permitted to take leave types with a negative balance. If no
+restrictions are set for a leave type, all employees can use it with a
+negative balance (as in the base module).
 
 **Table of contents**
 
 .. contents::
    :local:
+
+Known issues / Roadmap
+======================
+
+Currently, leave types that allow negative balances require a numeric
+limit to be defined. But originally, this module allowed for an
+"unlimited" negative balance. A common and useful workaround is to use a
+very large number, but this is not ideal. In the future, it would be
+interesting to introduce an option for endless negative credit, removing
+the need to set an arbitrary upper limit.
 
 Bug Tracker
 ===========

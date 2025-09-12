@@ -1,299 +1,190 @@
 # Copyright (C) 2018 Brainbean Apps (https://brainbeanapps.com)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-import logging
+from datetime import datetime
+
+from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
-from odoo.tests import common
+from odoo.tests.common import tagged
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.hr_holidays.tests.test_negative import TestNegative
 
 
-class TestHrHolidaysCredit(common.TransactionCase):
+@tagged("negative_time_off")
+class TestHrHolidaysCredit(TestNegative):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.Employee = cls.env["hr.employee"]
-        cls.SudoEmployee = cls.Employee.sudo()
-        cls.Department = cls.env["hr.department"]
-        cls.SudoDepartment = cls.Department.sudo()
+        # Set category and department for some employees
+        cls.employee_emp_category_id = cls.env.ref("hr.employee_category_2").id
+        cls.employee_hrmanager_category_id = cls.env.ref("hr.employee_category_3").id
+        cls.employee_emp.category_ids = [(4, cls.employee_emp_category_id)]
+        cls.employee_hrmanager.category_ids = [(4, cls.employee_hrmanager_category_id)]
+        cls.employee_emp_department_id = cls.env.ref("hr.dep_administration").id
+        cls.employee_hrmanager_department_id = cls.env.ref("hr.dep_rd_ltp").id
+        cls.employee_emp.department_id = cls.employee_emp_department_id
+        cls.employee_hrmanager.department_id = cls.employee_hrmanager_department_id
 
-        cls.LeaveType = cls.env["hr.leave.type"]
-        cls.SudoLeaveType = cls.LeaveType.sudo()
-        cls.Leave = cls.env["hr.leave"]
-        cls.SudoLeave = cls.Leave.sudo()
-        cls.Allocation = cls.env["hr.leave.allocation"]
-        cls.SudoAllocation = cls.Allocation.sudo()
-
-    def test_1(self):
-        """
-        Test that creating a leave without allowing credit raises a
-        ValidationError, and succeeds after enabling credit on the leave type.
-        """
-        employee = self.SudoEmployee.create({"name": "Employee #1"})
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #1",
-                "requires_allocation": "yes",
-                "allocation_validation_type": "officer",
-                "allow_credit": False,
-            }
-        )
-
-        allocation = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-        allocation.action_confirm()
-        allocation.action_validate()
-
-        with self.assertRaises(ValidationError):
-            self.SudoLeave.create(
+    def test_negative_time_off_02(self):
+        with freeze_time("2022-10-02"):
+            # At the start of 2022, the user receives 1 day, his balance is at 1
+            # The first 2022 leave brings the user balance at -4
+            self.env["hr.leave"].with_user(self.user_employee_id).create(
                 {
-                    "holiday_status_id": leave_type.id,
-                    "holiday_type": "employee",
-                    "employee_id": employee.id,
-                    "date_from": "2020-01-01",
-                    "date_to": "2020-01-10",
+                    "name": "first 2022 leave of 5 days",
+                    "holiday_status_id": self.leave_type.id,
+                    "employee_id": self.employee_emp.id,
+                    "request_date_from": datetime(2022, 10, 24),
+                    "request_date_to": datetime(2022, 10, 28),
                 }
             )
 
-        leave_type.write({"allow_credit": True})
-        self.SudoLeave.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "holiday_type": "employee",
-                "employee_id": employee.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-01-10",
-            }
-        )
+        with freeze_time("2023-10-02"):
+            # At the start of 2023, the user receives 5 days, his balance is at 1
+            # The first leave of 2023 brings the balance at -4
+            leave = (
+                self.env["hr.leave"]
+                .with_user(self.user_employee_id)
+                .create(
+                    {
+                        "name": "first 2023 leave of 5 days",
+                        "holiday_status_id": self.leave_type.id,
+                        "employee_id": self.employee_emp.id,
+                        "request_date_from": datetime(2023, 10, 9),
+                        "request_date_to": datetime(2023, 10, 13),
+                    }
+                )
+            )
 
-    def test_2(self):
-        """
-        Test that leave allocation validation respects department restrictions.
-        Leaves for employees in allowed departments succeed, while others
-        raise ValidationError.
-        """
-        department = self.SudoDepartment.create({"name": "Department #2"})
-        employee_1 = self.SudoEmployee.create(
-            {"name": "Employee #2-1", "department_id": department.id}
-        )
-        employee_2 = self.SudoEmployee.create(
-            {"name": "Employee #2-2", "department_id": False}
-        )
+            # We cancel the first leave of 2023, the balance is back at 1
+            # Now we don't allow the employee to take negative credit
+            # The leave should not be possible to take since this employee is
+            # not allowed to take negative credit
+            # We are testing the _check_validity() method
+            leave._action_user_cancel("Cancel leave")
+            self.leave_type.creditable_employee_ids = [(4, self.employee_hrmanager_id)]
+            with self.assertRaises(ValidationError):
+                self.env["hr.leave"].with_user(self.user_employee_id).create(
+                    {
+                        "name": "not takable leaves of 5 days",
+                        "holiday_status_id": self.leave_type.id,
+                        "employee_id": self.employee_emp_id,
+                        "request_date_from": datetime(2023, 10, 16),
+                        "request_date_to": datetime(2023, 10, 20),
+                    }
+                )
 
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #2",
-                "requires_allocation": "yes",
-                "allocation_validation_type": "officer",
-                "allow_credit": True,
-                "creditable_department_ids": [(6, False, [department.id])],
-            }
-        )
-
-        allocation_1 = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee_1.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-        allocation_2 = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee_2.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-
-        allocation_1.action_confirm()
-        allocation_1.action_validate()
-        allocation_2.action_confirm()
-        allocation_2.action_validate()
-
-        self.SudoLeave.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "holiday_type": "employee",
-                "employee_id": employee_1.id,
-                "number_of_days": 1,
-            }
-        )
-        with self.assertRaises(ValidationError):
-            self.SudoLeave.create(
+            # We make the employee be allowed to take negative credit again
+            # The leave should be possible to take since it would bring the
+            # balance at -4
+            self.leave_type.creditable_employee_ids = [(4, self.employee_emp_id)]
+            self.env["hr.leave"].with_user(self.user_employee_id).create(
                 {
-                    "holiday_status_id": leave_type.id,
-                    "holiday_type": "employee",
-                    "employee_id": employee_2.id,
-                    "number_of_days": 1,
+                    "name": "first 2023 leave of 5 days",
+                    "holiday_status_id": self.leave_type.id,
+                    "employee_id": self.employee_emp.id,
+                    "request_date_from": datetime(2023, 10, 9),
+                    "request_date_to": datetime(2023, 10, 13),
                 }
             )
 
-    def test_3(self):
-        """
-        Test that leave allocation validation respects individual employee
-        credit restrictions. Leaves for employees with credit allowed succeed,
-        while others raise ValidationError.
-        """
-        employee_1 = self.SudoEmployee.create({"name": "Employee #3-1"})
-        employee_2 = self.SudoEmployee.create({"name": "Employee #3-2"})
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #3",
-                "requires_allocation": "yes",
-                "allocation_validation_type": "officer",
-                "allow_credit": True,
-                "creditable_employee_ids": [(6, False, [employee_1.id])],
-            }
-        )
-
-        allocation_1 = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee_1.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-        allocation_2 = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee_2.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-
-        allocation_1.action_confirm()
-        allocation_1.action_validate()
-        allocation_2.action_confirm()
-        allocation_2.action_validate()
-
-        self.SudoLeave.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "holiday_type": "employee",
-                "employee_id": employee_1.id,
-                "number_of_days": 1,
-            }
-        )
-        with self.assertRaises(ValidationError):
-            self.SudoLeave.create(
+    def test_negative_time_off_03(self):
+        with freeze_time("2023-10-02"):
+            # At the start of 2023, the user receives 5 days
+            # The first leave of 2023 brings the balance at 0
+            # We are testing the write() method of hr.leave.allocation
+            self.env["hr.leave"].with_user(self.user_employee_id).create(
                 {
-                    "holiday_status_id": leave_type.id,
-                    "holiday_type": "employee",
-                    "employee_id": employee_2.id,
-                    "number_of_days": 1,
+                    "name": "first 2023 leave of 5 days",
+                    "holiday_status_id": self.leave_type.id,
+                    "employee_id": self.employee_emp.id,
+                    "request_date_from": datetime(2023, 10, 9),
+                    "request_date_to": datetime(2023, 10, 13),
                 }
             )
+            # Now we can change the original allocation to 3 days only
+            # The leave should still be possible to take since it would bring
+            # the balance at -2
+            # Since the employee is allowed to take negative credit
+            self.allocation_2023.sudo().write({"number_of_days": 3})
+            # We make the employee be not allowed to take negative credit
+            # The operation should not be possible since it would bring the
+            # balance at -1
+            self.leave_type.creditable_employee_ids = [(4, self.employee_hrmanager_id)]
+            with self.assertRaises(ValidationError):
+                self.allocation_2023.sudo().write({"number_of_days": 4})
 
-    def test_4(self):
-        """
-        Test the name_get method
-        """
-        employee = self.SudoEmployee.create({"name": "Employee #4"})
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #4",
-                "requires_allocation": "yes",
-                "allocation_validation_type": "officer",
-                "allow_credit": False,
-            }
-        )
+    def test_is_holiday_credit_allowed(self):
+        self.assertTrue(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
+        # Employee in creditable_employee_ids
+        self.leave_type.creditable_employee_ids = [(4, self.employee_emp_id)]
+        self.assertTrue(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
+        # Employee not in creditable_employee_ids
+        self.leave_type.creditable_employee_ids = [(3, self.employee_emp_id)]
+        self.leave_type.creditable_employee_ids = [(4, self.employee_hrmanager_id)]
+        self.assertFalse(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
+        # Employee in creditable_employee_category_ids
+        self.leave_type.creditable_employee_category_ids = [
+            (4, self.employee_emp_category_id)
+        ]
+        self.assertTrue(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
+        # Employee not in creditable_employee_category_ids
+        self.leave_type.creditable_employee_category_ids = [
+            (3, self.employee_emp_category_id)
+        ]
+        self.leave_type.creditable_employee_category_ids = [
+            (4, self.employee_hrmanager_category_id)
+        ]
+        self.assertFalse(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
+        # Employee in creditable_department_ids
+        self.leave_type.creditable_department_ids = [
+            (4, self.employee_emp_department_id)
+        ]
+        self.assertTrue(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
+        # Employee not in creditable_department_ids
+        self.leave_type.creditable_department_ids = [
+            (3, self.employee_emp_department_id)
+        ]
+        self.leave_type.creditable_department_ids = [
+            (4, self.employee_hrmanager_department_id)
+        ]
+        self.assertFalse(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
 
-        allocation = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-        allocation.action_confirm()
-        allocation.action_validate()
+    def test_get_allocation_data(self):
+        # Employee allowed to take negative credit
+        result = self.leave_type.get_allocation_data(self.employee_emp)
+        self.assertEqual(result[self.employee_emp][0][1]["max_allowed_negative"], 5.0)
+        # Employee not allowed to take negative credit
+        self.leave_type.creditable_employee_ids = [(4, self.employee_hrmanager_id)]
+        result = self.leave_type.get_allocation_data(self.employee_emp)
+        self.assertEqual(result[self.employee_emp][0][1]["max_allowed_negative"], 0.0)
 
-        name = leave_type.with_context(employee_id=employee.id).name_get()[0][1]
-        self.assertTrue("available" in name)
-        self.assertTrue("credit" not in name)
-
-    def test_5(self):
-        """
-        Test that the name_get method includes 'available + credit' in the
-        leave type name when credit is allowed.
-        """
-        employee = self.SudoEmployee.create({"name": "Employee #5"})
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #5",
-                "requires_allocation": "yes",
-                "allocation_validation_type": "officer",
-                "allow_credit": True,
-            }
-        )
-
-        allocation = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-        allocation.action_confirm()
-        allocation.action_validate()
-
-        name = leave_type.with_context(employee_id=employee.id).name_get()[0][1]
-        self.assertTrue("available + credit" in name)
-
-    def test_6(self):
-        """
-        Test that the name_get method includes 'used in credit' in the leave
-        type name when a leave consumes credit.
-        """
-        employee = self.SudoEmployee.create({"name": "Employee #6"})
-        leave_type = self.SudoLeaveType.create(
-            {
-                "name": "Leave Type #6",
-                "requires_allocation": "yes",
-                "allocation_validation_type": "officer",
-                "allow_credit": True,
-            }
-        )
-        self.SudoLeave.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "holiday_type": "employee",
-                "employee_id": employee.id,
-                "number_of_days": 1,
-            }
-        )
-
-        allocation = self.SudoAllocation.create(
-            {
-                "holiday_status_id": leave_type.id,
-                "number_of_days": 5,
-                "employee_id": employee.id,
-                "date_from": "2020-01-01",
-                "date_to": "2020-12-31",
-            }
-        )
-        allocation.action_confirm()
-        allocation.action_validate()
-
-        name = leave_type.with_context(employee_id=employee.id).name_get()[0][1]
-        self.assertTrue("used in credit" in name)
+    def test_compute_valid(self):
+        # At the start of 2023, the user receives 5 days
+        with freeze_time("2023-10-02"):
+            # The user takes a leave of 6 days (with weekend), his balance is at -1
+            # Since the user is allowed to take negative credit up to -5 days,
+            # the leave type is valid
+            self.env["hr.leave"].with_user(self.user_employee_id).create(
+                {
+                    "name": "first 2023 leave of 6 days",
+                    "holiday_status_id": self.leave_type.id,
+                    "employee_id": self.employee_emp.id,
+                    "request_date_from": datetime(2023, 10, 9),
+                    "request_date_to": datetime(2023, 10, 16),
+                }
+            )
+        with freeze_time("2023-10-17"):
+            # We check the validity of the leave type for that employee, for past leaves
+            # The employee is allowed to take negative credit
+            self.leave_type.with_context(
+                employee_id=self.employee_emp_id
+            )._compute_valid()
+            self.assertTrue(self.leave_type.has_valid_allocation)
+            # We make the employee be not allowed to take negative credit
+            self.leave_type.creditable_employee_ids = [(4, self.employee_hrmanager_id)]
+            self.leave_type.with_context(
+                employee_id=self.employee_emp_id
+            )._compute_valid()
+            self.assertFalse(self.leave_type.has_valid_allocation)
