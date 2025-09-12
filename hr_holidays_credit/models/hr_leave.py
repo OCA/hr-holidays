@@ -5,7 +5,7 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -21,9 +21,7 @@ class HrLeave(models.Model):
         for (leave_type, date_from), leaves in sorted_leaves.items():
             if leave_type.requires_allocation == "no":
                 continue
-            employees = self.env["hr.employee"]
-            for leave in leaves:
-                employees |= leave._get_employees_from_holiday_type()
+            employees = leaves.employee_id
             leave_data = leave_type.get_allocation_data(employees, date_from)
             if leave_type.allows_negative:
                 for employee in employees:
@@ -37,7 +35,9 @@ class HrLeave(models.Model):
                         < -max_excess
                     ):
                         raise ValidationError(
-                            _("There is no valid allocation to cover that request.")
+                            self.env._(
+                                "There is no valid allocation to cover that request."
+                            )
                         )
                 continue
         return result
@@ -71,7 +71,7 @@ class HrLeave(models.Model):
             lambda leave: leave.holiday_status_id
             in accrual_allocations.holiday_status_id
         ).sorted("date_from", reverse=True)
-        reason = _("the accruated amount is insufficient for that duration.")
+        reason = self.env._("the accruated amount is insufficient for that duration.")
         for leave in concerned_leaves:
             leave_type = leave.holiday_status_id
             date = leave.date_from.date()

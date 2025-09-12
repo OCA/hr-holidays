@@ -22,7 +22,7 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
                 "name": "Test Accrual - No negative",
                 "time_type": "leave",
                 "requires_allocation": "yes",
-                "allocation_validation_type": "no",
+                "allocation_validation_type": "no_validation",
                 "leave_validation_type": "no_validation",
                 "allows_negative": False,
             }
@@ -32,7 +32,7 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
                 "name": "Test Accrual - Negative",
                 "time_type": "leave",
                 "requires_allocation": "yes",
-                "allocation_validation_type": "no",
+                "allocation_validation_type": "no_validation",
                 "leave_validation_type": "no_validation",
                 "allows_negative": True,
                 "max_allowed_negative": 1,
@@ -133,5 +133,5 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
             # detected as discrepancies.
             # And since one of them is in negative excess, and the employee
             # is not allowed to take negative time off, it should be cancelled too.
-            self.assertFalse(excess_leave.active)
-            self.assertFalse(allowed_negative_leave.active)
+            self.assertEqual(excess_leave.state, "cancel")
+            self.assertEqual(allowed_negative_leave.state, "cancel")
