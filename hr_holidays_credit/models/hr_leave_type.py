@@ -96,11 +96,11 @@ class HrLeaveType(models.Model):
             "default_employee_id",
             self._context.get("employee_id", self.env.user.employee_id.id),
         )
-        for holiday_type in self:
-            if holiday_type.requires_allocation == "yes":
+        for leave_type in self:
+            if leave_type.requires_allocation == "yes":
                 allocations = self.env["hr.leave.allocation"].search(
                     [
-                        ("holiday_status_id", "=", holiday_type.id),
+                        ("holiday_status_id", "=", leave_type.id),
                         ("employee_id", "=", employee_id),
                         ("date_from", "<=", date_from),
                         "|",
@@ -109,16 +109,14 @@ class HrLeaveType(models.Model):
                     ]
                 )
                 allowed_excess = (
-                    holiday_type.max_allowed_negative
-                    if holiday_type.allows_negative
-                    else 0
+                    leave_type.max_allowed_negative if leave_type.allows_negative else 0
                 )
                 if allowed_excess > 0:
                     employee = self.env["hr.employee"].browse(employee_id)
                     # If the employee is not allowed to have holiday credit,
                     # we filter out allocations that have no remaining leaves,
                     # without considering the negative balance
-                    if not holiday_type._is_holiday_credit_allowed(employee):
+                    if not leave_type._is_holiday_credit_allowed(employee):
                         allocations = allocations.filtered(
                             lambda alloc: alloc.allocation_type == "accrual"
                             or (
@@ -126,5 +124,5 @@ class HrLeaveType(models.Model):
                                 and (alloc.max_leaves - alloc.leaves_taken) > 0
                             )
                         )
-                        holiday_type.has_valid_allocation = bool(allocations)
+                        leave_type.has_valid_allocation = bool(allocations)
         return res

@@ -107,13 +107,17 @@ class TestHrHolidaysCredit(TestNegative):
             # The leave should still be possible to take since it would bring
             # the balance at -2
             # Since the employee is allowed to take negative credit
-            self.allocation_2023.sudo().write({"number_of_days": 3})
+            self.allocation_2023.sudo().write(
+                {"number_of_days": 3, "number_of_days_display": 3}
+            )
             # We make the employee be not allowed to take negative credit
             # The operation should not be possible since it would bring the
             # balance at -1
             self.leave_type.creditable_employee_ids = [(4, self.employee_hrmanager_id)]
             with self.assertRaises(ValidationError):
-                self.allocation_2023.sudo().write({"number_of_days": 4})
+                self.allocation_2023.sudo().write(
+                    {"number_of_days": 4, "number_of_days_display": 4}
+                )
 
     def test_is_holiday_credit_allowed(self):
         self.assertTrue(self.leave_type._is_holiday_credit_allowed(self.employee_emp))
