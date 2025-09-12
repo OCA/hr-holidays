@@ -9,25 +9,31 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
         <field name="arch" type="xml">
-            <field name="allocation_validation_type" position="after">
-                <field
-                    name="allow_credit"
-                    attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('allocation_validation_type','=','no')]}"
-                />
+            <xpath expr="//group[@name='negative_cap']" position="attributes">
+                <attribute
+                    name="invisible"
+                >requires_allocation == 'no' or allocation_validation_type == 'no'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='max_allowed_negative']" position="attributes">
+                <attribute
+                    name="required"
+                >requires_allocation == 'yes' and allocation_validation_type == 'officer' and allows_negative</attribute>
+            </xpath>
+            <field name="max_allowed_negative" position="after">
                 <field
                     name="creditable_employee_ids"
                     widget="many2many_tags"
-                    attrs="{'invisible': ['|', ('allow_credit', '!=', True), '|', ('allocation_validation_type','=','no'), ('requires_allocation', '=', 'no')]}"
+                    invisible="not allows_negative or (requires_allocation == 'no' or allocation_validation_type == 'no')"
                 />
                 <field
                     name="creditable_employee_category_ids"
                     widget="many2many_tags"
-                    attrs="{'invisible': ['|', ('allow_credit', '!=', True), '|', ('allocation_validation_type','=','no'), ('requires_allocation', '=', 'no')]}"
+                    invisible="not allows_negative or (requires_allocation == 'no' or allocation_validation_type == 'no')"
                 />
                 <field
                     name="creditable_department_ids"
                     widget="many2many_tags"
-                    attrs="{'invisible': ['|', ('allow_credit', '!=', True), '|', ('allocation_validation_type','=','no'), ('requires_allocation', '=', 'no')]}"
+                    invisible="not allows_negative or (requires_allocation == 'no' or allocation_validation_type == 'no')"
                 />
             </field>
         </field>
