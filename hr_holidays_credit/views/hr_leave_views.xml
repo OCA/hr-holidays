@@ -15,6 +15,5 @@
                 >['|', ('requires_allocation', '=', 'no'), '|',  ("allows_negative", "=", True), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('max_leaves', '>', '0'), ('virtual_remaining_leaves', '>', 0)]</attribute>
             </field>
         </field>
-
     </record>
 </odoo>
