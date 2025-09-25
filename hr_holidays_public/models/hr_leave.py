@@ -62,13 +62,7 @@ class HrLeave(models.Model):
         ) == "hr.employee" and self.env.context.get("active_id"):
             employee = self.env["hr.employee"].browse(self.env.context.get("active_id"))
         if date_to:
-            domain.append(
-                (
-                    "date",
-                    "<",
-                    date_to,
-                )
-            )
+            domain.append(("date", "<=", date_to))
         country_id = employee.address_id.country_id.id
         if not country_id:
             country_id = self.env.company.country_id.id or False
