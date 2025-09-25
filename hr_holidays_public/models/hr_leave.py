@@ -63,13 +63,7 @@ class HrLeave(models.Model):
             else self.env.user.employee_id
         )
         if date_to:
-            domain.append(
-                (
-                    "date",
-                    "<",
-                    date_to,
-                )
-            )
+            domain.append(("date", "<=", date_to))
         country_id = employee.address_id.country_id.id
         if not country_id:
             country_id = self.env.company.country_id.id or False
