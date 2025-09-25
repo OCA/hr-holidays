@@ -25,7 +25,7 @@ addon | version | maintainers | summary
 [hr_holidays_leave_auto_approve](hr_holidays_leave_auto_approve/) | 16.0.1.0.1 |  | Leave type for auto-validation of Leaves
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 16.0.1.1.1 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | Apply natural days in holidays
 [hr_holidays_natural_period_public](hr_holidays_natural_period_public/) | 16.0.1.1.0 |  | Allow excluding public holidays for natural days holidays
-[hr_holidays_public](hr_holidays_public/) | 16.0.2.0.5 |  | Manage Public Holidays
+[hr_holidays_public](hr_holidays_public/) | 16.0.2.0.6 |  | Manage Public Holidays
 [hr_holidays_public_city](hr_holidays_public_city/) | 16.0.2.0.1 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | HR Holidays Public City
 [hr_holidays_settings](hr_holidays_settings/) | 16.0.1.0.0 |  | Enables Settings Form for HR Holidays.
 [hr_holidays_summary_email](hr_holidays_summary_email/) | 16.0.1.0.0 | <a href='https://github.com/JordiMForgeFlow'><img src='https://github.com/JordiMForgeFlow.png' width='32' height='32' style='border-radius:50%;' alt='JordiMForgeFlow'/></a> | Notify employees with daily or weekly leaves summaries of their company.
