@@ -15,6 +15,7 @@ class TestHrLeaveCalendarEvent(TransactionCase):
         super().setUpClass()
         cls.admin_user = cls.env.ref("base.user_admin")
         cls.leave_type = cls.env.ref("hr_holidays.holiday_status_cl")
+        cls.leave_type.requires_allocation = "no"
 
     @classmethod
     def _new_leave_request(cls, date_from, date_to):
