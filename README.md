@@ -21,10 +21,10 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[hr_holidays_calendar_event_privacy](hr_holidays_calendar_event_privacy/) | 15.0.1.0.1 | <a href='https://github.com/grindtildeath'><img src='https://github.com/grindtildeath.png' width='32' height='32' style='border-radius:50%;' alt='grindtildeath'/></a> | Define privacy level of calendar events from Time off requests
+[hr_holidays_calendar_event_privacy](hr_holidays_calendar_event_privacy/) | 15.0.1.0.2 | <a href='https://github.com/grindtildeath'><img src='https://github.com/grindtildeath.png' width='32' height='32' style='border-radius:50%;' alt='grindtildeath'/></a> | Define privacy level of calendar events from Time off requests
 [hr_holidays_leave_self_approve](hr_holidays_leave_self_approve/) | 15.0.1.0.0 |  | Allow employees to approve their own leaves when allowed
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 15.0.1.0.2 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | Apply natural days in holidays
-[hr_holidays_public](hr_holidays_public/) | 15.0.1.1.6 |  | Manage Public Holidays
+[hr_holidays_public](hr_holidays_public/) | 15.0.1.1.7 |  | Manage Public Holidays
 [hr_holidays_public_city](hr_holidays_public_city/) | 15.0.1.0.2 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | HR Holidays Public City
 [hr_holidays_public_overtime](hr_holidays_public_overtime/) | 15.0.1.0.1 | <a href='https://github.com/hbrunn'><img src='https://github.com/hbrunn.png' width='32' height='32' style='border-radius:50%;' alt='hbrunn'/></a> | Support public holidays in overtime calculations
 [hr_leave_custom_hour_interval](hr_leave_custom_hour_interval/) | 15.0.1.0.0 |  | Edit start and end of leaves using time intervals
