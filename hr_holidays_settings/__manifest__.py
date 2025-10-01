@@ -3,7 +3,7 @@
 {
     "name": "HR Holidays Settings",
     "summary": "Enables Settings Form for HR Holidays.",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Human Resources",
     "website": "https://github.com/OCA/hr-holidays",
     "author": "ForgeFlow, Odoo Community Association (OCA)",
