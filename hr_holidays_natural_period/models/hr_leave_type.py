@@ -27,7 +27,11 @@ class HrLeaveType(models.Model):
             lambda x: x.request_unit in ("natural_day", "natural_day_half_day")
         ):
             old_request_unit_data[item.id] = item.request_unit
-            item.sudo().request_unit = "day"
+            item.sudo().request_unit = (
+                "half_day"
+                if old_request_unit_data[item.id] == "natural_day_half_day"
+                else "day"
+            )
         res = super()._get_employees_days_per_allocation(
             employee_ids=employee_ids, date=date
         )
