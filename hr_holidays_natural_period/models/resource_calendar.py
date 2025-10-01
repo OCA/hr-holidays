@@ -10,8 +10,7 @@ from pytz import timezone
 
 from odoo import models
 from odoo.tools.float_utils import float_round
-
-from odoo.addons.resource.models.utils import Intervals
+from odoo.tools.intervals import Intervals
 
 
 class ResourceCalendar(models.Model):

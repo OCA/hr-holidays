@@ -14,12 +14,20 @@ class TestHrLeave(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.leave_type = cls.env.ref(
-            "hr_holidays_natural_period.hr_leave_type_natural_day_test"
+        admin_user = cls.quick_ref("base.user_admin")
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Test Time Off (natural day)",
+                "request_unit": "natural_day",
+                "responsible_ids": [Command.link(admin_user.id)],
+                "employee_requests": True,
+                "allocation_validation_type": "hr",
+                "leave_validation_type": "hr",
+            }
         )
-        cls.leave_type_day = cls.env.ref("hr_holidays.holiday_status_cl")
-        cls.leave_type_day.employee_requests = "yes"
-        calendar = cls.env.ref("resource.resource_calendar_std")
+        cls.leave_type_day = cls.quick_ref("hr_holidays.leave_type_paid_time_off")
+        cls.leave_type_day.employee_requests = True
+        calendar = cls.quick_ref("resource.resource_calendar_std")
         calendar = calendar.copy({"name": "Test calendar"})
         calendar.switch_calendar_type()
         calendar.attendance_ids.filtered(
@@ -36,7 +44,7 @@ class TestHrLeave(BaseCommon):
             {
                 "name": "Test employee",
                 "type": "other",
-                "country_id": cls.env.ref("base.es").id,
+                "country_id": cls.quick_ref("base.es").id,
             }
         )
         cls.user = new_test_user(cls.env, login="test-user")
@@ -72,7 +80,7 @@ class TestHrLeave(BaseCommon):
     @mute_logger("odoo.models.unlink")
     def test_hr_leave_natural_day_01(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 5)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo().action_approve()
         res_leave_type = (
             self.env["hr.leave.type"]
             .with_company(self.env.company)
@@ -111,7 +119,19 @@ class TestHrLeave(BaseCommon):
             }
         )
         self.employee.resource_calendar_id = calendar
-        leave = self._create_hr_leave(self.leave_type, "2022-12-31", "2023-01-08")
+
+        leave_allocation = self._create_leave_allocation(self.leave_type, 9)
+        leave_allocation.sudo().action_approve()
+
+        # check allocation before creating leave
+        res_leave_type = (
+            self.env["hr.leave.type"]
+            .with_company(self.env.company)
+            .get_allocation_data_request()[0][1]
+        )
+        self.assertEqual(res_leave_type["remaining_leaves"], 9)
+
+        leave = self._create_hr_leave(self.leave_type, "2023-01-01", "2023-01-09")
         self.assertEqual(leave.number_of_days, 9.0)
 
     @users("test-user")
@@ -119,7 +139,7 @@ class TestHrLeave(BaseCommon):
     @mute_logger("odoo.models.unlink")
     def test_hr_leave_day(self):
         leave_allocation = self._create_leave_allocation(self.leave_type_day, 5)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo().action_approve()
         res_leave_type = (
             self.env["hr.leave.type"]
             .with_company(self.env.company)
