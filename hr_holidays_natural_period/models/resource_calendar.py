@@ -24,7 +24,12 @@ class ResourceCalendar(models.Model):
         # Re-define start_dt and end_dt to ensure that we always iterate through the
         # last day.
         start_dt = datetime.combine(start_dt.date(), time.min)
-        end_dt = datetime.combine(end_dt.date(), time.max)
+        end_time = (
+            time.max
+            if self.env.context.get("old_request_unit") == "natural_day"
+            else time(12, 0, 0)
+        )
+        end_dt = datetime.combine(end_dt.date(), end_time)
         for resource in resources or []:
             interval_resource = intervals[resource.id]
             tz = timezone(resource.tz)
@@ -37,7 +42,7 @@ class ResourceCalendar(models.Model):
                     attendances.append(
                         (
                             datetime.combine(day.date(), time.min).replace(tzinfo=tz),
-                            datetime.combine(day.date(), time.max).replace(tzinfo=tz),
+                            datetime.combine(day.date(), end_time).replace(tzinfo=tz),
                             self.env["resource.calendar.attendance"],
                         )
                     )

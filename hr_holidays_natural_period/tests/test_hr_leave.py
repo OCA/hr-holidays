@@ -63,11 +63,14 @@ class TestHrLeave(BaseCommon):
         leave_form = Form(self.env["hr.leave"])
         leave_form.holiday_status_id = leave_type
         leave_form.request_date_from = date_from
-        leave_form.request_date_to = date_to
+        if leave_type.request_unit == "natural_day_half_day":
+            leave_form.request_unit_half = True
+            leave_form.request_date_from_period = "am"
+        else:
+            leave_form.request_date_to = date_to
         return leave_form.save()
 
-    @users("test-user")
-    def test_hr_leave_natural_day_01(self):
+    def _test_hr_leave_natural_day_01(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 5)
         leave_allocation.action_confirm()
         leave_allocation.sudo().action_validate()
@@ -78,14 +81,28 @@ class TestHrLeave(BaseCommon):
         self.assertEqual(res_leave_type["leaves_taken"], "0")
         self.assertEqual(res_leave_type["virtual_leaves_taken"], "0")
         self.assertEqual(res_leave_type["request_unit"], self.leave_type.request_unit)
+
+    @users("test-user")
+    def test_hr_leave_natural_day_01(self):
+        self._test_hr_leave_natural_day_01()
         leave = self._create_hr_leave(self.leave_type, "2023-01-02", "2023-01-05")
         self.assertEqual(leave.number_of_days, 4.0)
         self.assertEqual(leave.number_of_days_display, 4.0)
 
     @users("test-user")
-    def test_hr_leave_natural_day_02(self):
+    def test_hr_leave_natural_day_half_day_01(self):
+        self.leave_type.request_unit = "natural_day_half_day"
+        self._test_hr_leave_natural_day_01()
+        leave = self._create_hr_leave(self.leave_type, "2023-01-02", "2023-01-05")
+        self.assertEqual(leave.number_of_days, 0.5)
+        self.assertEqual(leave.number_of_days_display, 0.5)
+
+    def _test_hr_leave_natural_day_02(self):
         self.leave_type.requires_allocation = "no"
-        attendances = [(0, 16, 21), (1, 9, 14), (2, 9, 14), (3, 9, 14), (4, 9, 14)]
+        attendances = []
+        for i in range(0, 5):
+            attendances.append((i, "morning", 10, 14))
+            attendances.append((i, "afternoon", 16, 20))
         r_sudo = self.env["resource.calendar"].sudo()
         calendar = r_sudo.create(
             {
@@ -98,8 +115,9 @@ class TestHrLeave(BaseCommon):
                         {
                             "name": index,
                             "dayofweek": str(att[0]),
-                            "hour_from": att[1],
-                            "hour_to": att[2],
+                            "day_period": att[1],
+                            "hour_from": att[2],
+                            "hour_to": att[3],
                         },
                     )
                     for index, att in enumerate(attendances)
@@ -107,17 +125,21 @@ class TestHrLeave(BaseCommon):
             }
         )
         self.employee.resource_calendar_id = calendar
+
+    @users("test-user")
+    def test_hr_leave_natural_day_02(self):
+        self._test_hr_leave_natural_day_02()
         leave = self._create_hr_leave(self.leave_type, "2022-12-31", "2023-01-08")
         self.assertEqual(leave.number_of_days, 9.0)
         self.assertEqual(leave.number_of_days_display, 9.0)
 
-    def test_hr_leave_natural_day_half_day_01(self):
-        self.leave_type.request_unit = "natural_day_half_day"
-        self.test_hr_leave_natural_day_01()
-
+    @users("test-user")
     def test_hr_leave_natural_day_half_day_02(self):
         self.leave_type.request_unit = "natural_day_half_day"
-        self.test_hr_leave_natural_day_02()
+        self._test_hr_leave_natural_day_02()
+        leave = self._create_hr_leave(self.leave_type, "2022-12-31", "2023-01-08")
+        self.assertEqual(leave.number_of_days, 0.5)
+        self.assertEqual(leave.number_of_days_display, 0.5)
 
     @users("test-user")
     def test_hr_leave_day_01(self):
@@ -134,7 +156,3 @@ class TestHrLeave(BaseCommon):
         leave = self._create_hr_leave(self.leave_type_day, "2023-01-08", "2023-01-15")
         self.assertEqual(leave.number_of_days, 5)
         self.assertEqual(leave.number_of_days_display, 5)
-
-    def test_hr_leave_day_02(self):
-        self.leave_type.request_unit = "natural_day_half_day"
-        self.test_hr_leave_day_01()
