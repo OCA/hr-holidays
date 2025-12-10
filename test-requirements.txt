@@ -1,0 +1,1 @@
+odoo-addon-base_tier_validation_allow_disable_restart @ git+https://github.com/OCA/server-ux.git@refs/pull/1125/head#subdirectory=setup/base_tier_validation_allow_disable_restart
