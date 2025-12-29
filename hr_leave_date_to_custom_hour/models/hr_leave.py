@@ -15,11 +15,12 @@ class HRLeave(models.Model):
         "custom_hours_request_date_to",
     )
     def _compute_date_from_to(self):
-        return super()._compute_date_from_to()
-
-    def _get_attendances(self, employee, request_date_from, request_date_to):
-        if len(self) == 1 and self.request_unit_hours:
-            self.request_date_to = request_date_to = (
-                self.custom_hours_request_date_to or self.request_date_to
-            )
-        return super()._get_attendances(employee, request_date_from, request_date_to)
+        res = super()._compute_date_from_to()
+        for holiday in self:
+            if holiday.request_unit_hours and holiday.custom_hours_request_date_to:
+                holiday.date_to = holiday._to_utc(
+                    holiday.custom_hours_request_date_to,
+                    holiday.request_hour_to,
+                    holiday.employee_id or holiday,
+                )
+        return res

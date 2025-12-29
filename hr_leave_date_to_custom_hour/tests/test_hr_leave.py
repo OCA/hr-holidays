@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -29,19 +29,8 @@ class TestHRLeave(TestHrHolidaysCommon):
         leave_form.request_unit_hours = True
         leave_form.request_date_from = from_datetime.date()
         leave_form.custom_hours_request_date_to = to_datetime.date()
-
-        # Module `hr_leave_custom_hour_interval` makes hours fields readonly
-        from_hour = from_datetime.hour
-        if "request_time_hour_from" in leave_form._view["fields"]:
-            leave_form.request_time_hour_from = from_hour
-        else:
-            leave_form.request_hour_from = str(from_hour)
-
-        to_hour = to_datetime.hour
-        if "request_time_hour_to" in leave_form._view["fields"]:
-            leave_form.request_time_hour_to = to_hour
-        else:
-            leave_form.request_hour_to = str(to_hour)
+        leave_form.request_hour_from = str(from_datetime.hour)
+        leave_form.request_hour_to = str(to_datetime.hour)
         return leave_form.save()
 
     def test_custom_hours_date_to(self):
@@ -63,4 +52,4 @@ class TestHRLeave(TestHrHolidaysCommon):
         leave = self._create_user_leave(user, leave_from, leave_to)
 
         # Assert
-        self.assertEqual(leave.number_of_hours_display, leave_duration_hours)
+        self.assertEqual(leave.number_of_hours, leave_duration_hours)

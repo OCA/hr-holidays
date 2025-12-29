@@ -4,7 +4,7 @@
 {
     "name": "Date to for custom hours",
     "summary": "Display Date to when custom hours is selected.",
-    "version": "16.0.1.0.0",
+    "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "author": "PyTech, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/hr-holidays",
