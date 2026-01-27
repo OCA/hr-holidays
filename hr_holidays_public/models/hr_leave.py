@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
-    def action_validate(self, check_state=True):
+    def _action_validate(self, check_state=True):
         """Inject the needed context for excluding public holidays (if applicable) on
         the actions derived from this validation. This is required for example for
         `project_timesheet_holidays` for not generating the timesheet on the public
@@ -23,7 +23,7 @@ class HrLeave(models.Model):
                 leave = leave.with_context(
                     employee_id=leave.employee_id.id, exclude_public_holidays=True
                 )
-            super(HrLeave, leave).action_validate(check_state=check_state)
+            super(HrLeave, leave)._action_validate(check_state=check_state)
         return True
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):

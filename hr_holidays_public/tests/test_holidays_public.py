@@ -36,7 +36,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
     ):
         self.assertFalse(
             self.leave_model.with_context(employee_id=self.employee.id)
-            .get_unusual_days("2019-07-01", date_to="2019-07-31")
+            .get_unusual_days("2019-07-01 00:00:00", date_to="2019-07-31 23:59:59")
             .get("2019-07-30", False)
         )
         self.holiday_model.create(
@@ -59,7 +59,9 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertEqual(
             self.leave_model.with_context(
                 employee_id=self.employee.id
-            ).get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
+            ).get_unusual_days("2019-07-01 00:00:00", date_to="2019-07-31 23:59:59")[
+                "2019-07-30"
+            ],
             expected,
         )
 
@@ -125,6 +127,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_state(self):
         self.employee.address_id = False
+        self.env.company.state_id = self.st_state_2
         self.assertPublicHolidayIsUnusualDay(
             True,
             country_id=self.env.company.country_id.id,
