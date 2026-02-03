@@ -1,6 +1,6 @@
 {
     "name": "HR Leave Type Code",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.0.1",
     "category": "Human Resources",
     "summary": "Add a code field to HR Leaves",
     "website": "https://github.com/OCA/hr-holidays",
