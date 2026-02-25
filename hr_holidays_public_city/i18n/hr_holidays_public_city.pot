@@ -14,6 +14,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_holidays_public_city
+#: model:ir.model,name:hr_holidays_public_city.model_calendar_public_holiday
+msgid "Calendar Public Holiday"
+msgstr ""
+
+#. module: hr_holidays_public_city
 #: model:ir.model,name:hr_holidays_public_city.model_calendar_public_holiday_line
 msgid "Calendar Public Holiday Line"
 msgstr ""
