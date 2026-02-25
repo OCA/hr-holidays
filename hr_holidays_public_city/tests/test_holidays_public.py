@@ -1,7 +1,8 @@
-# Copyright 2023-2025 Tecnativa - Víctor Martínez
+# Copyright 2023-2026 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import Command
+from odoo.tests import new_test_user
 
 from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
     TestCalendarPublicHoliday,
@@ -20,119 +21,117 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         cls.st_state_2 = cls.env["res.country.state"].create(
             {"name": "ST State 2", "code": "st", "country_id": cls.country_1.id}
         )
-        cls.employee = cls.employee_model.create(
+        cls.user = new_test_user(
+            cls.env,
+            login="test-user_us_city_a",
+        )
+        cls.user.action_create_employee()
+        cls.employee = cls.user.employee_id
+        cls.address = cls.env["res.partner"].create(
             {
-                "name": "Employee 1",
-                "address_id": cls.res_partner.id,
+                "name": "Test address",
             }
         )
+        cls.employee.address_id = cls.address
+        cls.us_country = cls.env.ref("base.us")
+        cls.state_us_4 = cls.env.ref("base.state_us_4")
         cls.us_city_a = cls.env["res.city"].create(
             {
                 "name": "Test city A",
-                "state_id": cls.env.ref("base.state_us_4").id,
-                "country_id": cls.env.ref("base.us").id,
+                "state_id": cls.state_us_4.id,
+                "country_id": cls.us_country.id,
             }
         )
         cls.us_city_b = cls.env["res.city"].create(
             {
                 "name": "Test city B",
-                "state_id": cls.env.ref("base.state_us_4").id,
-                "country_id": cls.env.ref("base.us").id,
+                "state_id": cls.state_us_4.id,
+                "country_id": cls.us_country.id,
             }
         )
-
-    def assertPublicHolidayIsUnusualDay(
-        self, expected, country_id=None, state_ids=False, city_ids=False
-    ):
-        self.assertFalse(
-            self.leave_model.with_user(self.env.ref("base.user_demo").id)
-            .get_unusual_days("2019-07-01", date_to="2019-07-31")
-            .get("2019-07-30", False)
-        )
-        holiday = self.holiday_model.create({"year": 2019, "country_id": country_id})
-        self.holiday_line_model.create(
+        cls.holiday_model.create(
             {
-                "name": "holiday x",
-                "date": "2019-07-30",
-                "public_holiday_id": holiday.id,
-                "state_ids": state_ids,
-                "city_ids": city_ids,
+                "year": 2019,
+                "country_id": cls.us_country.id,
+                "line_ids": [
+                    Command.create(
+                        {
+                            "name": "holiday city a + b",
+                            "date": "2019-07-29",
+                            "state_ids": [Command.set(cls.state_us_4.ids)],
+                            "city_ids": [
+                                Command.set((cls.us_city_a + cls.us_city_b).ids)
+                            ],
+                        },
+                    ),
+                    Command.create(
+                        {
+                            "name": "holiday city a",
+                            "date": "2019-07-30",
+                            "state_ids": [Command.set(cls.state_us_4.ids)],
+                            "city_ids": [Command.set(cls.us_city_a.ids)],
+                        }
+                    ),
+                ],
             }
-        )
-        self.assertEqual(
-            self.leave_model.with_user(
-                self.env.ref("base.user_demo").id
-            ).get_unusual_days("2019-07-01", date_to="2019-07-31")["2019-07-30"],
-            expected,
         )
 
     def test_public_holidays_context(self):
-        self.env.ref("base.user_demo").employee_id.address_id.country_id = False
-        self.env.ref("base.user_demo").employee_id.address_id.state_id = False
-        self.env.ref("base.user_demo").employee_id.address_id.city_id = False
-        self.employee.address_id.country_id = self.env.ref("base.us")
-        self.employee.address_id.state_id = self.env.ref("base.state_us_4")
-        self.employee.address_id.city_id = self.us_city_a
-        self.leave_model = self.leave_model.with_context(employee_id=self.employee.id)
-        self.assertPublicHolidayIsUnusualDay(
-            True,
-            country_id=self.env.ref(
-                "base.user_demo"
-            ).employee_id.address_id.country_id.id,
-            state_ids=[Command.set(self.employee.address_id.state_id.ids)],
-            city_ids=[Command.set(self.employee.address_id.city_id.ids)],
+        self.address.country_id = False
+        self.address.state_id = False
+        self.address.city_id = False
+        unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
+            "2019-07-01", date_to="2019-07-31"
         )
+        self.assertFalse(unusual_days["2019-07-29"])
+        self.assertFalse(unusual_days["2019-07-30"])
+        self.assertFalse(unusual_days["2019-07-31"])
 
     def test_get_unusual_days_return_public_holidays_same_state_same_city(self):
-        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
-        demo_user_empl_addr.country_id = self.env.ref("base.us")
-        demo_user_empl_addr.state_id = self.env.ref("base.state_us_4")
-        demo_user_empl_addr.city_id = self.us_city_a
-        self.assertPublicHolidayIsUnusualDay(
-            True,
-            country_id=self.env.ref(
-                "base.user_demo"
-            ).employee_id.address_id.country_id.id,
-            state_ids=[Command.set(demo_user_empl_addr.state_id.ids)],
-            city_ids=[Command.set(demo_user_empl_addr.city_id.ids)],
+        self.address.country_id = self.us_country
+        self.address.state_id = self.state_us_4
+        self.address.city_id = self.us_city_a
+        unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
+            "2019-07-01", date_to="2019-07-31"
         )
+        self.assertTrue(unusual_days["2019-07-29"])
+        self.assertTrue(unusual_days["2019-07-30"])
+        self.assertFalse(unusual_days["2019-07-31"])
 
     def test_get_unusual_days_return_public_holidays_same_state_differente_city(self):
-        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
-        demo_user_empl_addr.country_id = self.env.ref("base.us")
-        demo_user_empl_addr.state_id = self.env.ref("base.state_us_4")
-        demo_user_empl_addr.city_id = self.us_city_a
-        self.assertPublicHolidayIsUnusualDay(
-            False,
-            country_id=self.env.ref(
-                "base.user_demo"
-            ).employee_id.address_id.country_id.id,
-            state_ids=[Command.set(demo_user_empl_addr.state_id.ids)],
-            city_ids=[Command.set(self.us_city_b.ids)],
+        self.address.country_id = self.us_country
+        self.address.state_id = self.state_us_4
+        self.address.city_id = self.us_city_b
+        unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
+            "2019-07-01", date_to="2019-07-31"
         )
+        self.assertTrue(unusual_days["2019-07-29"])
+        self.assertFalse(unusual_days["2019-07-30"])
+        self.assertFalse(unusual_days["2019-07-31"])
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_state_city(
         self,
     ):
-        self.env.ref("base.user_demo").employee_id = False
-        self.env.company.partner_id.city_id = self.us_city_a
-        self.assertPublicHolidayIsUnusualDay(
-            True,
-            country_id=self.env.company.country_id.id,
-            state_ids=[Command.set(self.env.company.state_id.ids)],
-            city_ids=[Command.set(self.env.company.partner_id.city_id.ids)],
+        self.user.employee_id = False
+        self.user.company_id.partner_id.country_id = self.us_country
+        self.user.company_id.partner_id.state_id = self.state_us_4
+        self.user.company_id.partner_id.city_id = self.us_city_a
+        unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
+            "2019-07-01", date_to="2019-07-31"
         )
+        self.assertTrue(unusual_days["2019-07-29"])
+        self.assertTrue(unusual_days["2019-07-30"])
+        self.assertFalse(unusual_days["2019-07-31"])
 
     def test_get_unusual_days_not_return_public_holidays_fallback_to_company_state_city(
         self,
     ):
-        demo_user_empl_addr = self.env.ref("base.user_demo").employee_id.address_id
-        demo_user_empl_addr.country_id = self.env.ref("base.us")
-        demo_user_empl_addr.city_id = False
-        self.env.company.partner_id.city_id = self.us_city_a
-        self.assertPublicHolidayIsUnusualDay(
-            False,
-            country_id=demo_user_empl_addr.country_id.id,
-            state_ids=[Command.set(demo_user_empl_addr.state_id.ids)],
-            city_ids=[Command.set(self.us_city_b.ids)],
+        self.address.country_id = self.us_country
+        self.address.city_id = False
+        self.user.company_id.partner_id.city_id = self.us_city_a
+        unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
+            "2019-07-01", date_to="2019-07-31"
         )
+        self.assertFalse(unusual_days["2019-07-29"])
+        self.assertFalse(unusual_days["2019-07-30"])
+        self.assertFalse(unusual_days["2019-07-31"])
