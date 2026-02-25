@@ -18,17 +18,17 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #. module: hr_holidays_public_city
-#: model:ir.model,name:hr_holidays_public_city.model_hr_holidays_public
-msgid "Public Holidays"
-msgstr "Festivos"
+#: model:ir.model,name:hr_holidays_public_city.model_calendar_public_holiday
+msgid "Calendar Public Holiday"
+msgstr ""
 
 #. module: hr_holidays_public_city
-#: model:ir.model,name:hr_holidays_public_city.model_hr_holidays_public_line
-msgid "Public Holidays Lines"
-msgstr "Líneas de Festivos"
+#: model:ir.model,name:hr_holidays_public_city.model_calendar_public_holiday_line
+msgid "Calendar Public Holiday Line"
+msgstr ""
 
 #. module: hr_holidays_public_city
-#: model:ir.model.fields,field_description:hr_holidays_public_city.field_hr_holidays_public_line__city_ids
+#: model:ir.model.fields,field_description:hr_holidays_public_city.field_calendar_public_holiday_line__city_ids
 msgid "Related Cities"
 msgstr "Ciudades relacionadas"
 
@@ -36,3 +36,9 @@ msgstr "Ciudades relacionadas"
 #: model:ir.model,name:hr_holidays_public_city.model_hr_leave
 msgid "Time Off"
 msgstr "Tiempo libre"
+
+#~ msgid "Public Holidays"
+#~ msgstr "Festivos"
+
+#~ msgid "Public Holidays Lines"
+#~ msgstr "Líneas de Festivos"

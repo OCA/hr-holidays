@@ -17,17 +17,17 @@ msgstr ""
 "X-Generator: Weblate 5.6.2\n"
 
 #. module: hr_holidays_public_city
-#: model:ir.model,name:hr_holidays_public_city.model_hr_holidays_public
-msgid "Public Holidays"
-msgstr "Giorni festivi"
+#: model:ir.model,name:hr_holidays_public_city.model_calendar_public_holiday
+msgid "Calendar Public Holiday"
+msgstr ""
 
 #. module: hr_holidays_public_city
-#: model:ir.model,name:hr_holidays_public_city.model_hr_holidays_public_line
-msgid "Public Holidays Lines"
-msgstr "Righe giorni festivi"
+#: model:ir.model,name:hr_holidays_public_city.model_calendar_public_holiday_line
+msgid "Calendar Public Holiday Line"
+msgstr ""
 
 #. module: hr_holidays_public_city
-#: model:ir.model.fields,field_description:hr_holidays_public_city.field_hr_holidays_public_line__city_ids
+#: model:ir.model.fields,field_description:hr_holidays_public_city.field_calendar_public_holiday_line__city_ids
 msgid "Related Cities"
 msgstr "Città collegate"
 
@@ -35,3 +35,9 @@ msgstr "Città collegate"
 #: model:ir.model,name:hr_holidays_public_city.model_hr_leave
 msgid "Time Off"
 msgstr "Ferie"
+
+#~ msgid "Public Holidays"
+#~ msgstr "Giorni festivi"
+
+#~ msgid "Public Holidays Lines"
+#~ msgstr "Righe giorni festivi"
