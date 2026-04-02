@@ -1,0 +1,43 @@
+<odoo>
+    <record id="hr_leave_report_calendar_view" model="ir.ui.view">
+        <field
+            name="name"
+        >hr.leave.report.calendar.view (in hr_holidays_leave_calendar_type)</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_report_calendar_view" />
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field name="holiday_status_id" filters="1" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_calendar_view_form" model="ir.ui.view">
+        <field
+            name="name"
+        >hr.leave.report.calendar.view.form (in hr_holidays_leave_calendar_type)</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_report_calendar_view_form" />
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field name="holiday_status_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_calendar_view_search" model="ir.ui.view">
+        <field
+            name="name"
+        >hr.leave.report.calendar.view.search (in hr_holidays_leave_calendar_type)</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field
+            name="inherit_id"
+            ref="hr_holidays.hr_leave_report_calendar_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field name="holiday_status_id" />
+            </field>
+        </field>
+    </record>
+</odoo>
