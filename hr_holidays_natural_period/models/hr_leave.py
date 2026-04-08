@@ -23,8 +23,11 @@ class HrLeave(models.Model):
         """Only in UX an incorrect value is set, recalculate.
         https://github.com/OCA/hr-holidays/issues/105."""
         res = super().create(vals_list)
+        # Use sudo because
+        # days have to be correctly computed
+        # even if the current user cannot edit this holiday
         res.filtered(
             lambda x: x.holiday_status_id.request_unit
             in ("natural_day", "natural_day_half_day")
-        )._compute_number_of_days()
+        ).sudo()._compute_number_of_days()
         return res

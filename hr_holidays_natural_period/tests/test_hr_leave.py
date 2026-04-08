@@ -1,5 +1,7 @@
 # Copyright 2020-2025 Tecnativa - Víctor Martínez
+# Copyright 2026 Simone Rubino - PyTech
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 from odoo import fields
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import users
@@ -14,6 +16,13 @@ class TestHrLeave(BaseCommon):
         cls.HrLeave = cls.env["hr.leave"]
         cls.leave_type = cls.env.ref(
             "hr_holidays_natural_period.hr_leave_type_natural_day_test"
+        )
+        cls.no_validation_leave_type = cls.leave_type.copy(
+            default={
+                "name": "Test no validation leave type",
+                "requires_allocation": "no",
+                "leave_validation_type": "no_validation",
+            },
         )
         cls.leave_type_day = cls.env.ref("hr_holidays.holiday_status_cl")
         cls.leave_type_day.employee_requests = "yes"
@@ -140,6 +149,32 @@ class TestHrLeave(BaseCommon):
         leave = self._create_hr_leave(self.leave_type, "2022-12-31", "2023-01-08")
         self.assertEqual(leave.number_of_days, 0.5)
         self.assertEqual(leave.number_of_days_display, 0.5)
+
+    @users("test-user")
+    def test_hr_leave_natural_day_no_manager(self):
+        """An employee that is not a manager
+        can create a natural day leave
+        in the future with no validation.
+        """
+        # Arrange
+        leave_type = self.no_validation_leave_type
+        manager_groups = [
+            self.env.ref("hr.group_hr_user"),
+            self.env.ref("hr.group_hr_manager"),
+            self.env.ref("hr_holidays.group_hr_holidays_user"),
+            self.env.ref("hr_holidays.group_hr_holidays_responsible"),
+            self.env.ref("hr_holidays.group_hr_holidays_manager"),
+        ]
+        # pre-condition
+        self.assertEqual(leave_type.leave_validation_type, "no_validation")
+        for manager_group in manager_groups:
+            self.assertNotIn(manager_group, self.env.user.groups_id)
+
+        # Act
+        leave = self._create_hr_leave(leave_type, "3000-01-01", "3000-01-01")
+
+        # Assert
+        self.assertEqual(leave.state, "validate")
 
     @users("test-user")
     def test_hr_leave_day_01(self):
