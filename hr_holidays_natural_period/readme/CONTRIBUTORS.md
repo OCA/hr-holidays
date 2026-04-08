@@ -11,3 +11,5 @@
 - Grupo Isonor \<<https://www.grupoisonor.es>\>
 
   > - Alexandre D. Díaz
+- [PyTech](https://www.pytech.it):
+  - Simone Rubino \<<simone.rubino@pytech.it>\>
