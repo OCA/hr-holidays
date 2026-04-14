@@ -17,8 +17,8 @@ odoo_version: 16.0
 org_name: Odoo Community Association (OCA)
 org_slug: OCA
 rebel_module_groups: []
-repo_description: 'TODO: add repo description.'
-repo_name: hr-holidays
+repo_description: All functionality having to do with employee leave management.
+repo_name: Modules to enhance employee leave functionality
 repo_slug: hr-holidays
 repo_website: https://github.com/OCA/hr-holidays
 use_pyproject_toml: false
