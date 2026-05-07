@@ -37,6 +37,7 @@ class TestHrEmployeePlanning(WorkAndLeavesBase):
             self.employee_two_week,
             datetime(2026, 5, 15, 11, 0, 0),
             datetime(2026, 5, 15, 13, 0, 0),
+            full_day=False,
         )
         wizard = self._create_wizard(
             self.employee_two_week, date(2026, 5, 11), date(2026, 5, 15)
@@ -144,6 +145,7 @@ class TestHrEmployeePlanning(WorkAndLeavesBase):
             self.employee_two_week,
             datetime(2026, 5, 22, 9, 0, 0),
             datetime(2026, 5, 22, 13, 0, 0),
+            full_day=False,
         )
         wizard = self._create_wizard(
             self.employee_two_week, date(2026, 5, 18), date(2026, 5, 22)

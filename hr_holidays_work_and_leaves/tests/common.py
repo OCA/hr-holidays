@@ -140,7 +140,7 @@ class WorkAndLeavesBase(TransactionCase):
             .create({"name": name, "date": holiday_date, "year_id": year_record.id})
         )
 
-    def _make_validated_leave(self, employee, date_from, date_to):
+    def _make_validated_leave(self, employee, date_from, date_to, full_day=True):
         leave = (
             self.env["hr.leave"]
             .sudo()
@@ -154,6 +154,16 @@ class WorkAndLeavesBase(TransactionCase):
                 }
             )
         )
+        if not full_day:
+            leave.sudo().write(
+                {
+                    "request_unit_hours": True,
+                    "request_date_from": date_from.date(),
+                    "request_date_to": date_to.date(),
+                    "request_hour_from": date_from.hour + date_from.minute / 60.0,
+                    "request_hour_to": date_to.hour + date_to.minute / 60.0,
+                }
+            )
         if leave.state == "draft":
             leave.sudo().action_confirm()
         if leave.state in ("confirm", "validate1"):

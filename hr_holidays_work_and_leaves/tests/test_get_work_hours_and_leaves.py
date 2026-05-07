@@ -20,6 +20,7 @@ class TestGetWorkHoursAndLeaves(WorkAndLeavesBase):
             self.employee_two_week,
             datetime(2026, 5, 15, 11, 0, 0),
             datetime(2026, 5, 15, 13, 0, 0),
+            full_day=False,
         )
         start_datetime = datetime(2026, 5, 11, 7, 0, 0)
         end_datetime = datetime(2026, 5, 15, 18, 0, 0)
@@ -122,6 +123,7 @@ class TestGetWorkHoursAndLeaves(WorkAndLeavesBase):
             self.employee_two_week,
             datetime(2026, 5, 22, 9, 0, 0),
             datetime(2026, 5, 22, 13, 0, 0),
+            full_day=False,
         )
         start_datetime = datetime(2026, 5, 18, 7, 0, 0)
         end_datetime = datetime(2026, 5, 22, 18, 0, 0)
@@ -167,6 +169,7 @@ class TestGetWorkHoursAndLeaves(WorkAndLeavesBase):
             self.employee,
             datetime(2026, 6, 2, 7, 0, 0),
             datetime(2026, 6, 2, 13, 0, 0),
+            full_day=False,
         )
         start_datetime = datetime(2026, 6, 1, 7, 0, 0)
         end_datetime = datetime(2026, 6, 5, 18, 0, 0)
@@ -199,6 +202,7 @@ class TestGetWorkHoursAndLeaves(WorkAndLeavesBase):
             self.employee,
             datetime(2026, 6, 2, 13, 0, 0),
             datetime(2026, 6, 2, 19, 0, 0),
+            full_day=False,
         )
         start_datetime = datetime(2026, 6, 1, 7, 0, 0)
         end_datetime = datetime(2026, 6, 5, 18, 0, 0)
@@ -223,3 +227,31 @@ class TestGetWorkHoursAndLeaves(WorkAndLeavesBase):
         self.assertEqual(
             leave_slot.datetime_to.timetz().replace(tzinfo=None), time(17, 0)
         )
+
+    def test_full_day_leave_adjusts_to_changed_work_schedule(self):
+        """Full-day leave is clipped to the current schedule, not the stored leave times."""
+        # Register a full-day leave while the schedule is 09:00–17:00.
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 5, 11, 9, 0, 0),
+            datetime(2026, 5, 11, 17, 0, 0),
+        )
+        # Simulate a schedule change: shift all attendances to 08:00–16:00.
+        self.employee.resource_calendar_id.attendance_ids.write(
+            {"hour_from": 8.0, "hour_to": 16.0}
+        )
+
+        result = self.employee._get_work_hours_and_leaves(
+            datetime(2026, 5, 11, 7, 0, 0),
+            datetime(2026, 5, 11, 18, 0, 0),
+        )
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].type, "leave")
+        self.assertEqual(
+            result[0].datetime_from.timetz().replace(tzinfo=None), time(8, 0)
+        )
+        self.assertEqual(
+            result[0].datetime_to.timetz().replace(tzinfo=None), time(16, 0)
+        )
+        self.assertAlmostEqual(result[0].duration, 8.0)

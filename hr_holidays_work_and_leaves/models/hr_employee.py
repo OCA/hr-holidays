@@ -379,6 +379,12 @@ class HrEmployee(models.Model):
         holiday, the holiday is returned for that portion and the leave is
         trimmed around it.  Entries are yielded in ascending datetime_from
         order.
+
+        For full-day leaves (is_full_day=True), one midnight-to-midnight entry
+        is generated per calendar day so the merge algorithm clips each day to
+        the *current* work schedule.  This keeps results correct even when the
+        work schedule is modified after the leave was registered.  Partial
+        leaves use the exact stored start/end times.
         """
         self.ensure_one()
         local_timezone = pytz.timezone(self.tz)
@@ -415,20 +421,63 @@ class HrEmployee(models.Model):
             order="date_from",
         )
         for leave in leaves:
-            # Odoo stores date_from/date_to as naive UTC datetimes.
-            dt_from = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
-                local_timezone
-            )
-            dt_to = leave.date_to.replace(tzinfo=pytz.utc).astimezone(local_timezone)
-            entry = WorkEntry(
-                type="leave",
-                datetime_from=dt_from,
-                datetime_to=dt_to,
-                holiday_status_id=leave.holiday_status_id,
-            )
-            leave_entries.extend(
-                self._split_entry_around_holidays(entry, holiday_dates, local_timezone)
-            )
+            if not leave.request_unit_half and not leave.request_unit_hours:
+                # Generate one midnight-to-midnight entry per calendar day so
+                # the merge algorithm clips it to the current work schedule,
+                # regardless of schedule changes since registration.
+                dt_from_local = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
+                    local_timezone
+                )
+                dt_to_local = leave.date_to.replace(tzinfo=pytz.utc).astimezone(
+                    local_timezone
+                )
+                # A leave ending exactly at midnight belongs to the previous
+                # day (e.g. date_to Tue 00:00 means the last active day is Mon).
+                end_date = (
+                    dt_to_local.date() - timedelta(days=1)
+                    if dt_to_local.time() == time.min
+                    else dt_to_local.date()
+                )
+                current_date = dt_from_local.date()
+                while current_date <= end_date:
+                    day_from = local_timezone.localize(
+                        datetime.combine(current_date, time.min)
+                    )
+                    day_to = local_timezone.localize(
+                        datetime.combine(current_date + timedelta(days=1), time.min)
+                    )
+                    entry = WorkEntry(
+                        type="leave",
+                        datetime_from=day_from,
+                        datetime_to=day_to,
+                        holiday_status_id=leave.holiday_status_id,
+                    )
+                    leave_entries.extend(
+                        self._split_entry_around_holidays(
+                            entry, holiday_dates, local_timezone
+                        )
+                    )
+                    current_date += timedelta(days=1)
+            else:
+                # Partial leave: Odoo stores date_from/date_to as naive UTC;
+                # convert to the employee's timezone and use as-is.
+                dt_from = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
+                    local_timezone
+                )
+                dt_to = leave.date_to.replace(tzinfo=pytz.utc).astimezone(
+                    local_timezone
+                )
+                entry = WorkEntry(
+                    type="leave",
+                    datetime_from=dt_from,
+                    datetime_to=dt_to,
+                    holiday_status_id=leave.holiday_status_id,
+                )
+                leave_entries.extend(
+                    self._split_entry_around_holidays(
+                        entry, holiday_dates, local_timezone
+                    )
+                )
 
         yield from sorted(
             holiday_entries + leave_entries,
