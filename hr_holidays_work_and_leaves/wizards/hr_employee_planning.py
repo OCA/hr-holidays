@@ -26,9 +26,7 @@ class HrEmployeePlanning(models.TransientModel):
         self.planning_line_ids.unlink()
         start_datetime = datetime.combine(self.date_start, time.min)
         end_datetime = datetime.combine(self.date_end, time.max)
-        days = self.employee_id._get_work_hours_and_leaves_per_day(
-            start_datetime, end_datetime
-        )
+        days = self.employee_id._get_full_schedule_per_day(start_datetime, end_datetime)
         self.env["hr.employee.planning.line"].create(
             [
                 {
@@ -37,6 +35,8 @@ class HrEmployeePlanning(models.TransientModel):
                     "hours_work": day.hours_work,
                     "hours_leave": day.hours_leave,
                     "hours_holiday": day.hours_holiday,
+                    "hours_leave_requested": day.hours_leave_requested,
+                    "hours_appointment": day.hours_appointment,
                 }
                 for day in days
             ]
@@ -60,3 +60,5 @@ class HrEmployeePlanningLine(models.TransientModel):
     hours_work = fields.Float(digits=(6, 2))
     hours_leave = fields.Float(digits=(6, 2))
     hours_holiday = fields.Float(digits=(6, 2))
+    hours_leave_requested = fields.Float(digits=(6, 2))
+    hours_appointment = fields.Float(digits=(6, 2))

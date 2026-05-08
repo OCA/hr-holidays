@@ -140,7 +140,13 @@ class WorkAndLeavesBase(TransactionCase):
             .create({"name": name, "date": holiday_date, "year_id": year_record.id})
         )
 
-    def _make_validated_leave(self, employee, date_from, date_to, full_day=True):
+    def _make_leave(self, employee, date_from, date_to, full_day=True, validate=True):
+        """Create a leave request, optionally validating it.
+
+        Advances the leave through draft → confirm (→ validate when requested).
+        Pass full_day=False for hour-specific leaves; the stored date_from/date_to
+        are then recomputed from the hour fields so they reflect the exact times.
+        """
         leave = (
             self.env["hr.leave"]
             .sudo()
@@ -166,6 +172,17 @@ class WorkAndLeavesBase(TransactionCase):
             )
         if leave.state == "draft":
             leave.sudo().action_confirm()
-        if leave.state in ("confirm", "validate1"):
+        if validate and leave.state in ("confirm", "validate1"):
             leave.with_user(self.manager_user).action_validate()
         return leave
+
+    def _make_leave_request(self, employee, date_from, date_to, full_day=True):
+        """Create a confirmed but not yet validated leave request."""
+        return self._make_leave(
+            employee, date_from, date_to, full_day=full_day, validate=False
+        )
+
+    def _make_validated_leave(self, employee, date_from, date_to, full_day=True):
+        return self._make_leave(
+            employee, date_from, date_to, full_day=full_day, validate=True
+        )

@@ -30,6 +30,8 @@
                             <field name="hours_work" />
                             <field name="hours_leave" />
                             <field name="hours_holiday" />
+                            <field name="hours_leave_requested" />
+                            <field name="hours_appointment" />
                         </tree>
                     </field>
                 </group>
