@@ -18,13 +18,14 @@ class TestGetFullSchedulePerDay(WorkAndLeavesBase):
         )
         cls.employee.write({"user_id": cls.employee_user.id})
 
-    def _create_event(self, name, start, stop, privacy="public"):
+    def _create_event(self, name, start, stop, privacy="public", show_as="busy"):
         return self.env["calendar.event"].create(
             {
                 "name": name,
                 "start": start,
                 "stop": stop,
                 "privacy": privacy,
+                "show_as": show_as,
                 "partner_ids": [(4, self.employee_user.partner_id.id)],
             }
         )
@@ -43,6 +44,21 @@ class TestGetFullSchedulePerDay(WorkAndLeavesBase):
             datetime(2026, 6, 10, 10, 0, 0),
             datetime(2026, 6, 10, 11, 0, 0),
             privacy="private",
+        )
+        result = self._full_schedule()
+        wed = next(d for d in result if d.date == date(2026, 6, 10))
+        self.assertEqual(
+            [ts for ts in wed.day_schedule if ts.type == "appointment"], []
+        )
+        self.assertAlmostEqual(wed.hours_appointment, 0.0)
+
+    def test_free_appointment_is_ignored(self):
+        """A calendar event with show_as='free' must not appear in the schedule."""
+        self._create_event(
+            "Free Slot",
+            datetime(2026, 6, 10, 10, 0, 0),
+            datetime(2026, 6, 10, 11, 0, 0),
+            show_as="free",
         )
         result = self._full_schedule()
         wed = next(d for d in result if d.date == date(2026, 6, 10))

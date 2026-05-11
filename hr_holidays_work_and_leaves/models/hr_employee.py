@@ -3,95 +3,16 @@
 """Get a real overview of leaves and work hours for an employee in a period."""
 import dataclasses
 import logging
-from dataclasses import dataclass
 from datetime import datetime, time, timedelta
 
 import pytz
 
 from odoo import _, models
 
+from ..utils.employee_day import EmployeeDay, EmployeeDaySchedule, TimeSlot, WorkEntry
+from ..utils.peekable_iterator import PeekableIterator
+
 _logger = logging.getLogger(__name__)
-
-
-def _time_to_float(t):
-    """Return hours since midnight; time(0, 0) used as end-of-day sentinel = 24.0."""
-    return 24.0 if t == time(0, 0) else t.hour + t.minute / 60.0
-
-
-class _PeekableIterator:
-    """Wraps a generator to provide hasNext()/next() peek semantics."""
-
-    def __init__(self, iterable):
-        self._iter = iter(iterable)
-        self._exhausted = False
-        self._peeked = None
-        self._advance()
-
-    def _advance(self):
-        try:
-            self._peeked = next(self._iter)
-        except StopIteration:
-            self._exhausted = True
-
-    def hasNext(self):
-        return not self._exhausted
-
-    def next(self):
-        value = self._peeked
-        self._advance()
-        return value
-
-
-@dataclass
-class WorkEntry:
-    """A single work, leave, or holiday interval in the planning pipeline."""
-
-    type: str
-    datetime_from: datetime
-    datetime_to: datetime
-    holiday_name: str = None
-    holiday_status_id: object = None
-    name: str = None
-
-    @property
-    def duration(self):
-        return (self.datetime_to - self.datetime_from).total_seconds() / 3600
-
-
-class TimeSlot:
-    """A single work or leave slot within a day."""
-
-    __slots__ = ("end_time", "hours_overlap_work", "name", "start_time", "type")
-
-    def __init__(self, start_time, end_time, slot_type, name=None):
-        self.start_time = start_time
-        self.end_time = end_time
-        self.type = slot_type
-        self.hours_overlap_work = 0.0
-        self.name = name
-
-
-class EmployeeDay:
-    """Work and leave summary for a single employee on a single day."""
-
-    __slots__ = (
-        "date",
-        "day_schedule",
-        "hours_appointment",
-        "hours_holiday",
-        "hours_leave",
-        "hours_leave_requested",
-        "hours_work",
-    )
-
-    def __init__(self, date):
-        self.date = date
-        self.hours_work = 0.0
-        self.hours_leave = 0.0
-        self.hours_holiday = 0.0
-        self.hours_leave_requested = 0.0
-        self.hours_appointment = 0.0
-        self.day_schedule = []
 
 
 class HrEmployee(models.Model):
@@ -121,102 +42,51 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         local_timezone = pytz.timezone(self.tz)
-
-        days = self._get_work_hours_and_leaves_per_day(start_datetime, end_datetime)
-        days_by_date = {day.date: day for day in days}
-
-        def _insert_slot(day_entry, slot):
-            schedule = day_entry.day_schedule
-            for idx, ts in enumerate(schedule):
-                if ts.start_time > slot.start_time:
-                    schedule.insert(idx, slot)
-                    return
-            schedule.append(slot)
-
-        def _add_to_days(dt_from, dt_to, slot_type, name):
-            end_date = (
-                dt_to.date() - timedelta(days=1)
-                if dt_to.time() == time(0, 0)
-                else dt_to.date()
-            )
-            current_date = dt_from.date()
-            while current_date <= end_date:
-                day_entry = days_by_date.get(current_date)
-                if day_entry is not None:
-                    slot_from_time = (
-                        dt_from.time() if current_date == dt_from.date() else time(0, 0)
-                    )
-                    slot_to_time = (
-                        dt_to.time() if current_date == dt_to.date() else time(0, 0)
-                    )
-                    overlap = self._compute_slot_work_overlap(
-                        day_entry, slot_from_time, slot_to_time
-                    )
-                    if overlap > 0.0:
-                        slot = TimeSlot(
-                            slot_from_time, slot_to_time, slot_type, name=name
-                        )
-                        slot.hours_overlap_work = overlap
-                        _insert_slot(day_entry, slot)
-                        if slot_type == "leave_requested":
-                            day_entry.hours_leave_requested += overlap
-                        elif slot_type == "appointment":
-                            day_entry.hours_appointment += overlap
-                current_date += timedelta(days=1)
-
+        schedule = self._get_work_hours_and_leaves_per_day(start_datetime, end_datetime)
         requested_leaves = self.env["hr.leave"].search(
-            [
-                ("employee_id", "=", self.id),
-                ("state", "not in", ["validate", "refuse"]),
-                ("date_from", "<", end_datetime),
-                ("date_to", ">", start_datetime),
-            ],
+            self._get_schedule_leave_requested_domain(start_datetime, end_datetime),
             order="date_from",
         )
         for leave in requested_leaves:
-            dt_from = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
+            date_from = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
                 local_timezone
             )
-            dt_to = leave.date_to.replace(tzinfo=pytz.utc).astimezone(local_timezone)
-            _add_to_days(
-                dt_from, dt_to, "leave_requested", leave.private_name or _("Leave")
+            date_to = leave.date_to.replace(tzinfo=pytz.utc).astimezone(local_timezone)
+            schedule.add_to_days(
+                date_from, date_to, "leave_requested", leave.private_name or _("Leave")
             )
-
         if self.user_id:
             events = self.env["calendar.event"].search(
-                [
-                    ("partner_ids", "in", self.user_id.partner_id.ids),
-                    ("privacy", "!=", "private"),
-                    ("start", "<", end_datetime),
-                    ("stop", ">", start_datetime),
-                ],
+                self._get_schedule_appointment_domain(start_datetime, end_datetime),
                 order="start",
             )
             for event in events:
-                dt_from = event.start.replace(tzinfo=pytz.utc).astimezone(
+                date_from = event.start.replace(tzinfo=pytz.utc).astimezone(
                     local_timezone
                 )
-                dt_to = event.stop.replace(tzinfo=pytz.utc).astimezone(local_timezone)
-                _add_to_days(dt_from, dt_to, "appointment", event.name)
+                date_to = event.stop.replace(tzinfo=pytz.utc).astimezone(local_timezone)
+                schedule.add_to_days(date_from, date_to, "appointment", event.name)
+        return schedule
 
-        return days
+    def _get_schedule_leave_requested_domain(self, start_datetime, end_datetime):
+        return [
+            ("employee_id", "=", self.id),
+            ("state", "not in", ["validate", "refuse"]),
+            ("date_from", "<", end_datetime),
+            ("date_to", ">", start_datetime),
+        ]
 
-    @staticmethod
-    def _compute_slot_work_overlap(day_entry, slot_from_time, slot_to_time):
-        """Return the total hours that [slot_from_time, slot_to_time) overlaps work slots."""
-        a = 0.0 if slot_from_time == time(0, 0) else _time_to_float(slot_from_time)
-        b = _time_to_float(slot_to_time)
-        total = 0.0
-        for ts in day_entry.day_schedule:
-            if ts.type != "work":
-                continue
-            c = ts.start_time.hour + ts.start_time.minute / 60.0
-            d = _time_to_float(ts.end_time)
-            total += max(0.0, min(b, d) - max(a, c))
-        return total
+    def _get_schedule_appointment_domain(self, start_datetime, end_datetime):
+        return [
+            ("partner_ids", "in", self.user_id.partner_id.ids),
+            ("privacy", "!=", "private"),
+            ("show_as", "=", "busy"),
+            ("start", "<", end_datetime),
+            ("stop", ">", start_datetime),
+        ]
 
     def _get_work_hours_and_leaves_per_day(self, start_datetime, end_datetime):
-        """For a single employee return a list of EmployeeDay objects, ordered on date.
+        """For a single employee return an EmployeeDaySchedule, ordered on date.
 
         Covers all dates with scheduled work or approved leave between
         start_datetime and end_datetime (inclusive).
@@ -233,7 +103,7 @@ class HrEmployee(models.Model):
             - type ("work" or "leave")
 
         Example:
-            [
+            EmployeeDaySchedule([
                 EmployeeDay(
                     date=date(2026, 5, 21),
                     hours_work=8.0,
@@ -252,7 +122,7 @@ class HrEmployee(models.Model):
                         TimeSlot(time(15, 0), time(17, 0), "work"),
                     ],
                 ),
-            ]
+            ])
         """
         self.ensure_one()
         work_hours_and_leaves_per_day = []
@@ -277,7 +147,7 @@ class HrEmployee(models.Model):
                     name=entry.name,
                 )
             )
-        return work_hours_and_leaves_per_day
+        return EmployeeDaySchedule(work_hours_and_leaves_per_day)
 
     def _get_work_hours_and_leaves(self, start_datetime, end_datetime):
         """Return a merged, chronological list of WorkEntry objects.
@@ -301,11 +171,15 @@ class HrEmployee(models.Model):
            places it on the correct date.  Advance work only; the same leave
            may cover subsequent work slots.
         4. Leave is entirely within work (leave_from >= work_from AND
-           leave_to <= work_to): emit work before the leave (if any), the
-           leave, and work after the leave (if any).  Advance both iterators.
-        5. Leave starts before work and ends during it: emit a clipped copy of
-           the leave starting at work_from, then the remaining work from
-           leave_to onward.  Advance both iterators.
+           leave_to <= work_to): emit work before the leave (if any), then
+           the leave.  Trim work to start at leave_to (or advance work if
+           leave_to == work_to) and advance leave; the loop then matches the
+           remaining work against subsequent leaves, correctly handling
+           multiple interruptions within one work slot.
+        5. Leave starts before work and ends during it: emit a clipped copy
+           of the leave starting at work_from.  Trim work to start at
+           leave_to (or advance work if leave_to == work_to) and advance
+           leave; the loop then handles any further interruptions.
         6. Leave starts during work and extends beyond it: emit work up to
            leave_from, then emit the leave clipped to work_to.  Trim the
            leave to start at work_to and advance work; the trimmed leave will
@@ -321,10 +195,10 @@ class HrEmployee(models.Model):
         self.ensure_one()
         self._check_resource_calendar()
         work_and_leaves = []
-        work_days = _PeekableIterator(
+        work_days = PeekableIterator(
             self._get_work_per_day(start_datetime, end_datetime)
         )
-        leave_days = _PeekableIterator(
+        leave_days = PeekableIterator(
             self._get_leaves_per_day(start_datetime, end_datetime)
         )
         work = work_days.next() if work_days.hasNext() else None
@@ -370,23 +244,24 @@ class HrEmployee(models.Model):
                         dataclasses.replace(work, datetime_to=leave.datetime_from)
                     )
                 work_and_leaves.append(leave)
+                # Trim work to start after the leave; subsequent leaves may
+                # still interrupt the remaining portion of this work slot.
                 if leave.datetime_to < work.datetime_to:
-                    work_and_leaves.append(
-                        dataclasses.replace(work, datetime_from=leave.datetime_to)
-                    )
-                # TODO: handle work interrupted multiple times by leave.
-                work = work_days.next() if work_days.hasNext() else None
+                    work = dataclasses.replace(work, datetime_from=leave.datetime_to)
+                else:
+                    work = work_days.next() if work_days.hasNext() else None
                 leave = leave_days.next() if leave_days.hasNext() else None
             elif leave.datetime_from < work.datetime_from:
                 # Leave started before this work slot and ends during it.
                 work_and_leaves.append(
                     dataclasses.replace(leave, datetime_from=work.datetime_from)
                 )
+                # Trim work to start after the leave; subsequent leaves may
+                # still interrupt the remaining portion of this work slot.
                 if leave.datetime_to < work.datetime_to:
-                    work_and_leaves.append(
-                        dataclasses.replace(work, datetime_from=leave.datetime_to)
-                    )
-                work = work_days.next() if work_days.hasNext() else None
+                    work = dataclasses.replace(work, datetime_from=leave.datetime_to)
+                else:
+                    work = work_days.next() if work_days.hasNext() else None
                 leave = leave_days.next() if leave_days.hasNext() else None
             else:
                 # Leave starts during this work slot and extends beyond it.
@@ -513,28 +388,26 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         local_timezone = pytz.timezone(self.tz)
-        date_from = self._get_employee_datetime(start_datetime).date()
-        date_to = self._get_employee_datetime(end_datetime).date()
-
+        start_date = self._get_employee_datetime(start_datetime).date()
+        end_date = self._get_employee_datetime(end_datetime).date()
         # Build holiday entries (full calendar day: 00:00 → 00:00 next day).
         holiday_entries = []
         holiday_dates = set()
-        for line in self._get_public_holiday_lines(date_from, date_to):
-            dt_from = local_timezone.localize(datetime.combine(line.date, time.min))
-            dt_to = local_timezone.localize(
+        for line in self._get_public_holiday_lines(start_date, end_date):
+            date_from = local_timezone.localize(datetime.combine(line.date, time.min))
+            date_to = local_timezone.localize(
                 datetime.combine(line.date + timedelta(days=1), time.min)
             )
             holiday_entries.append(
                 WorkEntry(
                     type="holiday",
-                    datetime_from=dt_from,
-                    datetime_to=dt_to,
+                    datetime_from=date_from,
+                    datetime_to=date_to,
                     holiday_name=line.name,
                     name=line.name,
                 )
             )
             holiday_dates.add(line.date)
-
         # Build leave entries split around any overlapping holiday days.
         leave_entries = []
         leaves = self.env["hr.leave"].search(
@@ -547,25 +420,23 @@ class HrEmployee(models.Model):
             order="date_from",
         )
         for leave in leaves:
+            date_from = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
+                local_timezone
+            )
+            date_to = leave.date_to.replace(tzinfo=pytz.utc).astimezone(local_timezone)
             if not leave.request_unit_half and not leave.request_unit_hours:
                 # Generate one midnight-to-midnight entry per calendar day so
                 # the merge algorithm clips it to the current work schedule,
                 # regardless of schedule changes since registration.
-                dt_from_local = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
-                    local_timezone
-                )
-                dt_to_local = leave.date_to.replace(tzinfo=pytz.utc).astimezone(
-                    local_timezone
-                )
                 # A leave ending exactly at midnight belongs to the previous
                 # day (e.g. date_to Tue 00:00 means the last active day is Mon).
-                end_date = (
-                    dt_to_local.date() - timedelta(days=1)
-                    if dt_to_local.time() == time.min
-                    else dt_to_local.date()
+                leave_end_date = (
+                    date_to.date() - timedelta(days=1)
+                    if date_to.time() == time.min
+                    else date_to.date()
                 )
-                current_date = dt_from_local.date()
-                while current_date <= end_date:
+                current_date = date_from.date()
+                while current_date <= leave_end_date:
                     day_from = local_timezone.localize(
                         datetime.combine(current_date, time.min)
                     )
@@ -586,18 +457,10 @@ class HrEmployee(models.Model):
                     )
                     current_date += timedelta(days=1)
             else:
-                # Partial leave: Odoo stores date_from/date_to as naive UTC;
-                # convert to the employee's timezone and use as-is.
-                dt_from = leave.date_from.replace(tzinfo=pytz.utc).astimezone(
-                    local_timezone
-                )
-                dt_to = leave.date_to.replace(tzinfo=pytz.utc).astimezone(
-                    local_timezone
-                )
                 entry = WorkEntry(
                     type="leave",
-                    datetime_from=dt_from,
-                    datetime_to=dt_to,
+                    datetime_from=date_from,
+                    datetime_to=date_to,
                     holiday_status_id=leave.holiday_status_id,
                     name=leave.private_name or _("Leave"),
                 )
@@ -606,7 +469,6 @@ class HrEmployee(models.Model):
                         entry, holiday_dates, local_timezone
                     )
                 )
-
         yield from sorted(
             holiday_entries + leave_entries,
             key=lambda e: e.datetime_from,
@@ -654,15 +516,15 @@ class HrEmployee(models.Model):
         within holiday days, all portions are discarded and an empty list is
         returned.
         """
-        dt_from = entry.datetime_from
-        dt_to = entry.datetime_to
+        date_from = entry.datetime_from
+        date_to = entry.datetime_to
         overlapping = sorted(
-            h for h in holiday_dates if dt_from.date() <= h <= dt_to.date()
+            h for h in holiday_dates if date_from.date() <= h <= date_to.date()
         )
         if not overlapping:
             return [entry]
         result = []
-        current_from = dt_from
+        current_from = date_from
         for holiday_date in overlapping:
             holiday_start = local_timezone.localize(
                 datetime.combine(holiday_date, time.min)
@@ -678,10 +540,10 @@ class HrEmployee(models.Model):
             current_from = local_timezone.localize(
                 datetime.combine(holiday_date + timedelta(days=1), time.min)
             )
-        if current_from < dt_to:
+        if current_from < date_to:
             result.append(
                 dataclasses.replace(
-                    entry, datetime_from=current_from, datetime_to=dt_to
+                    entry, datetime_from=current_from, datetime_to=date_to
                 )
             )
         return result

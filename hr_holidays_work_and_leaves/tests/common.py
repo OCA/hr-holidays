@@ -11,6 +11,7 @@ class WorkAndLeavesBase(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
+        cls.env["hr.holidays.public"].sudo().search([]).unlink()
         # Manager who approves leaves.
         cls.manager_user = cls.env["res.users"].create(
             {
@@ -161,13 +162,17 @@ class WorkAndLeavesBase(TransactionCase):
             )
         )
         if not full_day:
+            h_from = date_from.hour + date_from.minute / 60.0
+            h_to = date_to.hour + date_to.minute / 60.0
             leave.sudo().write(
                 {
                     "request_unit_hours": True,
                     "request_date_from": date_from.date(),
                     "request_date_to": date_to.date(),
-                    "request_hour_from": date_from.hour + date_from.minute / 60.0,
-                    "request_hour_to": date_to.hour + date_to.minute / 60.0,
+                    "request_hour_from": str(h_from)
+                    if h_from % 1
+                    else str(int(h_from)),
+                    "request_hour_to": str(h_to) if h_to % 1 else str(int(h_to)),
                 }
             )
         if leave.state == "draft":

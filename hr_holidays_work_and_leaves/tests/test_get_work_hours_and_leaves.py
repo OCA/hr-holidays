@@ -228,6 +228,94 @@ class TestGetWorkHoursAndLeaves(WorkAndLeavesBase):
             leave_slot.datetime_to.timetz().replace(tzinfo=None), time(17, 0)
         )
 
+    def test_two_leaves_within_one_work_slot(self):
+        """Two partial leaves within a single work slot produce five entries."""
+        # Leave 1: 10:00–11:00, Leave 2: 13:00–14:00, both on Tuesday 2026-06-02.
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 10, 0, 0),
+            datetime(2026, 6, 2, 11, 0, 0),
+            full_day=False,
+        )
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 13, 0, 0),
+            datetime(2026, 6, 2, 14, 0, 0),
+            full_day=False,
+        )
+        result = self.employee._get_work_hours_and_leaves(
+            datetime(2026, 6, 2, 7, 0, 0),
+            datetime(2026, 6, 2, 18, 0, 0),
+        )
+        tuesday = [e for e in result if e.datetime_from.date().day == 2]
+        self.assertEqual(len(tuesday), 5)
+        types = [e.type for e in tuesday]
+        self.assertEqual(types, ["work", "leave", "work", "leave", "work"])
+        times = [(e.datetime_from.hour, e.datetime_to.hour) for e in tuesday]
+        self.assertEqual(times, [(9, 10), (10, 11), (11, 13), (13, 14), (14, 17)])
+
+    def test_three_leaves_within_one_work_slot(self):
+        """Three partial leaves within a single work slot produce seven entries."""
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 10, 0, 0),
+            datetime(2026, 6, 2, 11, 0, 0),
+            full_day=False,
+        )
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 12, 0, 0),
+            datetime(2026, 6, 2, 13, 0, 0),
+            full_day=False,
+        )
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 15, 0, 0),
+            datetime(2026, 6, 2, 16, 0, 0),
+            full_day=False,
+        )
+        result = self.employee._get_work_hours_and_leaves(
+            datetime(2026, 6, 2, 7, 0, 0),
+            datetime(2026, 6, 2, 18, 0, 0),
+        )
+        tuesday = [e for e in result if e.datetime_from.date().day == 2]
+        self.assertEqual(len(tuesday), 7)
+        types = [e.type for e in tuesday]
+        self.assertEqual(
+            types, ["work", "leave", "work", "leave", "work", "leave", "work"]
+        )
+        times = [(e.datetime_from.hour, e.datetime_to.hour) for e in tuesday]
+        self.assertEqual(
+            times, [(9, 10), (10, 11), (11, 12), (12, 13), (13, 15), (15, 16), (16, 17)]
+        )
+
+    def test_leave_before_work_then_second_leave_within_remaining_work(self):
+        """Leave starting before work then a second leave within the remaining work slot."""
+        # Leave 1: 07:00–11:00 (starts before work at 09:00).
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 7, 0, 0),
+            datetime(2026, 6, 2, 11, 0, 0),
+            full_day=False,
+        )
+        # Leave 2: 13:00–14:00 (within remaining work 11:00–17:00).
+        self._make_validated_leave(
+            self.employee,
+            datetime(2026, 6, 2, 13, 0, 0),
+            datetime(2026, 6, 2, 14, 0, 0),
+            full_day=False,
+        )
+        result = self.employee._get_work_hours_and_leaves(
+            datetime(2026, 6, 2, 7, 0, 0),
+            datetime(2026, 6, 2, 18, 0, 0),
+        )
+        tuesday = [e for e in result if e.datetime_from.date().day == 2]
+        self.assertEqual(len(tuesday), 4)
+        types = [e.type for e in tuesday]
+        self.assertEqual(types, ["leave", "work", "leave", "work"])
+        times = [(e.datetime_from.hour, e.datetime_to.hour) for e in tuesday]
+        self.assertEqual(times, [(9, 11), (11, 13), (13, 14), (14, 17)])
+
     def test_full_day_leave_adjusts_to_changed_work_schedule(self):
         """Full-day leave is clipped to the current schedule, not the stored leave times."""
         # Register a full-day leave while the schedule is 09:00–17:00.
