@@ -6,30 +6,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-05-23 16:02+0000\n"
+"Last-Translator: Pablo Castelo <pablocv@gmx.es>\n"
 "Language-Team: none\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: hr_holidays_public_city
 #: model:ir.model,name:hr_holidays_public_city.model_hr_holidays_public
 msgid "Public Holidays"
-msgstr ""
+msgstr "Festivos"
 
 #. module: hr_holidays_public_city
 #: model:ir.model,name:hr_holidays_public_city.model_hr_holidays_public_line
 msgid "Public Holidays Lines"
-msgstr ""
+msgstr "Liñas de Festivos"
 
 #. module: hr_holidays_public_city
 #: model:ir.model.fields,field_description:hr_holidays_public_city.field_hr_holidays_public_line__city_ids
 msgid "Related Cities"
-msgstr ""
+msgstr "Cidades relacionadas"
 
 #. module: hr_holidays_public_city
 #: model:ir.model,name:hr_holidays_public_city.model_hr_leave
 msgid "Time Off"
-msgstr ""
+msgstr "Tempo libre"
