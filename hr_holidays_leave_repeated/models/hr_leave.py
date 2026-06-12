@@ -95,7 +95,7 @@ class HrLeave(models.Model):
         from_dt, to_dt = self._update_repeated_workday_dates(
             resource_calendar, from_dt, to_dt, param_dict["days"]
         )
-        client_tz = timezone(self._context.get("tz") or self.env.user.tz or "UTC")
+        client_tz = timezone(self.env.context.get("tz") or self.env.user.tz or "UTC")
         request_date_from = utc.localize(from_dt).astimezone(client_tz)
         request_date_to = utc.localize(to_dt).astimezone(client_tz)
 
@@ -121,7 +121,9 @@ class HrLeave(models.Model):
         leaves = self.env["hr.leave"]
         vals = self._update_repeated_leave_vals(leave, resource_calendar)
         while _check_repeating(count, leave, vals.get("date_to")):
-            leave = leave.with_context(skip_create_handler=True).copy(vals)
+            leave = leave.with_context(
+                skip_create_handler=True, skip_copy_check=True
+            ).copy(vals)
             leaves += leave
             count += 1
             vals = self._update_repeated_leave_vals(leave, resource_calendar)

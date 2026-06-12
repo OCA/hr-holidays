@@ -1,3 +1,7 @@
+.. image:: https://odoo-community.org/readme-banner-image
+   :target: https://odoo-community.org/get-involved?utm_source=readme
+   :alt: Odoo Community Association
+
 ==========================
 HR Holidays leave repeated
 ==========================
@@ -16,14 +20,14 @@ HR Holidays leave repeated
 .. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
-.. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fhr--holiday-lightgray.png?logo=github
-    :target: https://github.com/OCA/hr-holiday/tree/18.0/hr_holidays_leave_repeated
-    :alt: OCA/hr-holiday
+.. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github
+    :target: https://github.com/OCA/hr-holidays/tree/19.0/hr_holidays_leave_repeated
+    :alt: OCA/hr-holidays
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/hr-holiday-18-0/hr-holiday-18-0-hr_holidays_leave_repeated
+    :target: https://translation.odoo-community.org/projects/hr-holidays-19-0/hr-holidays-19-0-hr_holidays_leave_repeated
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holiday&target_branch=18.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=19.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -55,10 +59,10 @@ Usage
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/OCA/hr-holiday/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/OCA/hr-holidays/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/hr-holiday/issues/new?body=module:%20hr_holidays_leave_repeated%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_leave_repeated%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -92,6 +96,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/hr-holiday <https://github.com/OCA/hr-holiday/tree/18.0/hr_holidays_leave_repeated>`_ project on GitHub.
+This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/19.0/hr_holidays_leave_repeated>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.

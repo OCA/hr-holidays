@@ -64,7 +64,7 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "date_from": date(2016, 1, 1),
             }
         )
-        allocation.action_validate()
+        allocation.action_approve()
         allocation = cls.env["hr.leave.allocation"].create(
             {
                 "name": "Initial Allocation",
@@ -74,7 +74,7 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "date_from": date(2016, 1, 1),
             }
         )
-        allocation.action_validate()
+        allocation.action_approve()
         allocation = cls.env["hr.leave.allocation"].create(
             {
                 "name": "Initial Allocation",
@@ -84,7 +84,7 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "date_from": date(2016, 1, 1),
             }
         )
-        allocation.action_validate()
+        allocation.action_approve()
         allocation = cls.env["hr.leave.allocation"].create(
             {
                 "name": "Initial Allocation",
@@ -94,7 +94,7 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "date_from": date(2016, 1, 1),
             }
         )
-        allocation.action_validate()
+        allocation.action_approve()
 
         cls.leave_1_list = cls.env["hr.leave"].create(
             {
@@ -151,9 +151,9 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
         for i in range(0, 5):
             check_from = self.client_tz.localize(self.date_start).astimezone(
                 utc
-            ) + timedelta(days=i)
-            check_to = self.client_tz.localize(self.date_end).astimezone(
-                utc
+            ).replace(tzinfo=None) + timedelta(days=i)
+            check_to = self.client_tz.localize(self.date_end).astimezone(utc).replace(
+                tzinfo=None
             ) + timedelta(days=i)
             leaves = self.env["hr.leave"].search(
                 [
@@ -169,9 +169,9 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
         for i in range(0, 4):
             check_from = self.client_tz.localize(self.date_start).astimezone(
                 utc
-            ) + timedelta(days=i * 7)
-            check_to = self.client_tz.localize(self.date_end).astimezone(
-                utc
+            ).replace(tzinfo=None) + timedelta(days=i * 7)
+            check_to = self.client_tz.localize(self.date_end).astimezone(utc).replace(
+                tzinfo=None
             ) + timedelta(days=i * 7)
             leaves = self.env["hr.leave"].search(
                 [
@@ -187,9 +187,9 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
         for i in range(0, 3):
             check_from = self.client_tz.localize(self.date_start).astimezone(
                 utc
-            ) + timedelta(days=i * 14)
-            check_to = self.client_tz.localize(self.date_end).astimezone(
-                utc
+            ).replace(tzinfo=None) + timedelta(days=i * 14)
+            check_to = self.client_tz.localize(self.date_end).astimezone(utc).replace(
+                tzinfo=None
             ) + timedelta(days=i * 14)
             leaves = self.env["hr.leave"].search(
                 [
@@ -205,9 +205,9 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
         for i in range(0, 2):
             check_from = self.client_tz.localize(self.date_start).astimezone(
                 utc
-            ) + timedelta(days=i * 28)
-            check_to = self.client_tz.localize(self.date_end).astimezone(
-                utc
+            ).replace(tzinfo=None) + timedelta(days=i * 28)
+            check_to = self.client_tz.localize(self.date_end).astimezone(utc).replace(
+                tzinfo=None
             ) + timedelta(days=i * 28)
             leaves = self.env["hr.leave"].search(
                 [
@@ -277,10 +277,10 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
         for i in range(0, 7):
             datetime_from = self.client_tz.localize(self.date_start).astimezone(
                 utc
-            ) + timedelta(days=i)
+            ).replace(tzinfo=None) + timedelta(days=i)
             datetime_to = self.client_tz.localize(self.date_end).astimezone(
                 utc
-            ) + timedelta(days=i)
+            ).replace(tzinfo=None) + timedelta(days=i)
             leaves = self.env["hr.leave"].search(
                 [
                     ("holiday_status_id", "=", self.status_1.id),
@@ -307,7 +307,7 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
                 "date_from": date(2025, 1, 1),
             }
         )
-        allocation.action_validate()
+        allocation.action_approve()
         leaves = self.env["hr.leave"].create(
             {
                 "holiday_status_id": self.status_1.id,
