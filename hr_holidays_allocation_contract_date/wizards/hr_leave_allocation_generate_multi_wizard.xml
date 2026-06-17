@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="hr_leave_allocation_generate_multi_wizard_form_view">
+        <field name="model">hr.leave.allocation.generate.multi.wizard</field>
+        <field
+            name="inherit_id"
+            ref="hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form"
+        />
+        <field name="arch" type="xml">
+            <field name="accrual_plan_id" position="after">
+                <field
+                    name="contract_date_enforce"
+                    invisible="allocation_type != 'accrual'"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
