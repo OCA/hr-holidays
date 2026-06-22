@@ -111,7 +111,6 @@ class HrHolidaysPublic(models.Model):
             start_dt,
             end_dt,
             partner_id=partner_id,
-            employee_id=employee_id,
         )
         hhplo = self.env["hr.holidays.public.line"]
         holidays_lines = hhplo.search(states_filter)
@@ -126,8 +125,6 @@ class HrHolidaysPublic(models.Model):
         :param partner_id: ID of the partner
         :return: bool
         """
-        partner = self._get_partner_deprecated_employee(partner_id, employee_id)
-        partner_id = partner.id if partner else None
         holidays_lines = self.get_holidays_list(
             year=selected_date.year, partner_id=partner_id, employee_id=employee_id
         )
