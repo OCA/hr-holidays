@@ -7,10 +7,12 @@ from odoo import api, models
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
-    def _check_approval_update(self, state):
+    def _check_approval_update(self, state, raise_if_not_possible=True):
         if self.env.user._is_admin():
             return
-        return super()._check_approval_update(state)
+        return super()._check_approval_update(
+            state, raise_if_not_possible=raise_if_not_possible
+        )
 
     def _should_auto_approve(self):
         self.ensure_one()
@@ -22,6 +24,7 @@ class HrLeave(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        created_records = self.env["hr.leave"]
         for vals in vals_list:
             auto_approve = self._get_auto_approve_on_creation(vals)
             tracking_disable = self.env.context.get("tracking_disable")
@@ -33,10 +36,10 @@ class HrLeave(models.Model):
                     "mail_activity_automation_skip": mail_skip or auto_approve,
                 }
             )
-        # pylint: disable=context-overridden
-        res = super(HrLeave, self.with_context(ctx)).create(vals_list)
-        res._apply_auto_approve_policy()
-        return res
+            res = super(HrLeave, self.with_context(**ctx)).create([vals])
+            res._apply_auto_approve_policy()
+            created_records += res
+        return created_records
 
     @api.model
     def _get_auto_approve_on_creation(self, values):
