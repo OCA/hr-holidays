@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<!--
+  Copyright 2023 ForgeFlow S.L.
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="view_employee_form_leave_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.view.form - hr_holidays_summary_email</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_holidays.view_employee_form_leave_inherit" />
+        <field name="arch" type="xml">
+            <field name="leave_manager_id" position="after">
+                <field name="hr_leave_summary_type" />
+            </field>
+        </field>
+    </record>
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.form - hr_holidays_summary_email</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form" />
+        <field name="arch" type="xml">
+            <field name="leave_manager_id" position="after">
+                <field name="hr_leave_summary_type" />
+            </field>
+        </field>
+    </record>
+</odoo>
