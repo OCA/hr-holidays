@@ -80,8 +80,13 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.address.country_id = False
         self.address.state_id = False
         self.address.city_id = False
+        # The employee has no address at all, so the country/state/city
+        # filters can only exclude the US-restricted holidays below if the
+        # company itself resolves to a different country (an unset company
+        # country means no country filter is applied at all).
+        self.user.company_id.partner_id.country_id = self.country_1
         unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
-            "2019-07-01", date_to="2019-07-31"
+            "2019-07-01 00:00:00", date_to="2019-07-31 23:59:59"
         )
         self.assertFalse(unusual_days["2019-07-29"])
         self.assertFalse(unusual_days["2019-07-30"])
@@ -92,7 +97,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.address.state_id = self.state_us_4
         self.address.city_id = self.us_city_a
         unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
-            "2019-07-01", date_to="2019-07-31"
+            "2019-07-01 00:00:00", date_to="2019-07-31 23:59:59"
         )
         self.assertTrue(unusual_days["2019-07-29"])
         self.assertTrue(unusual_days["2019-07-30"])
@@ -103,7 +108,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.address.state_id = self.state_us_4
         self.address.city_id = self.us_city_b
         unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
-            "2019-07-01", date_to="2019-07-31"
+            "2019-07-01 00:00:00", date_to="2019-07-31 23:59:59"
         )
         self.assertTrue(unusual_days["2019-07-29"])
         self.assertFalse(unusual_days["2019-07-30"])
@@ -117,7 +122,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.user.company_id.partner_id.state_id = self.state_us_4
         self.user.company_id.partner_id.city_id = self.us_city_a
         unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
-            "2019-07-01", date_to="2019-07-31"
+            "2019-07-01 00:00:00", date_to="2019-07-31 23:59:59"
         )
         self.assertTrue(unusual_days["2019-07-29"])
         self.assertTrue(unusual_days["2019-07-30"])
@@ -128,9 +133,14 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
     ):
         self.address.country_id = self.us_country
         self.address.city_id = False
+        # The employee has no state, so the state filter only excludes the
+        # state_us_4-restricted holidays below if the company resolves to a
+        # different state (an unset company state means no state filter is
+        # applied at all, letting the city match through unchecked).
+        self.user.company_id.partner_id.state_id = self.st_state_2
         self.user.company_id.partner_id.city_id = self.us_city_a
         unusual_days = self.leave_model.with_user(self.user.id).get_unusual_days(
-            "2019-07-01", date_to="2019-07-31"
+            "2019-07-01 00:00:00", date_to="2019-07-31 23:59:59"
         )
         self.assertFalse(unusual_days["2019-07-29"])
         self.assertFalse(unusual_days["2019-07-30"])
