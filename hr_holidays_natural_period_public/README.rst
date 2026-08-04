@@ -17,23 +17,23 @@ Holidays Natural Period Public
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github
-    :target: https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_natural_period_public
+    :target: https://github.com/OCA/hr-holidays/tree/18.0/hr_holidays_natural_period_public
     :alt: OCA/hr-holidays
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/hr-holidays-16-0/hr-holidays-16-0-hr_holidays_natural_period_public
+    :target: https://translation.odoo-community.org/projects/hr-holidays-18-0/hr-holidays-18-0-hr_holidays_natural_period_public
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This is a glue module between `HR Holidays Public` and `HR Holidays Natural
-Period` modules.
+This is a glue module between HR Holidays Public and HR Holidays Natural
+Period modules.
 
-It allows the user to decide whether public holidays should be excluded from
-leave days computation or not, when the requested leave type uses natural days
-as the request unit.
+It allows the user to decide whether public holidays should be excluded
+from leave days computation or not, when the requested leave type uses
+natural days as the request unit.
 
 **Table of contents**
 
@@ -44,12 +44,12 @@ Usage
 =====
 
 To choose whether you want to exclude public holidays from leave days
-computation, you can access the settings of the leave type and check or uncheck
-the box "Exclude public holidays". Also make sure that the "Request Unit" is
-set to "Natural Day".
+computation, you can access the settings of the leave type and check or
+uncheck the box "Exclude public holidays". Also make sure that the
+"Request Unit" is set to "Natural Day".
 
-To access the settings of the leave type, you must navigate to `Time Off -->
-Configurations --> Time Off Types` and select the desired leave type.
+To access the settings of the leave type, you must navigate to Time Off
+--> Configurations --> Time Off Types and select the desired leave type.
 
 Bug Tracker
 ===========
@@ -57,7 +57,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/hr-holidays/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_natural_period_public%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/hr-holidays/issues/new?body=module:%20hr_holidays_natural_period_public%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -65,18 +65,19 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * ForgeFlow
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* `ForgeFlow <https://forgeflow.com>`_:
-    * Laura Cazorla <laura.cazorla@forgeflow.com>
+- `ForgeFlow <https://forgeflow.com>`__:
+
+  - Laura Cazorla <laura.cazorla@forgeflow.com>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -88,6 +89,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/16.0/hr_holidays_natural_period_public>`_ project on GitHub.
+This module is part of the `OCA/hr-holidays <https://github.com/OCA/hr-holidays/tree/18.0/hr_holidays_natural_period_public>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
