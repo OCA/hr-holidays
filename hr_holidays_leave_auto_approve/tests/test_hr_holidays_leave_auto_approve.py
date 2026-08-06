@@ -65,6 +65,8 @@ class TestHolidaysAutoValidate(TransactionCase):
     def test_leave_requests_state(self):
 
         today = datetime.today()
+        while today.weekday() >= 5:
+            today += timedelta(days=1)
 
         # Create leave requests for Leave Type1 and 2
         leave1 = self.leave_request_model.create(
@@ -98,6 +100,8 @@ class TestHolidaysAutoValidate(TransactionCase):
     def test_leave_requests_state_employee_user(self):
 
         today = datetime.today()
+        while today.weekday() >= 5:
+            today += timedelta(days=1)
 
         # Create leave requests for Leave Type1 and 2
         leave1 = self.leave_request_model.with_user(self.test_user_id).create(
