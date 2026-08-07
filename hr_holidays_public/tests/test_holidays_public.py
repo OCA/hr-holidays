@@ -24,10 +24,16 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         cls.st_state_2 = cls.env["res.country.state"].create(
             {"name": "ST State 2", "code": "st", "country_id": cls.country_1.id}
         )
+        # A running contract is required: since odoo/odoo@45c601bf,
+        # get_unusual_days() returns True for every day outside of the
+        # employee's contracts, which would make the tested dates unusual
+        # regardless of the public holidays.
         cls.employee = cls.employee_model.create(
             {
                 "name": "Employee 1",
                 "address_id": cls.res_partner.id,
+                "date_version": "2019-01-01",
+                "contract_date_start": "2019-01-01",
             }
         )
 
