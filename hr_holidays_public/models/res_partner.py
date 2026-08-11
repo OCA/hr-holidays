@@ -9,14 +9,12 @@ class ResPartner(models.Model):
 
     def _compute_im_status(self):
         res = super()._compute_im_status()
-        for item in self.filtered(
-            lambda x: x.user_ids.employee_id.is_public_holiday
+        for item in self.with_context(active_test=True).filtered(
+            lambda x: x.user_ids.employee_id.filtered("is_public_holiday")
             and x.im_status != "im_partner"
             and "leave_" not in x.im_status
         ):
-            item.im_status = (
-                item.user_ids.employee_id._get_im_status_hr_holidays_public(
-                    item.im_status
-                )
+            item.im_status = self.env["hr.employee"]._get_im_status_hr_holidays_public(
+                item.im_status
             )
         return res
