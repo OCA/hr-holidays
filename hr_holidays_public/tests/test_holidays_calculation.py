@@ -4,6 +4,8 @@
 # Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from odoo.tests import new_test_user
+
 from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
     TestCalendarPublicHoliday,
 )
@@ -65,6 +67,13 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
                 "address_id": cls.address_2.id,
             }
         )
+        cls.employee_user = new_test_user(
+            cls.env,
+            login="public_holiday_employee",
+            groups="base.group_user",
+            name="Employee 2",
+        )
+        cls.employee_2.user_id = cls.employee_user
         # Use a very old year for avoiding to collapse with current data
         cls.public_holiday_global = cls.holiday_model.create(
             {
@@ -178,4 +187,17 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
                 "employee_id": self.employee_2.id,
             }
         )
+        self.assertEqual(leave_request.number_of_days, 2)
+
+    def test_number_days_excluding_as_employee_user(self):
+        """Test an employee user excludes holidays using its public work address."""
+        leave_request = self.HrLeave.with_user(self.employee_user).new(
+            {
+                "date_from": "1946-12-23 00:00:00",  # Monday
+                "date_to": "1946-12-29 23:59:59",  # Sunday
+                "holiday_status_id": self.holiday_type.id,
+                "employee_id": self.employee_2.id,
+            }
+        )
+
         self.assertEqual(leave_request.number_of_days, 2)

@@ -18,7 +18,7 @@ class ResourceCalendar(models.Model):
         employee_id = self.env.context.get("employee_id", False)
         if not employee_id:
             return intervals
-        employee = self.env["hr.employee"].browse(employee_id)
+        employee = self.env["hr.employee.public"].browse(employee_id)
         list_by_dates = (
             self.env["calendar.public.holiday"]
             .get_holidays_list(
