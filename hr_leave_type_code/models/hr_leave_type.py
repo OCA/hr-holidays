@@ -22,10 +22,7 @@ class HolidaysType(models.Model):
     def requested_name_get(self):
         return self.env.context.get("requested_name_get")
 
-    _sql_constraints = [
-        (
-            "code_uniq",
-            "UNIQUE(code, company_id)",
-            "The code must be unique per company!",
-        )
-    ]
+    _code_uniq = models.Constraint(
+        "UNIQUE(code, company_id)",
+        "The code must be unique per company!",
+    )
