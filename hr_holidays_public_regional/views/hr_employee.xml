@@ -1,0 +1,37 @@
+<odoo>
+    <!-- Copyright 2025 Miquel Alzanillas, Antoni Marroig  (APSL-Nagarro) <malzanillas@apsl.net><amarroig@apsl.net>
+       License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location_id']" position="after">
+                <field name="regional_holiday_calendar_ids">
+                    <tree editable="bottom" limit="5">
+                        <field name="calendar_id" />
+                        <field name="start_date" />
+                        <field name="end_date" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_hr_employee_public_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.public.inherit</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location_id']" position="after">
+                <field name="regional_holiday_calendar_ids">
+                    <tree editable="bottom">
+                        <field name="calendar_id" />
+                        <field name="start_date" />
+                        <field name="end_date" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>
