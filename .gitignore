@@ -86,3 +86,6 @@ docs/_build/
 
 # OCA rules
 !static/lib/
+
+# AI Assistents
+CLAUDE.md

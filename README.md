@@ -1,7 +1,7 @@
 
 [![Support the OCA](https://odoo-community.org/readme-banner-image)](https://odoo-community.org/get-involved?utm_source=repo-readme)
 
-# hr-holidays
+# Modules to enhance employee leave functionality
 [![Runboat](https://img.shields.io/badge/runboat-Try%20me-875A7B.png)](https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&target_branch=16.0)
 [![Pre-commit Status](https://github.com/OCA/hr-holidays/actions/workflows/pre-commit.yml/badge.svg?branch=16.0)](https://github.com/OCA/hr-holidays/actions/workflows/pre-commit.yml?query=branch%3A16.0)
 [![Build Status](https://github.com/OCA/hr-holidays/actions/workflows/test.yml/badge.svg?branch=16.0)](https://github.com/OCA/hr-holidays/actions/workflows/test.yml?query=branch%3A16.0)
@@ -10,7 +10,7 @@
 
 <!-- /!\ do not modify above this line -->
 
-TODO: add repo description.
+All functionality having to do with employee leave management.
 
 <!-- /!\ do not modify below this line -->
 
