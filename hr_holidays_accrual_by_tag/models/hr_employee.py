@@ -17,63 +17,52 @@ class HrEmployee(models.Model):
         return res
 
     def _assign_accrual_plans_by_tags(self):
-        accrual_allocations = self.env["hr.leave.allocation"].search(
+        accrual_plans = self.env["hr.leave.accrual.plan"].search(
             [
-                ("employee_id", "=", False),
-                ("holiday_type", "=", "category"),
-                ("accrual_plan_id", "!=", False),
+                ("generate_allocation_category_ids", "!=", False),
             ]
         )
         existing_assignments = self.env["hr.leave.allocation"].search(
             [
                 ("employee_id", "in", self.ids),
-                ("accrual_plan_id", "in", accrual_allocations.accrual_plan_id.ids),
+                ("accrual_plan_id", "in", accrual_plans.ids),
                 ("date_to", "=", False),
             ],
         )
 
-        new_allocations_values = []
+        generate_new_allocations_values = []
         for employee in self:
             employee_tags = employee.category_ids
 
-            for allocation in accrual_allocations:
+            for plan in accrual_plans:
                 employee_assignment = fields.first(
                     existing_assignments.filtered(
-                        lambda assignment, allocation=allocation, employee=employee: (
-                            assignment.accrual_plan_id == allocation.accrual_plan_id
+                        lambda assignment, plan=plan, employee=employee: (
+                            assignment.accrual_plan_id == plan
                             and assignment.employee_id == employee
                         )
                     )
                 )
-                if allocation.category_id in employee_tags and not employee_assignment:
-                    new_allocations_values.append(
-                        {
-                            "name": allocation.name,
-                            "holiday_type": "employee",
-                            "holiday_status_id": allocation.holiday_status_id.id,
-                            "notes": allocation.notes,
-                            "number_of_days": allocation.number_of_days,
-                            "parent_id": allocation.id,
-                            "employee_id": employee.id,
-                            "employee_ids": [(6, 0, employee.ids)],
-                            "state": "confirm",
-                            "allocation_type": allocation.allocation_type,
-                            "date_from": fields.Date.context_today(employee),
-                            "accrual_plan_id": allocation.accrual_plan_id.id,
-                        }
-                    )
-                elif (
-                    allocation.category_id not in employee_tags and employee_assignment
-                ):
-                    employee_assignment.date_to = fields.Date.context_today(employee)
+                holiday_status = plan.generate_allocation_default_status_id
+                for category in plan.generate_allocation_category_ids:
+                    if category in employee_tags and not employee_assignment:
+                        generate_new_allocations_values.append(
+                            {
+                                "allocation_mode": "employee",
+                                "allocation_type": "accrual",
+                                "holiday_status_id": holiday_status.id,
+                                "employee_ids": employee.ids,
+                                "accrual_plan_id": plan.id,
+                            }
+                        )
+                    elif category not in employee_tags and employee_assignment:
+                        employee_assignment.date_to = fields.Date.context_today(
+                            employee
+                        )
 
-        if new_allocations_values:
-            new_allocations = (
-                self.env["hr.leave.allocation"]
-                .with_context(
-                    mail_notify_force_send=False,
-                    mail_activity_automation_skip=True,
-                )
-                .create(new_allocations_values)
-            )
-            new_allocations.action_validate()
+        if generate_new_allocations_values:
+            generate_new_allocations = self.env[
+                "hr.leave.allocation.generate.multi.wizard"
+            ].create(generate_new_allocations_values)
+            for wizard in generate_new_allocations:
+                wizard.action_generate_allocations()

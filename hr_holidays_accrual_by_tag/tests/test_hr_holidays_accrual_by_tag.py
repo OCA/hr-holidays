@@ -1,5 +1,3 @@
-from datetime import date
-
 from odoo import Command
 from odoo.tests.common import TransactionCase
 
@@ -14,37 +12,26 @@ class TestHrHolidaysAccrualsByTag(TransactionCase):
         cls.accrual_allocation_model = cls.env["hr.leave.allocation"]
         cls.employee_categ_model = cls.env["hr.employee.category"]
 
-        cls.accrual_plan1 = cls.accrual_plan_model.create(
-            {"name": "Test Accrual Plan 1"}
-        )
-        cls.accrual_plan2 = cls.accrual_plan_model.create(
-            {"name": "Test Accrual Plan 2"}
-        )
+        cls.tag1 = cls.employee_categ_model.create({"name": "Category 1"})
+        cls.tag2 = cls.employee_categ_model.create({"name": "Category 2"})
+        cls.tag3 = cls.employee_categ_model.create({"name": "Category 3"})
 
         cls.leave_type = cls.leave_type_model.create(
             {"name": "Test Leave", "time_type": "leave"}
         )
 
-        cls.tag1 = cls.employee_categ_model.create({"name": "Category 1"})
-        cls.tag2 = cls.employee_categ_model.create({"name": "Category 2"})
-        cls.tag3 = cls.employee_categ_model.create({"name": "Category 3"})
-
-        cls.accrual_allocation_model.create(
+        cls.accrual_plan1 = cls.accrual_plan_model.create(
             {
-                "date_from": date.today(),
-                "holiday_status_id": cls.leave_type.id,
-                "holiday_type": "category",
-                "accrual_plan_id": cls.accrual_plan1.id,
-                "category_id": cls.tag1.id,
+                "name": "Test Accrual Plan 1",
+                "generate_allocation_category_ids": cls.tag1.ids,
+                "generate_allocation_default_status_id": cls.leave_type.id,
             }
         )
-        cls.accrual_allocation_model.create(
+        cls.accrual_plan2 = cls.accrual_plan_model.create(
             {
-                "date_from": date.today(),
-                "holiday_status_id": cls.leave_type.id,
-                "holiday_type": "category",
-                "accrual_plan_id": cls.accrual_plan2.id,
-                "category_id": cls.tag2.id,
+                "name": "Test Accrual Plan 2",
+                "generate_allocation_category_ids": cls.tag2.ids,
+                "generate_allocation_default_status_id": cls.leave_type.id,
             }
         )
 
