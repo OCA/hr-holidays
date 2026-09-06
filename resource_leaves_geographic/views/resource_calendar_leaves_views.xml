@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 Moduon Team S.L.
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0) -->
+<data>
+    <record id="resource_calendar_leave_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.state.tree</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.resource_calendar_leave_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field
+                    name="state_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_calendar_leave_form" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.state.form</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.resource_calendar_leave_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='leave_dates']" position="inside">
+                <field
+                    name="state_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.state.calendar</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="state_ids" widget="many2many_tags" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.state.search</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_leaves_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="state_ids" />
+            </xpath>
+        </field>
+    </record>
+</data>
