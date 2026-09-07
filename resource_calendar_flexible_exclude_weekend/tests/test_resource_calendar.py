@@ -199,6 +199,39 @@ class TestResourceCalendar(TransactionCase):
             "for 10d starting on Fri: you get 6d",
         )
 
+    def test_flexible_calendar_non_utc_full_week_no_offset_leak(self):
+        """Regression test for a bug where a positive-offset timezone leaked
+        a bogus extra day into the following week.
+
+        Callers such as ``hr.employee._get_employees_working_hours`` build
+        their date range as a UTC midnight-to-midnight week (00:00:00 to the
+        following Sunday 23:59:59.999999 UTC). Converted to a timezone with a
+        positive UTC offset (Europe/Zurich is UTC+2 in August), that instant
+        lands a few hours past local midnight on the *following* Monday. The
+        per-week chunking loop used to compare its own locally-aligned week
+        boundary against that instant with exact equality, which could never
+        match, so it ran one bogus extra iteration that opened a new week
+        with a fresh weekly-hours budget for those few leftover hours -
+        crediting up to a full UTC-offset worth of extra hours on top of the
+        real weekly total (e.g. a real-world case: 40.25h computed instead
+        of the correct 38.25h/week, for a 90% Planair CH contract).
+        """
+        calendar = self.calendar_flex_without_weekend
+        calendar.tz = "Europe/Zurich"  # UTC+2 in August (CEST)
+        # A full UTC calendar week, Monday 00:00:00 to the following Sunday
+        # 23:59:59.999999, exactly as hr.employee._get_employees_working_hours
+        # builds its bounds.
+        start_dt = datetime(2026, 8, 17, 0, 0, 0, tzinfo=self.UTC)
+        end_dt = datetime(2026, 8, 23, 23, 59, 59, 999999, tzinfo=self.UTC)
+        self._check(
+            calendar,
+            start_dt,
+            end_dt,
+            40,  # 5 * 8h/day = hours_per_week, not 40 + a leaked UTC offset
+            "for a clean UTC week converted to a positive-offset timezone, "
+            "you must not get more than hours_per_week",
+        )
+
     def test_hr_holidays_use(self):
         calendar = self.calendar_flex_without_weekend
         calendar.tz = self.tz_FR.zone

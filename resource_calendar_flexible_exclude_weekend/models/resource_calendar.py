@@ -123,7 +123,20 @@ class ResourceCalendar(models.Model):
                         for start, end, attendance in work_intervals:
                             if start.weekday() not in (5, 6):
                                 new_intervals[(start, end)] = (start, end, attendance)
-                    if skipping_end_dt == end_dt:
+                    if skipping_end_dt.date() >= end_dt.date():
+                        # skipping_end_dt is always local-midnight-aligned,
+                        # while end_dt is a UTC day boundary: for any
+                        # non-UTC, positive offset it lands a few hours past
+                        # local midnight once interpreted in this timezone,
+                        # so it can never equal skipping_end_dt exactly
+                        # (they are genuinely different instants, not just
+                        # different representations of the same one).
+                        # Comparing on the calendar date instead of exact
+                        # datetime equality avoids running one bogus extra
+                        # iteration for that timezone-conversion artifact,
+                        # which would otherwise open a new week with a
+                        # fresh weekly-hours budget for a few leftover
+                        # hours that don't represent a real elapsed day.
                         break
                     else:
                         # go to next monday
