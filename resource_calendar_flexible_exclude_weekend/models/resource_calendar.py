@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 import logging
 from collections import defaultdict
-from datetime import timedelta
+from datetime import time, timedelta
 
 from dateutil.rrule import DAILY, rrule
 from pytz import timezone
@@ -72,7 +72,8 @@ class ResourceCalendar(models.Model):
             skipping_res = defaultdict(dict)
             resources_per_tz = defaultdict(list)
             for resource in resources_with_flex_no_weekend:
-                resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
+                # Always use the resource's/calendar's own tz
+                resources_per_tz[timezone((resource or self).tz)].append(resource)
             for tz, tz_resources in resources_per_tz.items():
                 skipping_start_dt = start_dt.astimezone(tz)
                 # 0=Monday, 6=Sunday
@@ -110,9 +111,19 @@ class ResourceCalendar(models.Model):
                         seconds=skipping_end_dt.second,
                     )
                     skipping_end_dt = min(skipping_end_dt, end_dt)
+                    # skipping_end_dt is not guaranteed to land on a clean
+                    # day boundary once clamped to end_dt above (e.g. a
+                    # leave record's own date_to a few seconds/minutes
+                    # short of midnight). Core's flexible-hours day loop
+                    # (`current_day += timedelta(days=1)`
+                    query_end_dt = skipping_end_dt
+                    if query_end_dt.time() != time.min:
+                        query_end_dt = (query_end_dt + timedelta(days=1)).replace(
+                            hour=0, minute=0, second=0, microsecond=0
+                        )
                     res_skip = super()._attendance_intervals_batch(
                         skipping_start_dt,
-                        skipping_end_dt,
+                        query_end_dt,
                         sum(tz_resources, self.env["resource.resource"]),
                         domain,
                         tz,
@@ -122,21 +133,27 @@ class ResourceCalendar(models.Model):
                         new_intervals = skipping_res[resource_id]
                         for start, end, attendance in work_intervals:
                             if start.weekday() not in (5, 6):
-                                new_intervals[(start, end)] = (start, end, attendance)
+                                end = min(end, skipping_end_dt)
+                                if end > start:
+                                    new_intervals[(start, end)] = (
+                                        start,
+                                        end,
+                                        attendance,
+                                    )
                     if skipping_end_dt.date() >= end_dt.date():
-                        # skipping_end_dt is always local-midnight-aligned,
-                        # while end_dt is a UTC day boundary: for any
-                        # non-UTC, positive offset it lands a few hours past
-                        # local midnight once interpreted in this timezone,
+                        # skipping_end_dt is always midnight-aligned in the
+                        # resource's own tz, while end_dt (the caller's
+                        # requested boundary) may not be -- it can land a
+                        # few seconds/minutes/hours short of that midnight,
                         # so it can never equal skipping_end_dt exactly
                         # (they are genuinely different instants, not just
                         # different representations of the same one).
                         # Comparing on the calendar date instead of exact
                         # datetime equality avoids running one bogus extra
-                        # iteration for that timezone-conversion artifact,
-                        # which would otherwise open a new week with a
-                        # fresh weekly-hours budget for a few leftover
-                        # hours that don't represent a real elapsed day.
+                        # iteration for that artifact, which would
+                        # otherwise open a new week with a fresh
+                        # weekly-hours budget for a few leftover hours that
+                        # don't represent a real elapsed day.
                         break
                     else:
                         # go to next monday

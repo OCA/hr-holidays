@@ -245,6 +245,64 @@ class TestResourceCalendar(TransactionCase):
                     len(meta), 1, f"more than one attendance for {start}->{end}: {meta}"
                 )
 
+    def test_leave_window_not_day_aligned_does_not_drop_last_day(self):
+        """Regression test for a day silently dropped when the query window
+        doesn't land on a clean day boundary in the calendar's own tz.
+
+        ``project_timesheet_holidays``'s ``_work_time_per_day`` (which
+        generates "Congé"/public-holiday timesheets for
+        ``resource.calendar.leaves``) queries with the leave's own
+        ``date_from``/``date_to`` as bounds. A leave meant to represent one
+        full local day can easily end a few seconds/minutes short of the
+        next local midnight (e.g. ``23:59:00`` instead of ``00:00:00`` the
+        next day)
+
+        Core Odoo's flexible-hours day loop
+        (``current_day += timedelta(days=1)``, never reset to midnight)
+        silently drops the last day whenever its carried-over
+        time-of-day ends up past such a non-aligned window end.
+        """
+        calendar = self.calendar_flex_without_weekend
+        calendar.tz = "Europe/Zurich"  # UTC+2 in September (CEST)
+        # Wed 2026-09-03, 00:00:00 to 23:59:00 Europe/Zurich (local), i.e.
+        # the leave's own date_from/date_to as stored (UTC) on prod.
+        start_dt = datetime(2026, 9, 2, 22, 0, 0, tzinfo=self.UTC)
+        end_dt = datetime(2026, 9, 3, 21, 59, 0, tzinfo=self.UTC)
+        # Explicit tz=UTC mirrors _work_time_per_day's own call
+        # (calendar._attendance_intervals_batch(..., tz=utc)).
+        result_per_resource_id = calendar._attendance_intervals_batch(
+            start_dt, end_dt, tz=self.UTC
+        )
+        actual_duration = sum(
+            (end - start).total_seconds() / 3600
+            for intervals in result_per_resource_id.values()
+            for start, end, _meta in intervals
+        )
+        self.assertEqual(
+            actual_duration,
+            8.0,
+            "a single day off, one minute short of a clean day boundary, "
+            "must still yield a full 8h day, not a ~2h leftover slice",
+        )
+
+    def test_leave_window_day_aligned_unaffected(self):
+        """Control for the fix above: an already clean, day-aligned window
+        (matching prod's working "31.08.2026" holiday record) must still
+        yield exactly one full day, unaffected by the rounding/clipping
+        added for the non-aligned case.
+        """
+        calendar = self.calendar_flex_without_weekend
+        calendar.tz = "Europe/Zurich"
+        start_dt = datetime(2026, 8, 30, 22, 0, 0, tzinfo=self.UTC)
+        end_dt = datetime(2026, 8, 31, 22, 0, 0, tzinfo=self.UTC)
+        self._check(
+            calendar,
+            start_dt,
+            end_dt,
+            8,
+            "a clean day-aligned single-day window must still yield 8h",
+        )
+
     def test_get_unusual_days_excluding_weekends(self):
         calendar = self.calendar_flex_without_weekend
         start_dt = datetime(2025, 11, 3, 0, 0, 0, tzinfo=self.UTC)
