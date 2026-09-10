@@ -201,3 +201,65 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
         )
 
         self.assertEqual(leave_request.number_of_days, 2)
+
+
+class TestHolidaysComputeDaysFlexibleSingleDay(TestHolidaysComputeDaysBase):
+    """Regression tests for a flexible employee requesting a single day of
+    leave that falls exactly on a public holiday: core's ``_get_durations``
+    special-cases flexible employees on single-day requests by searching
+    ``resource.calendar.leaves`` directly, bypassing the
+    ``calendar.public.holiday.line`` records this module manages.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.flexible_calendar = cls.env["resource.calendar"].create(
+            {"name": "Flexible Calendar", "flexible_hours": True}
+        )
+        cls.employee_flexible = cls.env["hr.employee"].create(
+            {
+                "name": "Flexible Employee",
+                "resource_calendar_id": cls.flexible_calendar.id,
+                "address_id": cls.address_1.id,
+            }
+        )
+
+    def test_single_day_on_public_holiday_is_excluded(self):
+        leave_request = self.HrLeave.new(
+            {
+                "date_from": "1946-12-25 00:00:00",  # Christmas, global holiday
+                "date_to": "1946-12-25 23:59:59",
+                "request_date_from": "1946-12-25",
+                "request_date_to": "1946-12-25",
+                "holiday_status_id": self.holiday_type.id,
+                "employee_id": self.employee_flexible.id,
+            }
+        )
+        self.assertEqual(leave_request.number_of_days, 0)
+
+    def test_single_day_not_on_public_holiday_is_not_excluded(self):
+        leave_request = self.HrLeave.new(
+            {
+                "date_from": "1946-12-26 00:00:00",
+                "date_to": "1946-12-26 23:59:59",
+                "request_date_from": "1946-12-26",
+                "request_date_to": "1946-12-26",
+                "holiday_status_id": self.holiday_type.id,
+                "employee_id": self.employee_flexible.id,
+            }
+        )
+        self.assertEqual(leave_request.number_of_days, 1)
+
+    def test_single_day_on_public_holiday_not_excluded_when_type_says_so(self):
+        leave_request = self.HrLeave.new(
+            {
+                "date_from": "1946-12-25 00:00:00",
+                "date_to": "1946-12-25 23:59:59",
+                "request_date_from": "1946-12-25",
+                "request_date_to": "1946-12-25",
+                "holiday_status_id": self.holiday_type_no_excludes.id,
+                "employee_id": self.employee_flexible.id,
+            }
+        )
+        self.assertEqual(leave_request.number_of_days, 1)
