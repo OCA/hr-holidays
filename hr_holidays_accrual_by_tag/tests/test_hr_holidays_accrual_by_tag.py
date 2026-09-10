@@ -1,0 +1,136 @@
+from odoo import Command
+from odoo.tests.common import TransactionCase
+
+
+class TestHrHolidaysAccrualsByTag(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company = cls.env.ref("base.main_company")
+        cls.accrual_plan_model = cls.env["hr.leave.accrual.plan"]
+        cls.leave_type_model = cls.env["hr.leave.type"]
+        cls.accrual_allocation_model = cls.env["hr.leave.allocation"]
+        cls.employee_categ_model = cls.env["hr.employee.category"]
+
+        cls.tag1 = cls.employee_categ_model.create({"name": "Category 1"})
+        cls.tag2 = cls.employee_categ_model.create({"name": "Category 2"})
+        cls.tag3 = cls.employee_categ_model.create({"name": "Category 3"})
+
+        cls.leave_type = cls.leave_type_model.create(
+            {"name": "Test Leave", "time_type": "leave"}
+        )
+
+        cls.accrual_plan1 = cls.accrual_plan_model.create(
+            {
+                "name": "Test Accrual Plan 1",
+                "generate_allocation_category_ids": cls.tag1.ids,
+                "generate_allocation_default_status_id": cls.leave_type.id,
+            }
+        )
+        cls.accrual_plan2 = cls.accrual_plan_model.create(
+            {
+                "name": "Test Accrual Plan 2",
+                "generate_allocation_category_ids": cls.tag2.ids,
+                "generate_allocation_default_status_id": cls.leave_type.id,
+            }
+        )
+
+    def test_create_new_employee(self):
+        # Employee without tags won't have any allocation
+        employee1 = self.env["hr.employee"].create(
+            {
+                "name": "Test Employee 1",
+                "company_id": self.company.id,
+            }
+        )
+        allocations = self.accrual_allocation_model.search(
+            [("employee_id", "=", employee1.id)]
+        )
+        self.assertFalse(allocations)
+
+        # Creation of accrual allocation only with tags that have a related accrual plan
+        employee2 = self.env["hr.employee"].create(
+            {
+                "name": "Test Employee 3",
+                "company_id": self.company.id,
+                "category_ids": [Command.set([self.tag1.id, self.tag3.id])],
+            }
+        )
+        allocations = self.accrual_allocation_model.search(
+            [("employee_id", "=", employee2.id)]
+        )
+        self.assertEqual(len(allocations), 1)
+        self.assertEqual(allocations.accrual_plan_id, self.accrual_plan1)
+
+        # Adding a new tag with a related accrual plan
+        employee2.category_ids = self.tag1 + self.tag2
+        allocations = self.accrual_allocation_model.search(
+            [("employee_id", "=", employee2.id)]
+        )
+        self.assertEqual(len(allocations), 2)
+        self.assertFalse(any(allocation.date_to for allocation in allocations))
+
+        # Updating tag list will update accrual allocations
+        employee2.category_ids = self.tag2
+        allocation1 = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee2.id),
+                ("accrual_plan_id", "=", self.accrual_plan1.id),
+            ]
+        )
+        self.assertTrue(allocation1.date_to)
+        allocation2 = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee2.id),
+                ("accrual_plan_id", "=", self.accrual_plan2.id),
+            ]
+        )
+        self.assertFalse(allocation2.date_to)
+
+        # Adding same tag again will create new accrual allocation
+        employee2.category_ids = self.tag1 + self.tag2
+        allocations = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee2.id),
+                ("accrual_plan_id", "=", self.accrual_plan1.id),
+            ]
+        )
+        self.assertEqual(len(allocations), 2)
+        self.assertFalse(all(allocation.date_to for allocation in allocations))
+
+    def test_ignore_refused_allocation(self):
+        """If an employee has a refused allocation for an accrual plan:
+        - when the tag is removed, the refused allocation is not updated
+        - when the tag is added back, a new allocation is created.
+        """
+        # Arrange
+        plan = self.accrual_plan1
+        tag = plan.generate_allocation_category_ids[0]
+        employee = self.env["hr.employee"].create({"name": "Test Employee"})
+        employee.category_ids = tag
+        refused_allocation = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee.id),
+                ("accrual_plan_id", "=", plan.id),
+            ]
+        )
+        refused_allocation.action_refuse()
+        # pre-condition
+        self.assertEqual(refused_allocation.state, "refuse")
+        self.assertFalse(refused_allocation.date_to)
+
+        # Remove the tag: the refused allocation is not ended
+        employee.category_ids -= tag
+        self.assertFalse(refused_allocation.date_to)
+
+        # Add the tag back: a new allocation is created
+        employee.category_ids += tag
+        allocations = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee.id),
+                ("accrual_plan_id", "=", plan.id),
+            ]
+        )
+        self.assertIn(refused_allocation, allocations)
+        new_allocation = allocations - refused_allocation
+        self.assertEqual(new_allocation.state, "validate")
