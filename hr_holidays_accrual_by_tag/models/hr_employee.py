@@ -17,6 +17,7 @@ class HrEmployee(models.Model):
         return res
 
     def _assign_accrual_plans_by_tags(self):
+        today = fields.Date.context_today(self)
         accrual_plans = self.env["hr.leave.accrual.plan"].search(
             [
                 ("generate_allocation_category_ids", "!=", False),
@@ -26,7 +27,10 @@ class HrEmployee(models.Model):
             [
                 ("employee_id", "in", self.ids),
                 ("accrual_plan_id", "in", accrual_plans.ids),
+                ("state", "=", "validate"),
+                "|",
                 ("date_to", "=", False),
+                ("date_to", ">", today),
             ],
         )
 
@@ -56,9 +60,7 @@ class HrEmployee(models.Model):
                             }
                         )
                     elif category not in employee_tags and employee_assignment:
-                        employee_assignment.date_to = fields.Date.context_today(
-                            employee
-                        )
+                        employee_assignment.date_to = today
 
         if generate_new_allocations_values:
             generate_new_allocations = self.env[

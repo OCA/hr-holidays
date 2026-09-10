@@ -97,3 +97,40 @@ class TestHrHolidaysAccrualsByTag(TransactionCase):
         )
         self.assertEqual(len(allocations), 2)
         self.assertFalse(all(allocation.date_to for allocation in allocations))
+
+    def test_ignore_refused_allocation(self):
+        """If an employee has a refused allocation for an accrual plan:
+        - when the tag is removed, the refused allocation is not updated
+        - when the tag is added back, a new allocation is created.
+        """
+        # Arrange
+        plan = self.accrual_plan1
+        tag = plan.generate_allocation_category_ids[0]
+        employee = self.env["hr.employee"].create({"name": "Test Employee"})
+        employee.category_ids = tag
+        refused_allocation = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee.id),
+                ("accrual_plan_id", "=", plan.id),
+            ]
+        )
+        refused_allocation.action_refuse()
+        # pre-condition
+        self.assertEqual(refused_allocation.state, "refuse")
+        self.assertFalse(refused_allocation.date_to)
+
+        # Remove the tag: the refused allocation is not ended
+        employee.category_ids -= tag
+        self.assertFalse(refused_allocation.date_to)
+
+        # Add the tag back: a new allocation is created
+        employee.category_ids += tag
+        allocations = self.accrual_allocation_model.search(
+            [
+                ("employee_id", "=", employee.id),
+                ("accrual_plan_id", "=", plan.id),
+            ]
+        )
+        self.assertIn(refused_allocation, allocations)
+        new_allocation = allocations - refused_allocation
+        self.assertEqual(new_allocation.state, "validate")
