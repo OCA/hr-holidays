@@ -9,7 +9,7 @@ from dateutil import rrule
 from pytz import timezone
 
 from odoo import models
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.tools.intervals import Intervals
 
 
@@ -29,7 +29,9 @@ class ResourceCalendar(models.Model):
         day_days = defaultdict(float)
         for start, stop, meta in attendance_intervals:
             interval_hours = (stop - start).total_seconds() / 3600
-            if meta:
+            if meta and not float_is_zero(
+                sum(meta.mapped("duration_hours")), precision_digits=2
+            ):
                 interval_days = (
                     sum(meta.mapped("duration_days"))
                     * interval_hours
@@ -84,7 +86,11 @@ class ResourceCalendar(models.Model):
                     (
                         datetime.combine(day.date(), time.min).replace(tzinfo=tz),
                         datetime.combine(day.date(), end_time).replace(tzinfo=tz),
-                        self.env["resource.calendar.attendance"],
+                        # It is very important to use .new() so that https://github.com/odoo/odoo/blob/63b7407b3cb02603e9d0f57b9f336c1c9af3074d/addons/resource/models/resource_calendar.py#L566
+                        # can execute the `any()` correctly and take these "virtual"
+                        # records into account
+                        # Related to https://github.com/odoo/odoo/commit/5588631d49e1ed6fb0ef1b433e94d29c271f82d0
+                        self.env["resource.calendar.attendance"].new(),
                     )
                 )
             intervals[resource.id] = Intervals(attendances)
