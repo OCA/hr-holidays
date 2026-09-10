@@ -1,0 +1,5 @@
+- Andrea Stirpe \<a.stirpe@onestein.nl\>
+- Antonio Esposito \<a.esposito@onestein.nl\>
+- Jaime Arroyo \<jaime.arroyo@creublanca.es\>
+- [Heliconia Solutions Pvt. Ltd.](https://www.heliconia.io)
+  - Bhavesh Heliconia
