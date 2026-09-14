@@ -29,15 +29,30 @@ class HrLeave(models.Model):
 
     @api.model
     def _update_repeated_workday_dates(self, resource_calendar, from_dt, to_dt, days):
-        user = self.env.user
-        from_dt = fields.Datetime.context_timestamp(user, from_dt)
-        to_dt = fields.Datetime.context_timestamp(user, to_dt)
+        client_tz = timezone(self._context.get("tz") or self.env.user.tz or "UTC")
+        from_dt = from_dt.astimezone(client_tz)
+        to_dt = to_dt.astimezone(client_tz)
         work_hours = resource_calendar.get_work_hours_count(
             from_dt, to_dt, compute_leaves=False
         )
         while work_hours:
+            previous_from_dt = from_dt
+            previous_to_dt = to_dt
             from_dt = from_dt + relativedelta(days=days)
             to_dt = to_dt + relativedelta(days=days)
+
+            # Handle case where Daylight Saving Time changes between 2 dates
+            # We want to keep the same hours in localized time
+            from_dt = from_dt.astimezone(client_tz)
+            to_dt = to_dt.astimezone(client_tz)
+
+            from_dt_dst_diff = previous_from_dt.dst() - from_dt.dst()
+            to_dt_dst_diff = previous_to_dt.dst() - to_dt.dst()
+
+            from_dt = from_dt + from_dt_dst_diff
+            from_dt = from_dt.astimezone(client_tz)
+            to_dt = to_dt + to_dt_dst_diff
+            to_dt = to_dt.astimezone(client_tz)
 
             new_work_hours = resource_calendar.get_work_hours_count(
                 from_dt, to_dt, compute_leaves=True
@@ -45,9 +60,7 @@ class HrLeave(models.Model):
             if new_work_hours and work_hours <= new_work_hours:
                 break
 
-        return from_dt.astimezone(utc).replace(tzinfo=None), to_dt.astimezone(
-            utc
-        ).replace(tzinfo=None)
+        return from_dt, to_dt
 
     @api.model
     def _get_repeated_vals_dict(self):
@@ -95,16 +108,13 @@ class HrLeave(models.Model):
         from_dt, to_dt = self._update_repeated_workday_dates(
             resource_calendar, from_dt, to_dt, param_dict["days"]
         )
-        client_tz = timezone(self._context.get("tz") or self.env.user.tz or "UTC")
-        request_date_from = utc.localize(from_dt).astimezone(client_tz)
-        request_date_to = utc.localize(to_dt).astimezone(client_tz)
 
         return {
             "employee_id": leave.employee_id.id,
-            "date_from": from_dt,
-            "date_to": to_dt,
-            "request_date_from": request_date_from,
-            "request_date_to": request_date_to,
+            "date_from": from_dt.astimezone(utc).replace(tzinfo=None),
+            "date_to": to_dt.astimezone(utc).replace(tzinfo=None),
+            "request_date_from": from_dt,
+            "request_date_to": to_dt,
         }
 
     @api.model

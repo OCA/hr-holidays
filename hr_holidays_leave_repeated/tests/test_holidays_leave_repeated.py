@@ -320,3 +320,107 @@ class TestHolidaysLeaveRepeated(common.TransactionCase):
             }
         )
         self.assertEqual(len(leaves), 5)
+
+    def test_10_check_dst_time(self):
+        self.calendar.tz = "Europe/Paris"
+        self.employee_1.tz = "Europe/Paris"
+        allocation = self.env["hr.leave.allocation"].create(
+            {
+                "name": "Initial Allocation",
+                "holiday_status_id": self.status_1.id,
+                "number_of_days": 20,
+                "employee_id": self.employee_1.id,
+                "date_from": date(2025, 1, 1),
+            }
+        )
+        allocation.action_validate()
+        leaves_1 = self.env["hr.leave"].create(
+            {
+                "holiday_status_id": self.status_1.id,
+                "repeat_every": "week",
+                "repeat_mode": "times",
+                "repeat_limit": 5,
+                "request_date_from": datetime(2025, 3, 20, 8),
+                "request_date_to": datetime(2025, 3, 20, 18),
+                "employee_id": self.employee_1.id,
+            }
+        )
+        leaves_2 = self.env["hr.leave"].create(
+            {
+                "holiday_status_id": self.status_1.id,
+                "repeat_every": "week",
+                "repeat_mode": "times",
+                "repeat_limit": 5,
+                "request_date_from": datetime(2025, 10, 16, 8),
+                "request_date_to": datetime(2025, 10, 16, 18),
+                "employee_id": self.employee_1.id,
+            }
+        )
+        self.assertEqual(
+            leaves_1.mapped("date_from"),
+            [
+                datetime(2025, 3, 20, 7),
+                datetime(2025, 3, 27, 7),
+                datetime(2025, 4, 3, 6),
+                datetime(2025, 4, 10, 6),
+                datetime(2025, 4, 17, 6),
+            ],
+        )
+        self.assertEqual(
+            leaves_2.mapped("date_from"),
+            [
+                datetime(2025, 10, 16, 6),
+                datetime(2025, 10, 23, 6),
+                datetime(2025, 10, 30, 7),
+                datetime(2025, 11, 6, 7),
+                datetime(2025, 11, 13, 7),
+            ],
+        )
+        self.assertEqual(
+            list(
+                set(
+                    leaves_1.mapped(
+                        lambda leave: leave.date_from.astimezone(
+                            timezone("Europe/Paris")
+                        ).hour
+                    )
+                )
+            ),
+            [8],
+        )
+        self.assertEqual(
+            list(
+                set(
+                    leaves_1.mapped(
+                        lambda leave: leave.date_to.astimezone(
+                            timezone("Europe/Paris")
+                        ).hour
+                    )
+                )
+            ),
+            [18],
+        )
+        self.assertEqual(
+            list(
+                set(
+                    leaves_2.mapped(
+                        lambda leave: leave.date_from.astimezone(
+                            timezone("Europe/Paris")
+                        ).hour
+                    )
+                )
+            ),
+            [8],
+        )
+        self.assertEqual(
+            list(
+                set(
+                    leaves_2.mapped(
+                        lambda leave: leave.date_to.astimezone(
+                            timezone("Europe/Paris")
+                        ).hour
+                    )
+                )
+            ),
+            [18],
+        )
