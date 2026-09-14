@@ -1,5 +1,7 @@
 # Copyright 2020-2025 Tecnativa - Víctor Martínez
+# Copyright 2026 Simone Rubino - PyTech
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 from odoo import Command, fields
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import users
@@ -141,6 +143,17 @@ class TestHrLeave(BaseCommon):
         self._test_hr_leave_natural_day_02()
         leave = self._create_hr_leave(self.leave_type, "2023-01-01", "2023-01-09")
         self.assertEqual(leave.number_of_days, 0.5)
+
+    @users("test-user")
+    def test_hr_leave_natural_day_no_manager(self):
+        """An employee that is not a manager
+        can create a natural day leave in the future with no validation.
+        """
+        leave_type = self.leave_type
+        leave_type.requires_allocation = "no"
+        leave_type.leave_validation_type = "no_validation"
+        leave = self._create_hr_leave(leave_type, "3000-01-01", "3000-01-01")
+        self.assertEqual(leave.state, "validate")
 
     @users("test-user")
     @mute_logger("odoo.models.unlink")
