@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_calendar_public_holiday_form" model="ir.ui.view">
+        <field name="name">calendar.public.holiday.form</field>
+        <field name="model">calendar.public.holiday</field>
+        <field
+            name="inherit_id"
+            ref="calendar_public_holiday.view_calendar_public_holiday_form"
+        />
+        <field name="arch" type="xml">
+            <field name="state_ids" position="after">
+                <field
+                    name="city_ids"
+                    widget="many2many_tags"
+                    domain="[('country_id','=',parent.country_id), ('state_id', 'in', state_ids)]"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
