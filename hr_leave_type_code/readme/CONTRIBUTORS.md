@@ -1,0 +1,2 @@
+- [Pytech SRL](https://www.pytech.it):
+  - Alessandro Uffreduzzi \<alessandro.uffreduzzi@pytech.it\>
