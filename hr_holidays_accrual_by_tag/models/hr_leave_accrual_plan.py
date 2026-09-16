@@ -1,7 +1,7 @@
 # Copyright 2026 Simone Rubino - PyTech
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, exceptions, fields, models
 
 
 class HrLeaveAccrualPlan(models.Model):
@@ -21,3 +21,25 @@ class HrLeaveAccrualPlan(models.Model):
         string="Default Time Off Type for generated allocations",
         help="Type of the generated allocations.",
     )
+
+    @api.constrains(
+        "generate_allocation_default_status_id",
+        "time_off_type_id",
+    )
+    def _check_generate_allocation_time_off_type(self):
+        for plan in self:
+            default_time_off_type = plan.generate_allocation_default_status_id
+            time_off_type = plan.time_off_type_id
+            if (
+                default_time_off_type
+                and time_off_type
+                and time_off_type != default_time_off_type
+            ):
+                raise exceptions.ValidationError(
+                    plan.env._(
+                        "The Accrual Plan %(plan)s can only "
+                        "generate Allocations of Type %(type)s",
+                        plan=plan.display_name,
+                        type=time_off_type.display_name,
+                    )
+                )

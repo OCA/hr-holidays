@@ -21,6 +21,9 @@
                         string="Default Time Off Type"
                         invisible="not generate_allocation_category_ids"
                         required="generate_allocation_category_ids"
+                        domain="[
+                            ('id', '=?', time_off_type_id),
+                        ]"
                     />
                 </group>
             </xpath>
