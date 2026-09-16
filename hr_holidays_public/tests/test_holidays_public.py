@@ -344,3 +344,38 @@ class TestHolidaysPublic(TestHolidaysPublicBase):
         self.assertEqual(user.im_status, "leave_offline")
         user.partner_id.invalidate_recordset()
         self.assertEqual(user.partner_id.im_status, "leave_offline")
+
+    @freeze_time("1994-10-14")
+    def test_partner_im_status_multi_user(self):
+        """
+        A partner linked to several active employees (because linked to several users)
+        should be marked in leave as soon as one of the employees is on a public
+        holiday.
+        """
+        # Two users linked to the same partner
+        user1 = new_test_user(self.env, login="test-multi-1")
+        partner = user1.partner_id
+        user2 = new_test_user(self.env, login="test-multi-2", partner_id=partner.id)
+        self.assertEqual(len(partner.user_ids), 2)
+
+        # employee1 is on a public holiday (base.sl, 1994-10-14)
+        addr_sl = self.env["res.partner"].create(
+            {"name": "Addr SL", "country_id": self.env.ref("base.sl").id}
+        )
+        employee1 = self.employee_model.create(
+            {"name": "Emp Multi 1", "user_id": user1.id, "address_id": addr_sl.id}
+        )
+        self.assertTrue(employee1.is_public_holiday)
+        # employee2 has no country → not on a public holiday
+        employee2 = self.employee_model.create(
+            {"name": "Emp Multi 2", "user_id": user2.id}
+        )
+        self.assertFalse(employee2.is_public_holiday)
+
+        # The partner is considered on a public holiday
+        self.assertEqual(partner.im_status, "leave_offline")
+
+        # user1 (on public holiday) is archived
+        # → partner status is computed from user2, not on a public holiday
+        user1.active = False
+        self.assertEqual(partner.im_status, "offline")
