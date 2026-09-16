@@ -19,12 +19,15 @@ class ResourceCalendar(models.Model):
         if not employee_id:
             return intervals
         employee = self.env["hr.employee"].browse(employee_id)
+        # We will use the address of the employee or the partner of the company; the
+        # goal is to check only the public holidays for a specific country.
+        partner = employee.address_id or employee.company_id.partner_id
         list_by_dates = (
             self.env["calendar.public.holiday"]
             .get_holidays_list(
                 start_dt=start_dt.date(),
                 end_dt=end_dt.date(),
-                partner_id=employee.address_id.id,
+                partner_id=partner.id,
             )
             .mapped("date")
         )
