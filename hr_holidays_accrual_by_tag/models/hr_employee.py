@@ -18,20 +18,31 @@ class HrEmployee(models.Model):
 
     def _assign_accrual_plans_by_tags(self):
         today = fields.Date.context_today(self)
-        accrual_plans = self.env["hr.leave.accrual.plan"].search(
-            [
-                ("generate_allocation_category_ids", "!=", False),
-            ]
+        accrual_plans = (
+            self.env["hr.leave.accrual.plan"]
+            .sudo()
+            .search(
+                [
+                    ("generate_allocation_category_ids", "!=", False),
+                ]
+            )
         )
-        existing_assignments = self.env["hr.leave.allocation"].search(
-            [
-                ("employee_id", "in", self.ids),
-                ("accrual_plan_id", "in", accrual_plans.ids),
-                ("state", "=", "validate"),
-                "|",
-                ("date_to", "=", False),
-                ("date_to", ">", today),
-            ],
+        if not accrual_plans:
+            return
+
+        existing_assignments = (
+            self.env["hr.leave.allocation"]
+            .sudo()
+            .search(
+                [
+                    ("employee_id", "in", self.ids),
+                    ("accrual_plan_id", "in", accrual_plans.ids),
+                    ("state", "=", "validate"),
+                    "|",
+                    ("date_to", "=", False),
+                    ("date_to", ">", today),
+                ],
+            )
         )
 
         generate_new_allocations_values = []
@@ -62,8 +73,10 @@ class HrEmployee(models.Model):
                         employee_assignment.date_to = today
 
         if generate_new_allocations_values:
-            generate_new_allocations = self.env[
-                "hr.leave.allocation.generate.multi.wizard"
-            ].create(generate_new_allocations_values)
+            generate_new_allocations = (
+                self.env["hr.leave.allocation.generate.multi.wizard"]
+                .sudo()
+                .create(generate_new_allocations_values)
+            )
             for wizard in generate_new_allocations:
                 wizard.action_generate_allocations()
