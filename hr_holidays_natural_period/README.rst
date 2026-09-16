@@ -75,19 +75,23 @@ Authors
 Contributors
 ------------
 
-- Tecnativa <https://www.tecnativa.com>
+-  Tecnativa <https://www.tecnativa.com>
 
-     - Víctor Martínez
-     - Pedro Baeza
-     - Carlos López
+      -  Víctor Martínez
+      -  Pedro Baeza
+      -  Carlos López
 
-- APSL-Nagarro <https://www.apsl.tech>
+-  APSL-Nagarro <https://www.apsl.tech>
 
-     - Antoni Marroig <amarroig@apsl.net>
+      -  Antoni Marroig <amarroig@apsl.net>
 
-- Grupo Isonor <https://www.grupoisonor.es>
+-  Grupo Isonor <https://www.grupoisonor.es>
 
-     - Alexandre D. Díaz
+      -  Alexandre D. Díaz
+
+-  `PyTech <https://www.pytech.it>`__:
+
+   -  Simone Rubino <simone.rubino@pytech.it>
 
 Maintainers
 -----------
