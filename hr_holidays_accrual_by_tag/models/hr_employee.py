@@ -58,19 +58,21 @@ class HrEmployee(models.Model):
                     )
                 )
                 holiday_status = plan.generate_allocation_default_status_id
-                for category in plan.generate_allocation_category_ids:
-                    if category in employee_tags and not employee_assignment:
-                        generate_new_allocations_values.append(
-                            {
-                                "allocation_mode": "employee",
-                                "allocation_type": "accrual",
-                                "holiday_status_id": holiday_status.id,
-                                "employee_ids": employee.ids,
-                                "accrual_plan_id": plan.id,
-                            }
-                        )
-                    elif category not in employee_tags and employee_assignment:
-                        employee_assignment.date_to = today
+                has_matching_tag = bool(
+                    employee_tags & plan.generate_allocation_category_ids
+                )
+                if has_matching_tag and not employee_assignment:
+                    generate_new_allocations_values.append(
+                        {
+                            "allocation_mode": "employee",
+                            "allocation_type": "accrual",
+                            "holiday_status_id": holiday_status.id,
+                            "employee_ids": employee.ids,
+                            "accrual_plan_id": plan.id,
+                        }
+                    )
+                elif not has_matching_tag and employee_assignment:
+                    employee_assignment.date_to = today
 
         if generate_new_allocations_values:
             generate_new_allocations = (
