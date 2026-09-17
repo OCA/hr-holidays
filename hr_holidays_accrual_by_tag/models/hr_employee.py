@@ -49,6 +49,9 @@ class HrEmployee(models.Model):
         for employee in self:
             employee_tags = employee.category_ids
             for plan in accrual_plans:
+                plan_company = plan.company_id
+                if plan_company and plan_company != employee.company_id:
+                    continue
                 employee_assignment = fields.first(
                     existing_assignments.filtered(
                         lambda assignment, plan=plan, employee=employee: (
@@ -69,6 +72,7 @@ class HrEmployee(models.Model):
                             "holiday_status_id": holiday_status.id,
                             "employee_ids": employee.ids,
                             "accrual_plan_id": plan.id,
+                            "company_id": employee.company_id.id,
                         }
                     )
                 elif not has_matching_tag and employee_assignment:

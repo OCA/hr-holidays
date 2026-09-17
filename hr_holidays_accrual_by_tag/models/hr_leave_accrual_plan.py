@@ -18,6 +18,7 @@ class HrLeaveAccrualPlan(models.Model):
     )
     generate_allocation_default_status_id = fields.Many2one(
         comodel_name="hr.leave.type",
+        check_company=True,
         string="Default Time Off Type for generated allocations",
         help="Type of the generated allocations.",
     )
