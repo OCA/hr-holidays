@@ -1,0 +1,2 @@
+odoo-addon-calendar_public_holiday @ git+https://github.com/oca/calendar.git@refs/pull/233/head#subdirectory=calendar_public_holiday
+odoo-addon-calendar_public_holiday_resource @ git+https://github.com/oca/calendar.git@refs/pull/233/head#subdirectory=calendar_public_holiday_resource
