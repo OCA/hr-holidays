@@ -1,5 +1,6 @@
 # Copyright 2024 Tecnativa - David Vidal
 # Copyright 2025 Tecnativa - Víctor Martínez
+# Copyright 2026 glueckkanja AG
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from datetime import datetime
 
@@ -16,8 +17,12 @@ class HrEmployee(models.Model):
     def _compute_is_public_holiday(self):
         holiday_public = self.env["calendar.public.holiday"]
         for item in self:
+            region = item.sudo().public_holiday_region_id
             item.is_public_holiday = holiday_public.is_public_holiday(
-                fields.Date.context_today(item), partner_id=item.address_id.id
+                fields.Date.context_today(item),
+                partner_id=item.address_id.id,
+                region_ids=region.ids,
+                country_id=region.country_id.id,
             )
 
     def _get_public_holiday_lines(self, date_start, date_end):

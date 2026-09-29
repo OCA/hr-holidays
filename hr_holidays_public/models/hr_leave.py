@@ -1,5 +1,6 @@
 # Copyright 2017-2021 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Brainbean Apps
+# Copyright 2026 glueckkanja AG
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -7,6 +8,21 @@ from odoo import api, fields, models
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
+
+    def _excludes_public_holidays(self):
+        """Whether the public holidays are skipped in this leave's duration.
+
+        Keyed on the standard *Ignore Public Holidays* setting of the leave
+        type, so that the same checkbox rules whether the public holidays
+        are taken out of the attendance intervals here or, with them
+        materialised as global time off, left out by standard itself. A
+        leave without a type yet skips them.
+        """
+        self.ensure_one()
+        return (
+            not self.holiday_status_id
+            or not self.holiday_status_id.include_public_holidays_in_duration
+        )
 
     def _action_validate(self, check_state=True):
         """Inject the needed context for excluding public holidays (if applicable) on
@@ -16,10 +32,7 @@ class HrLeave(models.Model):
         module.
         """
         for leave in self:
-            if (
-                leave.holiday_status_id.exclude_public_holidays
-                or not leave.holiday_status_id
-            ):
+            if leave._excludes_public_holidays():
                 leave = leave.with_context(
                     employee_id=leave.employee_id.id, exclude_public_holidays=True
                 )
@@ -28,8 +41,7 @@ class HrLeave(models.Model):
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         exclude_public_holidays_leaves = self.filtered(
-            lambda x: x.holiday_status_id.exclude_public_holidays
-            or not x.holiday_status_id
+            lambda x: x._excludes_public_holidays()
         )
         res = super(HrLeave, (self - exclude_public_holidays_leaves))._get_durations(
             check_leave_type=check_leave_type, resource_calendar=resource_calendar
@@ -45,6 +57,14 @@ class HrLeave(models.Model):
         return res
 
     def _get_domain_from_get_unusual_days(self, date_from, date_to=None):
+        """Domain of the public holiday lines applying to the employee.
+
+        The region is the public holiday region of the employee, derived
+        from their work location; the country is the one of that region,
+        falling back to the work address of the employee and then to the
+        company. A nationwide line always applies, a regional one only in
+        the employee's region.
+        """
         domain = [("date", ">=", date_from)]
         # Use the employee of the user or the one who has the context
         employee_id = self.env.context.get("employee_id", False)
@@ -55,22 +75,22 @@ class HrLeave(models.Model):
         )
         if date_to:
             domain.append(("date", "<=", date_to))
-        country_id = employee.address_id.country_id.id
+        region = employee.sudo().public_holiday_region_id
+        country_id = region.country_id.id or employee.address_id.country_id.id
         if not country_id:
             country_id = self.env.company.country_id.id or False
         if country_id:
             domain.append(("public_holiday_id.country_id", "in", (False, country_id)))
-        state_id = employee.address_id.state_id.id
-        if not state_id:
-            state_id = self.env.company.state_id.ids or False
-        if state_id:
+        if region:
             domain.extend(
                 [
                     "|",
-                    ("state_ids", "in", state_id),
-                    ("state_ids", "=", False),
+                    ("region_ids", "in", region.ids),
+                    ("region_ids", "=", False),
                 ]
             )
+        else:
+            domain.append(("region_ids", "=", False))
         return domain
 
     @api.model

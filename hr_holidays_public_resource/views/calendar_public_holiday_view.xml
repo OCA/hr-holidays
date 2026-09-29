@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_calendar_public_holiday_form" model="ir.ui.view">
+        <field name="name">calendar.public.holiday.form.employees</field>
+        <field name="model">calendar.public.holiday</field>
+        <field
+            name="inherit_id"
+            ref="calendar_public_holiday.view_calendar_public_holiday_form"
+        />
+        <!-- After calendar_public_holiday_resource, which adds the button box. -->
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_employees"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-users"
+                    help="Employees these public holidays give a day off."
+                >
+                    <field name="employee_count" widget="statinfo" string="Employees" />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

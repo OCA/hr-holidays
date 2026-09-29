@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t
+        t-name="hr_holidays_public_resource.PublicHolidayListView"
+        t-inherit="web.ListView"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//t[@t-component='props.Renderer']" position="before">
+            <div class="alert alert-info mb-2 mx-2" role="status">
+                <i class="fa fa-info-circle me-1" aria-hidden="true" />
+                These public holidays are generated from the public holiday
+                template and kept up to date automatically. Add or change them
+                under
+                <b>Configuration &gt; Public Holidays (OCA)</b>
+                rather than here. Entries without a public holiday were created by
+                hand and are not maintained; the
+                <b>Not From Public Holidays (OCA)</b>
+                filter lists them.
+            </div>
+        </xpath>
+    </t>
+</templates>

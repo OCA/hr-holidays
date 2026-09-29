@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Public holidays are maintained in the public holiday calendar and
+         generated onto the working schedules from there. Creating them here
+         would build a second, competing source of truth, so the standard
+         Public Holidays list is read-only for creation. Existing hand-made
+         entries stay editable so that they can still be cleaned up.
+         The Public Holiday column itself comes from
+         calendar_public_holiday_resource, whose extension of the base list is
+         already part of this primary view. -->
+    <record id="resource_calendar_leaves_tree_no_create" model="ir.ui.view">
+        <field
+            name="name"
+        >resource.calendar.leaves.list.public.holiday.no.create</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field
+            name="inherit_id"
+            ref="hr_holidays.resource_calendar_leaves_tree_inherit"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="js_class">public_holiday_list</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

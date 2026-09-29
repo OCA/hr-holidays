@@ -2,6 +2,7 @@
 # Copyright 2017-2018 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Brainbean Apps
 # Copyright 2020 InitOS Gmbh
+# Copyright 2026 glueckkanja AG
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo.tests import new_test_user
@@ -47,10 +48,17 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
             {"name": "Address 1", "country_id": cls.env.ref("base.uk").id}
         )
         cls.address_2 = cls.env["res.partner"].create(
+            {"name": "Address 2", "country_id": cls.env.ref("base.es").id}
+        )
+        # The region of an employee follows their work location.
+        cls.region_2 = cls.env["calendar.public.holiday.region"].create(
+            {"name": "Ciudad Real"}
+        )
+        cls.work_location_2 = cls.env["hr.work.location"].create(
             {
-                "name": "Address 1",
-                "country_id": cls.env.ref("base.es").id,
-                "state_id": cls.env.ref("base.state_es_cr").id,
+                "name": "Ciudad Real office",
+                "address_id": cls.address_2.id,
+                "public_holiday_region_id": cls.region_2.id,
             }
         )
         cls.employee_1 = cls.env["hr.employee"].create(
@@ -65,6 +73,7 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
                 "name": "Employee 2",
                 "resource_calendar_id": cls.calendar.id,
                 "address_id": cls.address_2.id,
+                "work_location_id": cls.work_location_2.id,
             }
         )
         cls.employee_user = new_test_user(
@@ -93,7 +102,7 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
                         {
                             "name": "Even More Before Christmas",
                             "date": "1946-12-23",
-                            "state_ids": [(6, 0, cls.address_2.state_id.ids)],
+                            "region_ids": [(6, 0, cls.region_2.ids)],
                         },
                     ),
                 ],
@@ -111,12 +120,12 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
         )
 
         cls.holiday_type = cls.HrLeaveType.create(
-            {"name": "Leave Type Test", "exclude_public_holidays": True}
+            {"name": "Leave Type Test", "include_public_holidays_in_duration": False}
         )
         cls.holiday_type_no_excludes = cls.HrLeaveType.create(
             {
                 "name": "Leave Type Test Without excludes",
-                "exclude_public_holidays": False,
+                "include_public_holidays_in_duration": True,
             }
         )
 
@@ -133,7 +142,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
         )
         self.assertEqual(leave_request.number_of_days, 4)
 
-    def _test_number_days_excluding_employee_2(self):
+    def test_number_days_excluding_employee_2(self):
         leave_request = self.HrLeave.new(
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
@@ -190,7 +199,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
         self.assertEqual(leave_request.number_of_days, 2)
 
     def test_number_days_excluding_as_employee_user(self):
-        """Test an employee user excludes holidays using its public work address."""
+        """An employee user excludes holidays by public work address and region."""
         leave_request = self.HrLeave.with_user(self.employee_user).new(
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday

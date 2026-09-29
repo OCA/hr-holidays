@@ -375,22 +375,33 @@ ul.auto-toc {
 !! source digest: sha256:7474c72c8df6609e64e002afa3d62fa9fd2ff9b031258b7f5b61e000851c98b2
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/hr-holidays/tree/19.0/hr_holidays_public"><img alt="OCA/hr-holidays" src="https://img.shields.io/badge/github-OCA%2Fhr--holidays-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/hr-holidays-19-0/hr-holidays-19-0-hr_holidays_public"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/hr-holidays&amp;target_branch=19.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
-<p>The calculation of each leave can exclude rest public holiday, depending
-on the leave type configuration.</p>
-<p>In HR holiday app, public holiday will be displayed as unusual days
-(grey like weekends).</p>
+<p>The calculation of each leave can exclude public holidays, depending on
+the leave type configuration.</p>
+<p>In the Time Off app, public holidays are displayed as unusual days (grey
+like weekends).</p>
+<p>Public holidays follow the <strong>public holiday region</strong> of each employee: a
+region (see <tt class="docutils literal">calendar_public_holiday</tt>) stands for a place of work, and
+every employee is assigned one through the work location of their
+version (contract). A nationwide public holiday applies to everybody of
+the country; one naming regions only to the people assigned to them.
+Installing the module bootstraps the regions from the existing work
+locations.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#configuration" id="toc-entry-1">Configuration</a></li>
 <li><a class="reference internal" href="#usage" id="toc-entry-2">Usage</a></li>
 <li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-3">Known issues / Roadmap</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-4">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-5">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-6">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-7">Contributors</a></li>
-<li><a class="reference internal" href="#other-credits" id="toc-entry-8">Other credits</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-9">Maintainers</a></li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-4">Changelog</a><ul>
+<li><a class="reference internal" href="#section-1" id="toc-entry-5">19.0.2.0.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-6">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-7">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-8">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
+<li><a class="reference internal" href="#other-credits" id="toc-entry-10">Other credits</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-11">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -400,8 +411,29 @@ on the leave type configuration.</p>
 <p>Go to <em>Time Off -&gt; Configuration -&gt; Time Off Types</em> and open a Leave
 Type</p>
 <ul class="simple">
-<li>Check “Exclude Public Holidays” to exclude public holidays.</li>
+<li>Leave the standard “Ignore Public Holidays” unchecked to exclude
+public holidays from the leave duration; check it to count them.</li>
 </ul>
+<p>Go to <em>Employees -&gt; Configuration -&gt; Work Locations</em> and open a work
+location</p>
+<ul class="simple">
+<li>Set its <em>Public Holiday Region</em>. Everybody whose contract names this
+work location follows it; the region shows read-only on the employee,
+on the Payroll tab below the working hours. Regions are maintained
+under <em>Time Off -&gt; Configuration -&gt; Public Holidays (OCA) -&gt; Public
+Holiday Regions</em>.</li>
+</ul>
+<p>Installing the module gives every work location a region of its own,
+named after the work location, owned by its company and carrying the
+country of its address. Public holidays that were scoped to states
+before the upgrade are then assigned to the regions of the work
+locations whose address lies in those states; a public holiday whose
+states no work location lies in is disabled until it is assigned a
+region by hand.</p>
+<p>The country of a region decides which public holiday calendars apply to
+the people assigned to it; the country of the work address only stands
+in for an employee without a region, and the company’s country for one
+without a work address.</p>
 </div>
 <div class="section" id="usage">
 <h2><a class="toc-backref" href="#toc-entry-2">Usage</a></h2>
@@ -416,20 +448,22 @@ Holidays</em>.</li>
 <li>Go to <em>Time Off &gt; Dashboard</em>.</li>
 <li>Select dragging on the calendar the days you want to be on leave, or
 go to the form view for selecting start and end dates.</li>
-<li>Select the proper “Leave Type” that has “Exclude Public Holidays”
-checked.</li>
+<li>Select the proper “Leave Type” that does not have “Ignore Public
+Holidays” checked.</li>
 <li>If no leave type is yet specified, then default configuration is to
 exclude public holidays.</li>
 <li>The number of days will be computed excluding public holidays that
-match the selected employee, including global, country and state
-holidays.</li>
+match the selected employee, including global, country and regional
+holidays – the latter through the public holiday region of the
+employee’s work location.</li>
 <li>If no employee is yet selected, only global holidays will be taken
 into account.</li>
 </ol>
-<p>In calendar views in HR holiday app public will be display (likes other
-unusual days) according the current user employee country/state. If not
-set the there is a fallback to the current company country/state to
-filter public holidays.</p>
+<p>In calendar views of the Time Off app, public holidays are displayed
+(like other unusual days) according to the country of the work address
+of the current user’s employee and the public holiday region of their
+work location. Without a work address there is a fallback to the current
+company’s country to filter public holidays.</p>
 </div>
 <div class="section" id="known-issues-roadmap">
 <h2><a class="toc-backref" href="#toc-entry-3">Known issues / Roadmap</a></h2>
@@ -450,8 +484,26 @@ custom fields.</p>
 will be noted in the description of the event, but it’ll be shown to all
 users. It’d be good to have it show only for users in these regions.</p>
 </div>
+<div class="section" id="changelog">
+<h2><a class="toc-backref" href="#toc-entry-4">Changelog</a></h2>
+<div class="section" id="section-1">
+<h3><a class="toc-backref" href="#toc-entry-5">19.0.2.0.0</a></h3>
+<ul class="simple">
+<li>The <em>Exclude Public Holidays</em> flag of the leave type is replaced by
+the standard <em>Ignore Public Holidays</em> setting, which means the
+opposite. Upgrading carries the value over.</li>
+<li>Public holidays follow the public holiday region of the employee,
+derived from their work location, instead of the state of their work
+address. Upgrading gives every work location a region of its own,
+owned by its company and carrying the country of its address, and
+assigns the public holidays formerly scoped to states to the regions
+of the work locations in those states. The country of the region
+selects the public holiday calendars.</li>
+</ul>
+</div>
+</div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-4">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-6">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/hr-holidays/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -459,19 +511,19 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-5">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-7">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-6">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-8">Authors</a></h3>
 <ul class="simple">
 <li>Michael Telahun Makonnen</li>
 <li>Tecnativa</li>
 <li>Fekete Mihai (Forest and Biomass Services Romania)</li>
 <li>Druidoo</li>
-<li></li>
+<li>glueckkanja AG</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-7">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-9">Contributors</a></h3>
 <ul class="simple">
 <li>Michael Telahun Makonnen &lt;<a class="reference external" href="mailto:mmakonnen&#64;gmail.com">mmakonnen&#64;gmail.com</a>&gt;</li>
 <li>Fekete Mihai &lt;<a class="reference external" href="mailto:feketemihai&#64;gmail.com">feketemihai&#64;gmail.com</a>&gt;</li>
@@ -506,15 +558,16 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <li>Do Anh Duy &lt;<a class="reference external" href="mailto:duyda&#64;trobz.com">duyda&#64;trobz.com</a>&gt;</li>
 </ul>
 </li>
+<li>glueckkanja AG</li>
 </ul>
 </div>
 <div class="section" id="other-credits">
-<h3><a class="toc-backref" href="#toc-entry-8">Other credits</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-10">Other credits</a></h3>
 <p>The migration of this module from 16.0 to 17.0 and then from 17.0 to
 18.0 was financially supported by Camptocamp.</p>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-9">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-11">Maintainers</a></h3>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />

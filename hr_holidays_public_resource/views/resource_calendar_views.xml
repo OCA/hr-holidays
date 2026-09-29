@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="resource_calendar_form_view" model="ir.ui.view">
+        <field name="name">resource.calendar.form public holiday scopes</field>
+        <field name="model">resource.calendar</field>
+        <field
+            name="inherit_id"
+            ref="calendar_public_holiday_resource.resource_calendar_form_view"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='public_holiday_overview_line_ids']/list/field[@name='name']"
+                position="after"
+            >
+                <field
+                    name="region_ids"
+                    widget="many2many_tags"
+                    placeholder="All Regions"
+                    optional="show"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

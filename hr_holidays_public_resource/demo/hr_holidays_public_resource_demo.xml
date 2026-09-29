@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- A day only the people of Building 1 get: generated per person, for
+         everybody whose work location stands for that region (see the demo
+         data of hr_holidays_public). -->
+    <record id="public_holiday_line_building_day" model="calendar.public.holiday.line">
+        <field name="name">Building 1 Anniversary</field>
+        <field name="date" eval="time.strftime('%Y-09-12')" />
+        <field name="variable_date" eval="False" />
+        <field
+            name="public_holiday_id"
+            ref="calendar_public_holiday_resource.public_holiday_demo"
+        />
+        <field
+            name="region_ids"
+            eval="[Command.set([ref('hr_holidays_public.region_building_1')])]"
+        />
+    </record>
+</odoo>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2024 Camptocamp
+     Copyright 2026 glueckkanja AG
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <menuitem
@@ -13,6 +14,12 @@
         parent="menu_hr_public_holidays"
         sequence="10"
         action="calendar_public_holiday.open_calendar_public_holiday_view"
+    />
+    <menuitem
+        id="menu_calendar_public_holiday_region"
+        parent="menu_hr_public_holidays"
+        sequence="20"
+        action="calendar_public_holiday.calendar_public_holiday_region_action"
     />
     <menuitem
         id="menu_create_next_year_public_holidays"

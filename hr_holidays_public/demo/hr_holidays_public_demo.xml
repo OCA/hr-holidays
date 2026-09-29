@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- A public holiday region standing for the hr demo work location.
+         Linking the work location makes everybody working there follow, the
+         way the install bootstrap would; the demo just does it with a
+         readable name before the hook runs. -->
+    <record id="region_building_1" model="calendar.public.holiday.region">
+        <field name="name">Building 1</field>
+        <field name="company_id" ref="base.main_company" />
+    </record>
+    <record id="hr.work_location_1" model="hr.work.location">
+        <field name="public_holiday_region_id" ref="region_building_1" />
+    </record>
+</odoo>
