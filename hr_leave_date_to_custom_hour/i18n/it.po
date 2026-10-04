@@ -1,0 +1,26 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_leave_date_to_custom_hour
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-06 10:01+0000\n"
+"PO-Revision-Date: 2025-05-06 10:01+0000\n"
+"Last-Translator: Simone Rubino\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_leave_date_to_custom_hour
+#: model:ir.model.fields,field_description:hr_leave_date_to_custom_hour.field_hr_leave__custom_hours_request_date_to
+msgid "Request End Date for custom hours"
+msgstr "Data fine richiesta per ore personalizzate"
+
+#. module: hr_leave_date_to_custom_hour
+#: model:ir.model,name:hr_leave_date_to_custom_hour.model_hr_leave
+msgid "Time Off"
+msgstr "Ferie"
