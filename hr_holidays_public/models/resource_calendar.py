@@ -52,6 +52,11 @@ class ResourceCalendar(models.Model):
             lunch=lunch,
         )
         if self.env.context.get("exclude_public_holidays") and resources:
+            # We need to pass the employee_id to the context to be able to filter
+            # the public holidays correctly
+            employees = resources.employee_id
+            if len(employees) == 1:
+                self = self.with_context(employee_id=employees.id)
             return self._attendance_intervals_batch_exclude_public_holidays(
                 start_dt, end_dt, res, resources, tz
             )
