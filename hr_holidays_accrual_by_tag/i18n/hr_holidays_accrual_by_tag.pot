@@ -1,0 +1,68 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_accrual_by_tag
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays_accrual_by_tag
+#: model:ir.model,name:hr_holidays_accrual_by_tag.model_hr_leave_accrual_plan
+msgid "Accrual Plan"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model_terms:ir.ui.view,arch_db:hr_holidays_accrual_by_tag.hr_accrual_plan_view_form
+msgid "Default Time Off Type"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model:ir.model.fields,field_description:hr_holidays_accrual_by_tag.field_hr_leave_accrual_plan__generate_allocation_default_status_id
+msgid "Default Time Off Type for generated allocations"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model:ir.model,name:hr_holidays_accrual_by_tag.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model:ir.model.fields,field_description:hr_holidays_accrual_by_tag.field_hr_leave_accrual_plan__generate_allocation_category_ids
+msgid "Generate allocations by tag"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model_terms:ir.ui.view,arch_db:hr_holidays_accrual_by_tag.hr_accrual_plan_view_form
+msgid "Generate by Tag"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model_terms:ir.ui.view,arch_db:hr_holidays_accrual_by_tag.hr_accrual_plan_view_form
+msgid "Tags"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#. odoo-python
+#: code:addons/hr_holidays_accrual_by_tag/models/hr_leave_accrual_plan.py:0
+msgid ""
+"The Accrual Plan %(plan)s can only generate Allocations of Type %(type)s"
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model:ir.model.fields,help:hr_holidays_accrual_by_tag.field_hr_leave_accrual_plan__generate_allocation_default_status_id
+msgid "Type of the generated allocations."
+msgstr ""
+
+#. module: hr_holidays_accrual_by_tag
+#: model:ir.model.fields,help:hr_holidays_accrual_by_tag.field_hr_leave_accrual_plan__generate_allocation_category_ids
+msgid ""
+"When one of these tags is added to an employee: an accrual allocation for the employee is created.\n"
+"When one of these tags is removed from an employee: the corresponding accrual allocation is ended.\n"
+msgstr ""
