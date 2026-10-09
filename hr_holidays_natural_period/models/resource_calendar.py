@@ -20,29 +20,35 @@ class ResourceCalendar(models.Model):
                 return True
         return False
 
-    def _natural_period_intervals_batch(self, start_dt, end_dt, intervals, resources):
-        # Re-define start_dt and end_dt to ensure that we always iterate through the
-        # last day.
-        start_dt = datetime.combine(start_dt.date(), time.min)
+    def _natural_period_intervals_batch(
+        self, start_dt, end_dt, intervals, resources, tz=None
+    ):
         end_time = (
             time.max
             if self.env.context.get("old_request_unit") == "natural_day"
             else time(12, 0, 0)
         )
-        end_dt = datetime.combine(end_dt.date(), end_time)
         for resource in resources or []:
             interval_resource = intervals[resource.id]
-            tz = timezone(resource.tz)
-            attendances = []
-            if len(interval_resource._items) > 0:
-                attendances = interval_resource._items
-            for day in rrule.rrule(rrule.DAILY, dtstart=start_dt, until=end_dt):
+            resource_tz = tz or timezone(resource.tz or self.tz)
+            # Iterate through the days in the resource timezone: start_dt and end_dt
+            # are usually in UTC, so their date can be the previous/next day (e.g.
+            # an attendance starting at 00:00 in Europe/Madrid starts at 23:00 UTC
+            # of the previous day).
+            start_date = start_dt.astimezone(resource_tz).date()
+            end_date = end_dt.astimezone(resource_tz).date()
+            attendances = list(interval_resource._items)
+            for day in rrule.rrule(
+                rrule.DAILY,
+                dtstart=datetime.combine(start_date, time.min),
+                until=datetime.combine(end_date, time.min),
+            ):
                 exist_interval = self._exist_interval_in_date(attendances, day.date())
                 if not exist_interval:
                     attendances.append(
                         (
-                            datetime.combine(day.date(), time.min).replace(tzinfo=tz),
-                            datetime.combine(day.date(), end_time).replace(tzinfo=tz),
+                            resource_tz.localize(datetime.combine(day, time.min)),
+                            resource_tz.localize(datetime.combine(day, end_time)),
                             self.env["resource.calendar.attendance"],
                         )
                     )
@@ -57,6 +63,6 @@ class ResourceCalendar(models.Model):
         )
         if self.env.context.get("natural_period"):
             return self._natural_period_intervals_batch(
-                start_dt, end_dt, res, resources
+                start_dt, end_dt, res, resources, tz=tz
             )
         return res
