@@ -151,6 +151,51 @@ class TestHrLeave(BaseCommon):
         self.assertEqual(leave.number_of_days_display, 0.5)
 
     @users("test-user")
+    def test_hr_leave_natural_day_night_shift(self):
+        """Attendances starting at 00:00 local time start the previous day in UTC.
+        That previous day must not be counted as a natural day of the leave."""
+        self.leave_type.requires_allocation = "no"
+        attendances = [
+            ("2", "afternoon", 21, 23.99),
+            ("3", "morning", 0, 7),
+            ("3", "afternoon", 21, 23.99),
+            ("4", "morning", 0, 7),
+        ]
+        calendar = (
+            self.env["resource.calendar"]
+            .sudo()
+            .create(
+                {
+                    "name": "Test night calendar",
+                    "tz": "Europe/Madrid",
+                    "attendance_ids": [
+                        (
+                            0,
+                            0,
+                            {
+                                "name": index,
+                                "dayofweek": att[0],
+                                "day_period": att[1],
+                                "hour_from": att[2],
+                                "hour_to": att[3],
+                            },
+                        )
+                        for index, att in enumerate(attendances)
+                    ],
+                }
+            )
+        )
+        self.employee.write(
+            {"resource_calendar_id": calendar.id, "tz": "Europe/Madrid"}
+        )
+        # 2023-01-05 is a Thursday
+        leave = self._create_hr_leave(self.leave_type, "2023-01-05", "2023-01-05")
+        self.assertEqual(leave.number_of_days, 1.0)
+        # Thursday to Saturday, the Saturday without attendances
+        leave = self._create_hr_leave(self.leave_type, "2023-01-12", "2023-01-14")
+        self.assertEqual(leave.number_of_days, 3.0)
+
+    @users("test-user")
     def test_hr_leave_natural_day_no_manager(self):
         """An employee that is not a manager
         can create a natural day leave
