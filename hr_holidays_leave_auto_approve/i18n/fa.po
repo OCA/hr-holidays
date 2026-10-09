@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_holidays_leave_auto_approve
+#
+# Translators:
+# Mehdi Zarrinkolah <mehdi1811@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-07 02:58+0000\n"
+"PO-Revision-Date: 2018-07-22 11:30+0000\n"
+"Last-Translator: derKonig <fshahy@gmail.com>\n"
+"Language-Team: Persian (https://www.transifex.com/oca/teams/23907/fa/)\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.0.1\n"
+
+#. module: hr_holidays_leave_auto_approve
+#: model:ir.model.fields,field_description:hr_holidays_leave_auto_approve.field_hr_leave_type__auto_approve_policy
+msgid "Auto Approve Policy"
+msgstr ""
+
+#. module: hr_holidays_leave_auto_approve
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__all
+#, fuzzy
+msgid "Auto Validated by Everyone"
+msgstr "تایید خودکار"
+
+#. module: hr_holidays_leave_auto_approve
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__hr
+#, fuzzy
+msgid "Auto Validated by HR"
+msgstr "تایید خودکار"
+
+#. module: hr_holidays_leave_auto_approve
+#: model:ir.model.fields.selection,name:hr_holidays_leave_auto_approve.selection__hr_leave_type__auto_approve_policy__no
+#, fuzzy
+msgid "No auto Validation"
+msgstr "تایید خودکار"
+
+#. module: hr_holidays_leave_auto_approve
+#: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_leave_auto_approve
+#: model:ir.model,name:hr_holidays_leave_auto_approve.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#~ msgid "Leave"
+#~ msgstr "خروج"
+
+#~ msgid "Leave Type"
+#~ msgstr "نوع خروج"
+
+#, fuzzy
+#~ msgid ""
+#~ "If True, leaves belonging to this leave type will be automatically "
+#~ "validated"
+#~ msgstr ""
+#~ "اگر صحیح است ، برگ های متعلق به این الگوی خروج به صورت خودکار تایید "
+#~ "خواهند شد"
