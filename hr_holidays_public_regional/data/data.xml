@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Copyright 2025 Miquel Alzanillas, Antoni Marroig  (APSL-Nagarro) <malzanillas@apsl.net> <amarroig@apsl.net>
+       License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+    <record id="event_type_holiday_regional" model="calendar.event.type">
+        <field name="name">Regional Holidays</field>
+    </record>
+</odoo>
