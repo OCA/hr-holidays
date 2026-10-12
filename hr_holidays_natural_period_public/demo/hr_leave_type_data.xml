@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record
+        id="hr_holidays_natural_period.hr_leave_type_natural_day_test"
+        model="hr.leave.type"
+    >
+        <field name="exclude_public_holidays">False</field>
+    </record>
+</odoo>
