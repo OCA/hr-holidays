@@ -26,6 +26,7 @@ addon | version | maintainers | summary
 [hr_holidays_natural_period](hr_holidays_natural_period/) | 19.0.1.0.2 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | Apply natural days in holidays
 [hr_holidays_public](hr_holidays_public/) | 19.0.1.0.3 |  | Manage Public Holidays
 [hr_holidays_settings](hr_holidays_settings/) | 19.0.1.0.0 |  | Enables Settings Form for HR Holidays.
+[resource_calendar_flexible_exclude_weekend](resource_calendar_flexible_exclude_weekend/) | 19.0.1.0.0 |  | Resource Calendar Flexible Hours Exclude Weekend
 
 [//]: # (end addons)
 
