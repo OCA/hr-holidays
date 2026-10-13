@@ -109,6 +109,29 @@ class TestResourceCalendar(TransactionCase):
         self.assertEqual(len(result_per_resource_id), 1)
         self.assertEqual(list(result_per_resource_id[False]), [])
 
+    def test_flexible_calendar_without_weekend_end_on_monday(self):
+        calendar = self.calendar_flex_without_weekend
+        calendar.tz = self.tz_FR.zone
+        # these are typical values you receive when creating a leave request
+        # from the calendar view except that they are in UTC, but this does not
+        # change the values in the call to _attendance_intervals_batch
+        start_dt = self.tz_FR.localize(datetime(2026, 10, 15, 8, 0))
+        end_dt = self.tz_FR.localize(datetime(2026, 10, 19, 16, 0))
+        result_per_resource_id = calendar._attendance_intervals_batch(start_dt, end_dt)
+        intervals = result_per_resource_id[False]
+
+        self.assertEqual(
+            [
+                start.astimezone(self.tz_FR).date().isoformat()
+                for start, _end, _ in intervals
+            ],
+            ["2026-10-15", "2026-10-16", "2026-10-19"],
+        )
+        actual_duration = sum(
+            (end - start).total_seconds() for start, end, _ in intervals
+        )
+        self.assertEqual(actual_duration / 3600, 24)
+
     def test_flexible_calendar_without_weekend_friday_sunday(self):
         calendar = self.calendar_flex_without_weekend
         start_dt = datetime(2025, 10, 31, 0, 0, 0).astimezone(self.UTC)

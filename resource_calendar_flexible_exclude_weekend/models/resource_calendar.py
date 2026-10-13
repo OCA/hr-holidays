@@ -140,7 +140,7 @@ class ResourceCalendar(models.Model):
                                         end,
                                         attendance,
                                     )
-                    if skipping_end_dt.date() >= end_dt.date():
+                    if skipping_end_dt >= end_dt:
                         # skipping_end_dt is always midnight-aligned in the
                         # resource's own tz, while end_dt (the caller's
                         # requested boundary) may not be -- it can land a
