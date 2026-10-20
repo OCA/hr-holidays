@@ -1,0 +1,2 @@
+- [APSL-Nagarro](https://www.apsl.tech):
+  - Antoni Marroig \<<antoni.marroig@nagarro.com>\>

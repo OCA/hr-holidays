@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Antoni Marroig (APSL-Nagarro) <antoni.marroig@nagarro.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_hr_holidays_filter" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
+        <field name="arch" type="xml">
+            <filter name="my_team" position="after">
+                <filter
+                    string="My Team (Hierarchy)"
+                    name="manager_hierarchy"
+                    domain="[('in_manager_hierarchy', '=', True)]"
+                    help="Time off of all the people under you in the hierarchy"
+                />
+            </filter>
+        </field>
+    </record>
+    <record id="hr_leave_view_tree" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="can_approve" column_invisible="True" />
+            </field>
+            <button name="action_approve" position="attributes">
+                <attribute
+                    name="invisible"
+                >not can_approve or state != 'confirm'</attribute>
+            </button>
+            <button name="action_validate" position="attributes">
+                <attribute name="groups">hr_holidays.group_hr_holidays_user</attribute>
+            </button>
+            <button name="action_refuse" position="attributes">
+                <attribute
+                    name="invisible"
+                >not can_approve or state not in ('confirm', 'validate1')</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_kanban" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_kanban" />
+        <field name="arch" type="xml">
+            <button name="action_approve" position="attributes">
+                <attribute
+                    name="t-if"
+                >record.can_approve.raw_value and record.state.raw_value === 'confirm'</attribute>
+            </button>
+            <button name="action_validate" position="attributes">
+                <attribute name="groups">hr_holidays.group_hr_holidays_user</attribute>
+            </button>
+            <button name="action_refuse" position="attributes">
+                <attribute
+                    name="t-if"
+                >record.can_approve.raw_value and ['confirm', 'validate1'].includes(record.state.raw_value)</attribute>
+            </button>
+        </field>
+    </record>
+</odoo>
