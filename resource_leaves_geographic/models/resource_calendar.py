@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import fields, models
+from odoo.osv import expression
 
 from odoo.addons.resource.models.utils import Intervals
 
@@ -42,6 +43,8 @@ class ResourceCalendar(models.Model):
     def _leave_intervals_batch(
         self, start_dt, end_dt, resources=None, domain=None, tz=None, any_calendar=False
     ):
+        if domain is None:
+            domain = [("time_type", "=", "leave")]
         # All interval batches (with/out State)
         res = super()._leave_intervals_batch(
             start_dt,
@@ -52,21 +55,33 @@ class ResourceCalendar(models.Model):
             any_calendar=any_calendar,
         )
         # Overwrite the result if resources are specified, but only with
-        # the global leaves (skipping the local leaves) using the domain
+        # the global leaves (skipping the local leaves) using the domain.
+        # Keep the received domain, as callers rely on it (e.g. to exclude
+        # the leave being computed).
+        global_domain = expression.AND([domain, [("state_ids", "=", False)]])
         for resource in resources or []:
             res.update(
                 super()._leave_intervals_batch(
                     start_dt,
                     end_dt,
                     resources=resource,
-                    domain=[("state_ids", "=", False)],  # Force global leaves
+                    domain=global_domain,
                     tz=tz,
                     any_calendar=any_calendar,
                 )
             )
         # Get Local interval batches by State
         state_interval_map = self._get_general_time_off_intervals_by_state(
-            domain=domain, any_calendar=any_calendar
+            domain=expression.AND(
+                [
+                    domain,
+                    [
+                        ("date_from", "<=", fields.Datetime.to_string(end_dt)),
+                        ("date_to", ">=", fields.Datetime.to_string(start_dt)),
+                    ],
+                ]
+            ),
+            any_calendar=any_calendar,
         )
         # Post-process generated intervals
         for resource_id in res.keys():

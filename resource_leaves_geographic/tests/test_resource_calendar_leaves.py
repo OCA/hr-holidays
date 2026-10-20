@@ -75,6 +75,52 @@ class TestResourceCalendarLeaves(BaseCommon):
         # Leave takes in consideration State
         self.assertEqual(leave.number_of_days, 1.0)
 
+    def test_validated_leave_new_global_leave(self):
+        leave = self._create_leave()
+        self.assertEqual(leave.number_of_days, 2.0)
+        # Creating a public holiday re-evaluates overlapping validated leaves
+        self.env["resource.calendar.leaves"].create(
+            {
+                "name": "New Global Leave",
+                "date_from": "2025-06-30 00:00:00",
+                "date_to": "2025-06-30 23:59:59",
+                "calendar_id": False,
+            }
+        )
+        self.assertEqual(leave.state, "validate")
+        self.assertEqual(leave.number_of_days, 1.0)
+
+    def test_validated_leave_new_local_leave(self):
+        self.partner.state_id = self.trcl_State.id
+        leave = self._create_leave()
+        self.assertEqual(leave.number_of_days, 1.0)
+        other_state = self.trcl_State.copy({"name": "TRCL Other", "code": "TRCLO"})
+        # A local holiday from another State must not affect the leave
+        self.env["resource.calendar.leaves"].create(
+            {
+                "name": "New Local Leave",
+                "date_from": "2025-06-30 00:00:00",
+                "date_to": "2025-06-30 23:59:59",
+                "state_ids": [(6, 0, other_state.ids)],
+                "calendar_id": False,
+            }
+        )
+        self.assertEqual(leave.state, "validate")
+        self.assertEqual(leave.number_of_days, 1.0)
+
+    def test_validated_leave_move_global_leave(self):
+        leave = self._create_leave()
+        self.assertEqual(leave.number_of_days, 2.0)
+        # Moving the public holiday out of the leave gives the day back
+        self.global_leave.write(
+            {
+                "date_from": "2025-07-03 00:00:00",
+                "date_to": "2025-07-03 23:59:59",
+            }
+        )
+        self.assertEqual(leave.state, "validate")
+        self.assertEqual(leave.number_of_days, 3.0)
+
     def test_unusual_days_without_state(self):
         unusual_days = self.employee._get_unusual_days(
             "2025-07-01", date_to="2025-07-02"
