@@ -4,6 +4,12 @@
 # Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from datetime import date, datetime
+from unittest.mock import patch
+
+from pytz import utc
+
+from odoo import Command
 from odoo.tests import new_test_user
 
 from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
@@ -201,3 +207,52 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
         )
 
         self.assertEqual(leave_request.number_of_days, 2)
+
+    def test_exclude_public_holidays_employee_being_created(self):
+        """Public holidays are excluded for an employee being created.
+
+        While hr.employee._create creates the one2many lines of an employee,
+        that employee has no row yet in the hr.employee.public SQL view.
+        """
+        HrEmployee = type(self.env["hr.employee"])
+        create = HrEmployee.create
+        work_dates = []
+
+        def create_with_manager_intervals(model, vals_list):
+            vals = vals_list[0] if isinstance(vals_list, list) else vals_list
+            manager = model.browse(vals.get("parent_id"))
+            if manager:
+                intervals = self.calendar.with_context(
+                    exclude_public_holidays=True, employee_id=manager.id
+                )._attendance_intervals_batch(
+                    datetime(1946, 12, 23, tzinfo=utc),  # Monday
+                    datetime(1946, 12, 29, 23, 59, 59, tzinfo=utc),  # Sunday
+                    resources=manager.resource_id,
+                )
+                work_dates.extend(
+                    start.date()
+                    for start, _stop, _attendance in intervals[manager.resource_id.id]
+                )
+            return create(model, vals_list)
+
+        with patch.object(HrEmployee, "create", create_with_manager_intervals):
+            self.env["hr.employee"].create(
+                {
+                    "name": "Manager",
+                    "resource_calendar_id": self.calendar.id,
+                    "address_id": self.address_2.id,
+                    "child_ids": [
+                        Command.create(
+                            {
+                                "name": "Subordinate",
+                                "resource_calendar_id": self.calendar.id,
+                            }
+                        )
+                    ],
+                }
+            )
+        # 1946-12-23 (state), 1946-12-24 (country), 1946-12-25 (global) excluded
+        self.assertEqual(
+            sorted(set(work_dates)),
+            [date(1946, 12, 26), date(1946, 12, 27)],
+        )

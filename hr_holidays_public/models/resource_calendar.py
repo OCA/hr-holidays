@@ -18,7 +18,12 @@ class ResourceCalendar(models.Model):
         employee_id = self.env.context.get("employee_id", False)
         if not employee_id:
             return intervals
-        employee = self.env["hr.employee.public"].browse(employee_id)
+        employee = self.env["hr.employee.public"].browse(employee_id).exists()
+        if not employee:
+            # hr.employee.public is a SQL view joining hr_version on
+            # current_version_id: an employee being created has no row there
+            # yet. Its address is only used to get the public holidays.
+            employee = self.env["hr.employee"].sudo().browse(employee_id)
         # We will use the address of the employee or the partner of the company; the
         # goal is to check only the public holidays for a specific country.
         partner = employee.address_id or employee.company_id.partner_id
