@@ -58,9 +58,18 @@ class HrEmployee(models.Model):
         im_status_mapped = {
             "online": "leave_online",
             "away": "leave_away",
+            "busy": "leave_busy",
             "offline": "leave_offline",
         }
-        return im_status_mapped[key]
+        if key in im_status_mapped:
+            return im_status_mapped[key]
+        if key.endswith("_online"):
+            return "leave_online"
+        if key.endswith("_away"):
+            return "leave_away"
+        if key.endswith("_busy"):
+            return "leave_busy"
+        return "leave_offline"
 
     def _compute_leave_status(self):
         res = super()._compute_leave_status()
