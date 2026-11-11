@@ -42,7 +42,33 @@ class HrLeave(models.Model):
                 check_leave_type=check_leave_type, resource_calendar=resource_calendar
             )
             res[leave.id] = _res[leave.id]
+        self._fix_flexible_single_day_public_holidays(exclude_public_holidays_leaves, res)
         return res
+
+    def _fix_flexible_single_day_public_holidays(self, leaves, res):
+        """``hr.leave._get_durations``'s "flexible employee + single-day
+        request" special case only ever looks for public holidays in
+        ``resource.calendar.leaves``, so it never sees the holidays this
+        module stores in ``calendar.public.holiday.line`` instead. Without
+        this, a flexible employee requesting a single day that falls on a
+        public holiday gets charged a full day (and a linked timesheet)
+        instead of 0, unlike a non-flexible employee or a multi-day request
+        landing on the same holiday.
+        """
+        for leave in leaves:
+            if not (
+                leave.employee_id.sudo().is_flexible
+                and leave.request_date_from
+                and leave.request_date_from == leave.request_date_to
+            ):
+                continue
+            domain = leave.with_context(
+                employee_id=leave.employee_id.id
+            )._get_domain_from_get_unusual_days(
+                leave.request_date_from, leave.request_date_from
+            )
+            if self.env["calendar.public.holiday.line"].search_count(domain):
+                res[leave.id] = (0, 0)
 
     def _get_domain_from_get_unusual_days(self, date_from, date_to=None):
         domain = [("date", ">=", date_from)]
