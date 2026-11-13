@@ -153,6 +153,16 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         )
 
     @freeze_time("2024-12-25")
+    def test_user_im_status_do_not_disturb(self):
+        """An employee set to "Do Not Disturb" on a public holiday"""
+        user = new_test_user(self.env, login="test-user-busy")
+        self.employee.user_id = user
+        self.env["mail.presence"].create({"user_id": user.id, "status": "online"})
+        user.manual_im_status = "busy"
+        self.assertEqual(user.im_status, "leave_busy")
+        self.assertEqual(user.partner_id.im_status, "leave_busy")
+
+    @freeze_time("2024-12-25")
     def test_user_im_status(self):
         self.assertTrue(self.employee.is_public_holiday)
         self.assertEqual(self.employee.hr_icon_display, "presence_holiday_absent")
