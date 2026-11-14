@@ -9,14 +9,13 @@ class ResPartner(models.Model):
 
     def _compute_im_status(self):
         res = super()._compute_im_status()
+        # A partner can be shared by several users, hence several employees
         for item in self.filtered(
-            lambda x: x.user_ids.employee_id.is_public_holiday
+            lambda x: any(x.user_ids.employee_id.mapped("is_public_holiday"))
             and x.im_status != "im_partner"
             and "leave_" not in x.im_status
         ):
-            item.im_status = (
-                item.user_ids.employee_id._get_im_status_hr_holidays_public(
-                    item.im_status
-                )
+            item.im_status = self.env["hr.employee"]._get_im_status_hr_holidays_public(
+                item.im_status
             )
         return res

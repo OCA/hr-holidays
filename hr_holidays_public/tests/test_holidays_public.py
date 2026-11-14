@@ -156,3 +156,22 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertEqual(user.im_status, "leave_offline")
         user.partner_id.invalidate_recordset()
         self.assertEqual(user.partner_id.im_status, "leave_offline")
+
+    @freeze_time("2024-12-25")
+    def test_partner_im_status_shared_by_users(self):
+        """A partner shared by two users of employees on public holiday"""
+        user = new_test_user(self.env, login="test-user-shared-1")
+        user_2 = new_test_user(
+            self.env, login="test-user-shared-2", partner_id=user.partner_id.id
+        )
+        self.employee.user_id = user
+        self.employee_model.create(
+            {
+                "name": "Employee 2",
+                "address_id": self.res_partner.id,
+                "user_id": user_2.id,
+            }
+        )
+        partner = user.partner_id
+        partner.invalidate_recordset()
+        self.assertEqual(partner.im_status, "leave_offline")
