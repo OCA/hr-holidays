@@ -58,6 +58,7 @@ class HrEmployee(models.Model):
         im_status_mapped = {
             "online": "leave_online",
             "away": "leave_away",
+            "busy": "leave_busy",
             "offline": "leave_offline",
         }
         return im_status_mapped[key]
