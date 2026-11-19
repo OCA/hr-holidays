@@ -10,7 +10,9 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     is_public_holiday = fields.Boolean(
-        string="Public Holiday Today", compute="_compute_is_public_holiday"
+        string="Public Holiday Today",
+        compute="_compute_is_public_holiday",
+        groups="hr.group_hr_user",
     )
 
     def _compute_is_public_holiday(self):
