@@ -1,51 +1,29 @@
 # Copyright 2024 Moduon Team S.L.
+# Copyright 2026 Tecnativa - Víctor Martínez
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
-
-from datetime import datetime, time
-
-from dateutil.rrule import DAILY, rrule
-from pytz import UTC
-
-from odoo import fields, models
+from odoo import models
 
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    def _get_unusual_days(self, date_from, date_to=None):
-        """Get the geographical unusual days belongs to employees"""
-        res = super()._get_unusual_days(date_from, date_to=date_to)
-
-        def dt_combiner(dt, tx):
-            """Return a datetime object with the date converted to datetime
-
-            :param dt: date string
-            :param tx: time.min or time.max
-            """
-            return datetime.combine(fields.Date.from_string(dt), tx).replace(tzinfo=UTC)
-
-        calendars = (
-            self.mapped("resource_calendar_id") or self.env.company.resource_calendar_id
-        )
-        state_interval_map = calendars._get_general_time_off_intervals_by_state(
-            domain=[
-                ("state_ids", "in", self.mapped("address_id.state_id").ids),
-                ("date_from", "<=", dt_combiner(date_to, time.max)),
-                ("date_to", ">=", dt_combiner(date_from, time.min)),
-            ],
-            any_calendar=False,
-        )
-        local_leave_days = set()
-        for interval_map in state_interval_map.values():
-            for start, end, _rcl in interval_map:
-                local_leave_days.update(
-                    {
-                        fields.Date.to_string(day.date())
-                        for day in rrule(DAILY, start.date(), until=end.date())
-                    }
+    def _get_public_holidays(self, date_start, date_end):
+        # Filter the records by country and state; there is no method in super() to
+        # generate the domain and extend it
+        res = super()._get_public_holidays(date_start, date_end)
+        if self.address_id:
+            res = res.filtered(
+                lambda x: (
+                    x.country_id == self.address_id.country_id
+                    and (not x.state_ids or self.address_id.state_id in x.state_ids)
                 )
-
-        for day in res.keys():
-            if day in local_leave_days:
-                res[day] = True
+            )
         return res
+
+    def _get_unusual_days(self, date_from, date_to=None):
+        # We include, for context, the address that we will use as a reference later
+        # in _leave_intervals_batch()
+        _self = self.with_context(employee_address_id=self.address_id.id)
+        return super(HrEmployee, _self)._get_unusual_days(
+            date_from=date_from, date_to=date_to
+        )

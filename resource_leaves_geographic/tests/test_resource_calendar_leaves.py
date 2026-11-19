@@ -1,26 +1,39 @@
 # Copyright 2024 Moduon Team S.L.
+# Copyright 2026 Tecnativa - Víctor Martínez
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
 
-from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT, BaseCommon
+from odoo import Command
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestResourceCalendarLeaves(BaseCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
+        country = cls.env.company.country_id
         cls.trcl_State = cls.env["res.country.state"].create(
             {
                 "name": "TRCL State",
                 "code": "TRCL",
-                "country_id": cls.env.user.company_id.country_id.id,
+                "country_id": country.id,
             }
         )
-        cls.partner = cls.env["res.partner"].create({"name": "TRCL Partner"})
-        cls.employee = cls.env["hr.employee"].create(
-            {"name": "TRCL Employee 1", "address_id": cls.partner.id}
+        cls.partner = cls.env["res.partner"].create(
+            {
+                "name": "TRCL Partner",
+                "country_id": country.id,
+            }
         )
-
+        cls.employee = cls.env["hr.employee"].create(
+            {
+                "name": "TRCL Employee 1",
+                "address_id": cls.partner.id,
+                "contract_date_start": "2025-07-01",
+            }
+        )
         cls.global_leave = cls.env["resource.calendar.leaves"].create(
             {
                 "name": "Global Leave",
@@ -35,15 +48,18 @@ class TestResourceCalendarLeaves(BaseCommon):
                 "name": "Local Leave",
                 "date_from": "2025-07-02 00:00:00",
                 "date_to": "2025-07-02 23:59:59",
-                "state_ids": [(6, 0, cls.trcl_State.ids)],
+                "state_ids": [Command.set(cls.trcl_State.ids)],
                 "calendar_id": False,
             }
         )
-        cls.timeoff_type = cls.env["hr.leave.type"].create(
+        cls.timeoff_type = cls.env["hr.work.entry.type"].create(
             {
                 "name": "TRCL Time Off",
+                "code": "TRCL",
+                "count_as": "absence",
+                "unit_of_measure": "day",
                 "leave_validation_type": "no_validation",
-                "requires_allocation": "no",
+                "requires_allocation": False,
             }
         )
 
@@ -54,7 +70,7 @@ class TestResourceCalendarLeaves(BaseCommon):
                 "date_from": "2025-06-30 00:00:00",
                 "date_to": "2025-07-02 23:59:59",
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.timeoff_type.id,
+                "work_entry_type_id": self.timeoff_type.id,
                 "request_date_from": "2025-06-30",
                 "request_date_to": "2025-07-02",
             }
@@ -70,7 +86,7 @@ class TestResourceCalendarLeaves(BaseCommon):
         self.assertEqual(leave.number_of_days, 2.0)
 
     def test_leave_partner_with_state(self):
-        self.partner.state_id = self.trcl_State.id
+        self.partner.state_id = self.trcl_State
         leave = self._create_leave()
         # Leave takes in consideration State
         self.assertEqual(leave.number_of_days, 1.0)
@@ -91,7 +107,7 @@ class TestResourceCalendarLeaves(BaseCommon):
         self.assertEqual(leave.number_of_days, 1.0)
 
     def test_validated_leave_new_local_leave(self):
-        self.partner.state_id = self.trcl_State.id
+        self.partner.state_id = self.trcl_State
         leave = self._create_leave()
         self.assertEqual(leave.number_of_days, 1.0)
         other_state = self.trcl_State.copy({"name": "TRCL Other", "code": "TRCLO"})
@@ -123,7 +139,7 @@ class TestResourceCalendarLeaves(BaseCommon):
 
     def test_unusual_days_without_state(self):
         unusual_days = self.employee._get_unusual_days(
-            "2025-07-01", date_to="2025-07-02"
+            "2025-07-01 00:00:00", date_to="2025-07-02 23:59:59"
         )
         self.assertTrue(unusual_days["2025-07-01"])
         self.assertFalse(unusual_days["2025-07-02"])
@@ -131,7 +147,7 @@ class TestResourceCalendarLeaves(BaseCommon):
     def test_unusual_days_with_state(self):
         self.partner.state_id = self.trcl_State.id
         unusual_days = self.employee._get_unusual_days(
-            "2025-07-01", date_to="2025-07-02"
+            "2025-07-01 00:00:00", date_to="2025-07-02 23:59:59"
         )
         self.assertTrue(unusual_days["2025-07-01"])
         self.assertTrue(unusual_days["2025-07-02"])
