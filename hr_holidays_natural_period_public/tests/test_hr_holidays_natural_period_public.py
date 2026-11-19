@@ -16,11 +16,15 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
         cls.partner_model = cls.env["res.partner"]
         cls.employee_model = cls.env["hr.employee"]
         cls.public_holiday_model = cls.env["calendar.public.holiday"]
-        cls.leave_type = cls.env.ref(
-            "hr_holidays_natural_period.hr_leave_type_natural_day_test"
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Natural Day Test Leave Type",
+                "request_unit": "natural_day",
+                "requires_allocation": True,
+                "employee_requests": True,
+                "exclude_public_holidays": False,
+            }
         )
-        cls.leave_type_day = cls.env.ref("hr_holidays.holiday_status_cl")
-        cls.leave_type_day.employee_requests = "yes"
         calendar = cls.env.ref("resource.resource_calendar_std")
         calendar = calendar.copy({"name": "Test calendar"})
         calendar.switch_calendar_type()
@@ -37,6 +41,7 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
         partner = cls.partner_model.create(
             {
                 "name": "Test employee",
+                "type": "other",
                 "country_id": cls.env.ref("base.es").id,
             }
         )
@@ -63,7 +68,6 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
                 default_date_to=f"{fields.Date.today().year}-12-31",
             )
         )
-        leave_allocation_form.name = "TEST"
         leave_allocation_form.holiday_status_id = leave_type
         leave_allocation_form.number_of_days_display = days
         return leave_allocation_form.save()
@@ -85,7 +89,7 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
     @users("test-user")
     def test_hr_leave_natural_day(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 10)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo()._action_validate()
         res_leave_type = (
             self.env["hr.leave.type"]
             .with_company(self.env.company)
@@ -103,7 +107,7 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
     @users("test-user")
     def test_hr_leave_natural_day_public_holiday_01(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 10)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo()._action_validate()
         self._create_public_holiday_line("P1", "2023-01-09", self.public_holiday)
         res_leave_type = (
             self.env["hr.leave.type"]
@@ -123,7 +127,7 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
     @users("test-user")
     def test_hr_leave_natural_day_public_holiday_02(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 10)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo()._action_validate()
         self._create_public_holiday_line("P1", "2023-01-09", self.public_holiday)
         self.leave_type.write({"exclude_public_holidays": True})
         res_leave_type = (
@@ -144,7 +148,7 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
     @users("test-user")
     def test_hr_leave_natural_day_public_holiday_weekend_01(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 10)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo()._action_validate()
         self._create_public_holiday_line("P1", "2023-01-14", self.public_holiday)
         res_leave_type = (
             self.env["hr.leave.type"]
@@ -164,7 +168,7 @@ class TestHrHolidaysNaturalPeriodPublic(BaseCommon):
     @users("test-user")
     def test_hr_leave_natural_day_public_holiday_weekend_02(self):
         leave_allocation = self._create_leave_allocation(self.leave_type, 10)
-        leave_allocation.sudo().action_validate()
+        leave_allocation.sudo()._action_validate()
         self._create_public_holiday_line("P1", "2023-01-14", self.public_holiday)
         self.leave_type.write({"exclude_public_holidays": True})
         res_leave_type = (
