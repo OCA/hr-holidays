@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+    <record id="load_public_holiday_wizard_view_form" model="ir.ui.view">
+        <field name="name">load.public.holiday.wizard.form</field>
+        <field name="model">load.public.holiday.wizard</field>
+        <field name="inherit_id" ref="hr_holidays.load_public_holiday_wizard_view_form" />
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="create">1</attribute>
+            </list>
+            <field name="company_id" position="after">
+                <field name="country_id" options="{'no_create': True}" invisible="not company_id" />
+                <field
+                    name="state_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                    readonly="not country_id"
+                    optional="hide"
+                />
+            </field>
+        </field>
+    </record>
+</data>
