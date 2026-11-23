@@ -31,27 +31,23 @@ class HrEmployee(models.Model):
     def get_public_holidays_data(self, date_start, date_end):
         # Include public holidays in the calendar summary
         res = super().get_public_holidays_data(date_start=date_start, date_end=date_end)
-        self = self._get_contextual_employee()
-        public_holidays = self._get_public_holiday_lines(date_start, date_end).sorted(
-            "date"
-        )
-        res += list(
-            map(
-                lambda bh: {
-                    "id": -bh.id,
-                    "colorIndex": 0,
-                    "end": (datetime.combine(bh.date, datetime.max.time())).isoformat(),
-                    "endType": "datetime",
-                    "isAllDay": True,
-                    "start": (
-                        datetime.combine(bh.date, datetime.min.time())
-                    ).isoformat(),
-                    "startType": "datetime",
-                    "title": bh.name,
-                },
-                public_holidays,
-            )
-        )
+        employee = self._get_contextual_employee()
+        public_holidays = employee._get_public_holiday_lines(
+            date_start, date_end
+        ).sorted("date")
+        res += [
+            {
+                "id": -bh.id,
+                "colorIndex": 0,
+                "end": (datetime.combine(bh.date, datetime.max.time())).isoformat(),
+                "endType": "datetime",
+                "isAllDay": True,
+                "start": (datetime.combine(bh.date, datetime.min.time())).isoformat(),
+                "startType": "datetime",
+                "title": bh.name,
+            }
+            for bh in public_holidays
+        ]
         return sorted(res, key=lambda x: x["start"])
 
     def _get_im_status_hr_holidays_public(self, key):

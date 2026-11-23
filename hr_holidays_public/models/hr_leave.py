@@ -28,8 +28,9 @@ class HrLeave(models.Model):
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         exclude_public_holidays_leaves = self.filtered(
-            lambda x: x.holiday_status_id.exclude_public_holidays
-            or not x.holiday_status_id
+            lambda x: (
+                x.holiday_status_id.exclude_public_holidays or not x.holiday_status_id
+            )
         )
         res = super(HrLeave, (self - exclude_public_holidays_leaves))._get_durations(
             check_leave_type=check_leave_type, resource_calendar=resource_calendar
