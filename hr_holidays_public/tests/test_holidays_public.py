@@ -5,7 +5,7 @@
 
 from freezegun import freeze_time
 
-from odoo.tests import new_test_user
+from odoo import Command
 
 from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
     TestCalendarPublicHoliday,
@@ -13,6 +13,13 @@ from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday impo
 
 
 class TestHolidaysPublic(TestCalendarPublicHoliday):
+    _test_user_groups = (
+        "base.group_user",
+        "hr.group_hr_user",
+        "hr_holidays.group_hr_holidays_user",
+        "base.group_system",
+    )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -50,9 +57,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
                 "year": 2019,
                 "country_id": country_id,
                 "line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "name": "holiday x",
                             "date": "2019-07-30",
@@ -120,7 +125,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertPublicHolidayIsUnusualDay(
             True,
             country_id=self.employee.address_id.country_id.id,
-            state_ids=[(6, 0, [self.employee.address_id.state_id.id])],
+            state_ids=[Command.set([self.employee.address_id.state_id.id])],
         )
 
     def test_get_unusual_days_not_return_public_holidays_different_state(self):
@@ -128,7 +133,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertPublicHolidayIsUnusualDay(
             False,
             country_id=self.country_1.id,
-            state_ids=[(6, 0, [self.st_state_2.id])],
+            state_ids=[Command.set([self.st_state_2.id])],
         )
 
     def test_get_unusual_days_return_public_holidays_fallback_to_company_state(self):
@@ -137,7 +142,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertPublicHolidayIsUnusualDay(
             True,
             country_id=self.env.company.country_id.id,
-            state_ids=[(6, 0, [self.env.company.state_id.id])],
+            state_ids=[Command.set([self.env.company.state_id.id])],
         )
 
     def test_get_unusual_days_not_return_public_holidays_fallback_to_company_state(
@@ -149,7 +154,7 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertPublicHolidayIsUnusualDay(
             False,
             country_id=self.employee.address_id.country_id.id,
-            state_ids=[(6, 0, [self.st_state_1.id])],
+            state_ids=[Command.set([self.st_state_1.id])],
         )
 
     @freeze_time("2024-12-25")
@@ -157,11 +162,3 @@ class TestHolidaysPublic(TestCalendarPublicHoliday):
         self.assertTrue(self.employee.is_public_holiday)
         self.assertEqual(self.employee.hr_icon_display, "presence_holiday_absent")
         self.assertTrue(self.employee.is_absent)
-        user = new_test_user(self.env, login="test-user")
-        self.assertEqual(user.im_status, "offline")
-        self.assertEqual(user.partner_id.im_status, "offline")
-        self.employee.user_id = user
-        user.invalidate_recordset()
-        self.assertEqual(user.im_status, "leave_offline")
-        user.partner_id.invalidate_recordset()
-        self.assertEqual(user.partner_id.im_status, "leave_offline")

@@ -5,15 +5,14 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import models
-
-from odoo.addons.resource.models.resource_resource import Intervals
+from odoo.tools.intervals import Intervals
 
 
 class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
     def _attendance_intervals_batch_exclude_public_holidays(
-        self, start_dt, end_dt, intervals, resources, tz
+        self, start_dt, end_dt, intervals, resources
     ):
         employee_id = self.env.context.get("employee_id", False)
         if not employee_id:
@@ -31,34 +30,44 @@ class ResourceCalendar(models.Model):
             )
             .mapped("date")
         )
-        for resource in resources:
-            interval_resource = intervals[resource.id]
-            attendances = []
-            for attendance in interval_resource._items:
-                if attendance[0].date() not in list_by_dates:
-                    attendances.append(attendance)
-            intervals[resource.id] = Intervals(attendances)
+        keys = (
+            [r.id for r in resources]
+            if resources
+            else ([False] if False in intervals else [])
+        )
+        for key in keys:
+            interval_resource = intervals.get(key)
+            if not interval_resource:
+                continue
+            attendances = [
+                attendance
+                for attendance in interval_resource._items
+                if attendance[0].date() not in list_by_dates
+            ]
+            intervals[key] = Intervals(attendances)
         return intervals
 
     def _attendance_intervals_batch(
-        self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False
+        self, start_dt, end_dt, resources_per_tz=None, domain=None
     ):
         res = super()._attendance_intervals_batch(
             start_dt=start_dt,
             end_dt=end_dt,
-            resources=resources,
+            resources_per_tz=resources_per_tz,
             domain=domain,
-            tz=tz,
-            lunch=lunch,
         )
-        if self.env.context.get("exclude_public_holidays") and resources:
-            # We need to pass the employee_id to the context to be able to filter
-            # the public holidays correctly
+        if self.env.context.get("exclude_public_holidays") and not domain:
             calendar = self
-            employees = resources.employee_id
-            if len(employees) == 1:
-                calendar = calendar.with_context(employee_id=employees.id)
+            resources = (
+                self.env["resource.resource"].concat(*resources_per_tz.values())
+                if resources_per_tz
+                else self.env["resource.resource"]
+            )
+            if resources:
+                employees = resources.employee_id
+                if len(employees) == 1:
+                    calendar = calendar.with_context(employee_id=employees.id)
             return calendar._attendance_intervals_batch_exclude_public_holidays(
-                start_dt, end_dt, res, resources, tz
+                start_dt, end_dt, res, resources
             )
         return res

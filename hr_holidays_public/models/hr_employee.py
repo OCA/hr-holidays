@@ -50,14 +50,6 @@ class HrEmployee(models.Model):
         ]
         return sorted(res, key=lambda x: x["start"])
 
-    def _get_im_status_hr_holidays_public(self, key):
-        im_status_mapped = {
-            "online": "leave_online",
-            "away": "leave_away",
-            "offline": "leave_offline",
-        }
-        return im_status_mapped[key]
-
     def _compute_leave_status(self):
         res = super()._compute_leave_status()
         for item in self.filtered(lambda x: not x.is_absent and x.is_public_holiday):

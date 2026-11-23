@@ -4,6 +4,7 @@
 # Copyright 2020 InitOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from odoo import Command
 from odoo.tests import new_test_user
 
 from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday import (
@@ -12,34 +13,35 @@ from odoo.addons.calendar_public_holiday.tests.test_calendar_public_holiday impo
 
 
 class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
+    _test_user_groups = (
+        "base.group_user",
+        "hr.group_hr_user",
+        "hr_holidays.group_hr_holidays_manager",
+        "base.group_system",
+    )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.HrLeave = cls.env["hr.leave"]
-        cls.HrLeaveType = cls.env["hr.leave.type"]
+        cls.HrLeaveType = cls.env["hr.work.entry.type"]
         cls.calendar = cls.env["resource.calendar"].create(
             {"name": "Calendar", "attendance_ids": []}
         )
         for day in range(5):  # From monday to friday
             cls.calendar.attendance_ids = [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
-                        "name": "Attendance",
                         "dayofweek": str(day),
-                        "hour_from": "08",
-                        "hour_to": "12",
+                        "hour_from": 8,
+                        "hour_to": 12,
                     },
                 ),
-                (
-                    0,
-                    0,
+                Command.create(
                     {
-                        "name": "Attendance",
                         "dayofweek": str(day),
-                        "hour_from": "14",
-                        "hour_to": "18",
+                        "hour_from": 14,
+                        "hour_to": 18,
                     },
                 ),
             ]
@@ -78,7 +80,9 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
         cls.public_holiday_global = cls.holiday_model.create(
             {
                 "year": 1946,
-                "line_ids": [(0, 0, {"name": "Christmas", "date": "1946-12-25"})],
+                "line_ids": [
+                    Command.create({"name": "Christmas", "date": "1946-12-25"}),
+                ],
             }
         )
         cls.public_holiday_country = cls.holiday_model.create(
@@ -86,14 +90,12 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
                 "year": 1946,
                 "country_id": cls.address_2.country_id.id,
                 "line_ids": [
-                    (0, 0, {"name": "Before Christmas", "date": "1946-12-24"}),
-                    (
-                        0,
-                        0,
+                    Command.create({"name": "Before Christmas", "date": "1946-12-24"}),
+                    Command.create(
                         {
                             "name": "Even More Before Christmas",
                             "date": "1946-12-23",
-                            "state_ids": [(6, 0, cls.address_2.state_id.ids)],
+                            "state_ids": [Command.create(cls.address_2.state_id.ids)],
                         },
                     ),
                 ],
@@ -104,18 +106,27 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
             {
                 "year": 1947,
                 "line_ids": [
-                    (0, 0, {"name": "New Eve", "date": "1947-01-01"}),
-                    (0, 0, {"name": "New Eve extended", "date": "1947-01-02"}),
+                    Command.create({"name": "New Eve", "date": "1947-01-01"}),
+                    Command.create({"name": "New Eve extended", "date": "1947-01-02"}),
                 ],
             }
         )
 
         cls.holiday_type = cls.HrLeaveType.create(
-            {"name": "Leave Type Test", "exclude_public_holidays": True}
+            {
+                "name": "Leave Type Test",
+                "code": "LEAVE_TEST",
+                "unit_of_measure": "day",
+                "time_off_selectable": True,
+                "exclude_public_holidays": True,
+            }
         )
         cls.holiday_type_no_excludes = cls.HrLeaveType.create(
             {
                 "name": "Leave Type Test Without excludes",
+                "code": "LEAVE_TEST_NO_EX",
+                "unit_of_measure": "day",
+                "time_off_selectable": True,
                 "exclude_public_holidays": False,
             }
         )
@@ -127,7 +138,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1946-12-29 23:59:59",  # Sunday
-                "holiday_status_id": self.holiday_type.id,
+                "work_entry_type_id": self.holiday_type.id,
                 "employee_id": self.employee_1.id,
             }
         )
@@ -138,7 +149,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1946-12-29 23:59:59",  # Sunday
-                "holiday_status_id": self.holiday_type.id,
+                "work_entry_type_id": self.holiday_type.id,
                 "employee_id": self.employee_2.id,
             }
         )
@@ -149,7 +160,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1946-12-29 23:59:59",  # Sunday
-                "holiday_status_id": self.holiday_type_no_excludes.id,
+                "work_entry_type_id": self.holiday_type_no_excludes.id,
                 "employee_id": self.employee_1.id,
             }
         )
@@ -160,7 +171,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1947-01-03 23:59:59",  # Friday
-                "holiday_status_id": self.holiday_type.id,
+                "work_entry_type_id": self.holiday_type.id,
                 "employee_id": self.employee_1.id,
             }
         )
@@ -171,19 +182,19 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1947-01-03 23:59:59",  # Friday
-                "holiday_status_id": self.holiday_type.id,
+                "work_entry_type_id": self.holiday_type.id,
                 "employee_id": self.employee_2.id,
             }
         )
         self.assertEqual(leave_request.number_of_days, 5)
 
     def test_number_of_hours_excluding_employee_2(self):
-        self.holiday_type.request_unit = "hour"
+        self.holiday_type.write({"unit_of_measure": "hour", "request_unit": "hour"})
         leave_request = self.HrLeave.new(
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1946-12-29 23:59:59",  # Sunday
-                "holiday_status_id": self.holiday_type.id,
+                "work_entry_type_id": self.holiday_type.id,
                 "employee_id": self.employee_2.id,
             }
         )
@@ -195,7 +206,7 @@ class TestHolidaysComputeDays(TestHolidaysComputeDaysBase):
             {
                 "date_from": "1946-12-23 00:00:00",  # Monday
                 "date_to": "1946-12-29 23:59:59",  # Sunday
-                "holiday_status_id": self.holiday_type.id,
+                "work_entry_type_id": self.holiday_type.id,
                 "employee_id": self.employee_2.id,
             }
         )

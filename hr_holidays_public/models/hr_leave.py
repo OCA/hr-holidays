@@ -17,8 +17,8 @@ class HrLeave(models.Model):
         """
         for leave in self:
             if (
-                leave.holiday_status_id.exclude_public_holidays
-                or not leave.holiday_status_id
+                leave.work_entry_type_id.exclude_public_holidays
+                or not leave.work_entry_type_id
             ):
                 leave = leave.with_context(
                     employee_id=leave.employee_id.id, exclude_public_holidays=True
@@ -26,21 +26,30 @@ class HrLeave(models.Model):
             super(HrLeave, leave)._action_validate(check_state=check_state)
         return True
 
-    def _get_durations(self, check_leave_type=True, resource_calendar=None):
+    def _get_durations(
+        self,
+        check_work_entry_type=True,
+        resource_calendar=None,
+        additional_domain=None,
+    ):
         exclude_public_holidays_leaves = self.filtered(
             lambda x: (
-                x.holiday_status_id.exclude_public_holidays or not x.holiday_status_id
+                x.work_entry_type_id.exclude_public_holidays or not x.work_entry_type_id
             )
         )
         res = super(HrLeave, (self - exclude_public_holidays_leaves))._get_durations(
-            check_leave_type=check_leave_type, resource_calendar=resource_calendar
+            check_work_entry_type=check_work_entry_type,
+            resource_calendar=resource_calendar,
+            additional_domain=additional_domain,
         )
         for leave in exclude_public_holidays_leaves:
             leave = leave.with_context(
                 employee_id=leave.employee_id.id, exclude_public_holidays=True
             )
             _res = super(HrLeave, leave)._get_durations(
-                check_leave_type=check_leave_type, resource_calendar=resource_calendar
+                check_work_entry_type=check_work_entry_type,
+                resource_calendar=resource_calendar,
+                additional_domain=additional_domain,
             )
             res[leave.id] = _res[leave.id]
         return res
