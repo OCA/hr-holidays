@@ -95,7 +95,7 @@ class TestHolidaysComputeDaysBase(TestCalendarPublicHoliday):
                         {
                             "name": "Even More Before Christmas",
                             "date": "1946-12-23",
-                            "state_ids": [Command.create(cls.address_2.state_id.ids)],
+                            "state_ids": [Command.set(cls.address_2.state_id.ids)],
                         },
                     ),
                 ],
