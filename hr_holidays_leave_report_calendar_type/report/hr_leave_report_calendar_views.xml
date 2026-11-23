@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_report_calendar_view" />
         <field name="arch" type="xml">
             <field name="employee_id" position="after">
-                <field name="holiday_status_id" filters="1" invisible="1" />
+                <field name="work_entry_type_id" filters="1" invisible="1" />
             </field>
         </field>
     </record>
@@ -24,7 +24,7 @@
         />
         <field name="arch" type="xml">
             <field name="employee_id" position="after">
-                <field name="holiday_status_id" />
+                <field name="work_entry_type_id" />
             </field>
         </field>
     </record>
