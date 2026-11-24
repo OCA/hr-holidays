@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Daniel Reis <dreis.pt@gmail.com>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record id="hr_holiday_schedule_list" model="ir.ui.view">
+        <field name="name">hr.holiday.schedule.list</field>
+        <field name="model">hr.holiday.schedule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="year_to_generate" />
+                <field name="country_ids" widget="many2many_tags" />
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_holiday_schedule_form" model="ir.ui.view">
+        <field name="name">hr.holiday.schedule.form</field>
+        <field name="model">hr.holiday.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Holiday Schedule">
+                <header>
+                    <button
+                        name="action_generate"
+                        type="object"
+                        string="Generate"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="action_delete_generated"
+                        type="object"
+                        string="Delete Generated"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="year_to_generate" />
+                        </group>
+                        <group>
+                            <field name="country_ids" widget="many2many_tags" />
+                            <field name="active" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="rules" string="Rules">
+                            <field name="rule_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" />
+                                    <field name="rule_type" />
+                                    <field name="month" optional="hide" />
+                                    <field name="day" optional="hide" />
+                                    <field name="easter_offset" optional="hide" />
+                                    <field name="weekday" optional="hide" />
+                                    <field name="ordinal" optional="hide" />
+                                    <field name="observed_shift" />
+                                    <field name="country_id" optional="hide" />
+                                    <field
+                                        name="state_ids"
+                                        widget="many2many_tags"
+                                        optional="hide"
+                                    />
+                                    <field name="zip_min" optional="hide" />
+                                    <field name="zip_max" optional="hide" />
+                                    <field name="active" />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="preview" string="Preview">
+                            <field name="preview" readonly="1" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_holiday_schedule_search" model="ir.ui.view">
+        <field name="name">hr.holiday.schedule.search</field>
+        <field name="model">hr.holiday.schedule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="country_ids" />
+                <field name="year_to_generate" />
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]"
+                />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group>
+                    <filter
+                        name="group_country"
+                        string="Country"
+                        context="{'group_by': 'country_ids'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_holiday_schedule_action" model="ir.actions.act_window">
+        <field name="name">Public Holiday Schedules</field>
+        <field name="res_model">hr.holiday.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_holiday_schedule_search" />
+    </record>
+</odoo>
