@@ -64,6 +64,29 @@ class TestResourceCalendarLeaves(BaseCommon):
         self.assertEqual(leave.state, "validate")
         return leave
 
+    def _create_flexible_single_day_leave(self, day):
+        self.employee.resource_calendar_id = self.env["resource.calendar"].create(
+            {
+                "name": "TRCL Flexible",
+                "tz": "UTC",
+                "flexible_hours": True,
+                "hours_per_day": 8.0,
+                "full_time_required_hours": 40.0,
+            }
+        )
+        self.employee.tz = "UTC"
+        # Avoid auto-validation, which refuses leaves without duration
+        self.timeoff_type.leave_validation_type = "hr"
+        return self.env["hr.leave"].create(
+            {
+                "name": "TRCL Flexible Leave",
+                "employee_id": self.employee.id,
+                "holiday_status_id": self.timeoff_type.id,
+                "request_date_from": day,
+                "request_date_to": day,
+            }
+        )
+
     def test_leave_partner_without_state(self):
         leave = self._create_leave()
         # Leave does not take in consideration State
@@ -135,3 +158,41 @@ class TestResourceCalendarLeaves(BaseCommon):
         )
         self.assertTrue(unusual_days["2025-07-01"])
         self.assertTrue(unusual_days["2025-07-02"])
+
+    def test_flexible_single_day_leave_on_other_state_local_leave(self):
+        other_state = self.trcl_State.copy({"name": "TRCL Other", "code": "TRCLO"})
+        self.partner.state_id = other_state.id
+        leave = self._create_flexible_single_day_leave("2025-07-02")
+        # Local holiday from another State must not reduce the leave
+        self.assertEqual(leave.number_of_days, 1.0)
+
+    def test_flexible_single_day_leave_without_state(self):
+        leave = self._create_flexible_single_day_leave("2025-07-02")
+        # Employee without State does not get local holidays
+        self.assertEqual(leave.number_of_days, 1.0)
+
+    def test_flexible_single_day_leave_on_own_state_local_leave(self):
+        self.partner.state_id = self.trcl_State.id
+        leave = self._create_flexible_single_day_leave("2025-07-02")
+        # Local holiday from employee's State reduces the leave
+        self.assertEqual(leave.number_of_days, 0.0)
+
+    def test_flexible_single_day_leave_on_global_leave(self):
+        leave = self._create_flexible_single_day_leave("2025-07-01")
+        # Global holiday always reduces the leave
+        self.assertEqual(leave.number_of_days, 0.0)
+
+    def test_search_with_state_context(self):
+        leaves = self.global_leave | self.local_leave
+        domain = [("id", "in", leaves.ids)]
+        model = self.env["resource.calendar.leaves"]
+        # Without context, all leaves are found
+        self.assertEqual(model.search(domain), leaves)
+        # With the employee's State, global and own State leaves are found
+        model_state = model.with_context(
+            resource_leaves_geographic_state_id=self.trcl_State.id
+        )
+        self.assertEqual(model_state.search(domain), leaves)
+        # Without employee's State, only global leaves are found
+        model_no_state = model.with_context(resource_leaves_geographic_state_id=False)
+        self.assertEqual(model_no_state.search(domain), self.global_leave)
