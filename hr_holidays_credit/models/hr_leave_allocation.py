@@ -9,12 +9,12 @@ from odoo.exceptions import ValidationError
 class HolidaysAllocation(models.Model):
     _inherit = "hr.leave.allocation"
 
-    def write(self, values):
+    def write(self, vals):
         # The logic is based on the original method in the hr_holidays module
-        res = super().write(values)
+        res = super().write(vals)
         if (
-            "number_of_days_display" not in values
-            and "number_of_hours_display" not in values
+            "number_of_days_display" not in vals
+            and "number_of_hours_display" not in vals
         ):
             return res
         consumed_leaves = self.employee_id._get_consumed_leaves(

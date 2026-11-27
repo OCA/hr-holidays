@@ -21,7 +21,7 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
             {
                 "name": "Test Accrual - No negative",
                 "time_type": "leave",
-                "requires_allocation": "yes",
+                "requires_allocation": True,
                 "allocation_validation_type": "no_validation",
                 "leave_validation_type": "no_validation",
                 "allows_negative": False,
@@ -31,7 +31,7 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
             {
                 "name": "Test Accrual - Negative",
                 "time_type": "leave",
-                "requires_allocation": "yes",
+                "requires_allocation": True,
                 "allocation_validation_type": "no_validation",
                 "leave_validation_type": "no_validation",
                 "allows_negative": True,
@@ -44,6 +44,7 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
             .create(
                 {
                     "name": "Monthly accrual",
+                    "can_be_carryover": True,
                     "carryover_date": "year_start",
                     "accrued_gain_time": "end",
                     "level_ids": [
@@ -52,13 +53,14 @@ class TestHrHolidaysCreditAccrualAllocations(TestAccrualAllocations):
                             0,
                             {
                                 "added_value_type": "day",
-                                "start_count": 0,
+                                "milestone_date": "creation",
                                 "start_type": "day",
                                 "added_value": 1,
                                 "frequency": "monthly",
-                                "first_day_display": "last",
+                                "first_day": "31",
                                 "cap_accrued_time": False,
-                                "action_with_unused_accruals": "maximum",
+                                "action_with_unused_accruals": "all",
+                                "carryover_options": "limited",
                                 "postpone_max_days": 5,
                             },
                         )

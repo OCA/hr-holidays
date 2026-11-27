@@ -19,7 +19,7 @@ class HrLeave(models.Model):
         for leave in self:
             sorted_leaves[(leave.holiday_status_id, leave.date_from.date())] |= leave
         for (leave_type, date_from), leaves in sorted_leaves.items():
-            if leave_type.requires_allocation == "no":
+            if not leave_type.requires_allocation:
                 continue
             employees = leaves.employee_id
             leave_data = leave_type.get_allocation_data(employees, date_from)

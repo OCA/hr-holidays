@@ -17,12 +17,18 @@ class TestHrHolidaysCredit(TestNegative):
     def setUpClass(cls):
         super().setUpClass()
         # Set category and department for some employees
-        cls.employee_emp_category_id = cls.env.ref("hr.employee_category_2").id
-        cls.employee_hrmanager_category_id = cls.env.ref("hr.employee_category_3").id
+        categories = cls.env["hr.employee.category"].create(
+            [{"name": "Credit Test Tag 1"}, {"name": "Credit Test Tag 2"}]
+        )
+        departments = cls.env["hr.department"].create(
+            [{"name": "Credit Test Department 1"}, {"name": "Credit Test Department 2"}]
+        )
+        cls.employee_emp_category_id = categories[0].id
+        cls.employee_hrmanager_category_id = categories[1].id
         cls.employee_emp.category_ids = [(4, cls.employee_emp_category_id)]
         cls.employee_hrmanager.category_ids = [(4, cls.employee_hrmanager_category_id)]
-        cls.employee_emp_department_id = cls.env.ref("hr.dep_administration").id
-        cls.employee_hrmanager_department_id = cls.env.ref("hr.dep_rd_ltp").id
+        cls.employee_emp_department_id = departments[0].id
+        cls.employee_hrmanager_department_id = departments[1].id
         cls.employee_emp.department_id = cls.employee_emp_department_id
         cls.employee_hrmanager.department_id = cls.employee_hrmanager_department_id
 
