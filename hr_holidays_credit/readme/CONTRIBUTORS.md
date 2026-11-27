@@ -1,0 +1,5 @@
+- [CorporateHub](https://corporatehub.eu/)
+  - Alexey Pelykh \<<alexey.pelykh@corphub.eu>\>
+- [Ecosoft](http://ecosoft.co.th/)
+  - Watcharaporn Charamrum \<<watcharapornc@ecosoft.co.th>\>
+  - Tharathip Chaweewongphan \<<tharathipc@ecosoft.co.th>\>
